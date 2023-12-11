@@ -1,0 +1,55 @@
+.flow {
+  display: flex;
+  flex-grow: 1;
+  height: calc(100% - 40px);
+  width: 100%;
+}
+
+.flow .react-flow__handle {
+  width: 8px;
+  height: 8px;
+  background-color: #c2c2c2;
+}
+
+/* .flow .react-flow__handle-left {
+  left: -15px;
+} */
+
+
+.flow .react-flow__node-custom {
+  background: #fff;
+  border: 1px solid #1a192b;
+  border-radius: 3px;
+  color: #222;
+  font-size: 12px;
+  padding: 10px;
+  text-align: center;
+  width: 150px;
+}
+
+.edgebutton {
+  width: 20px;
+  height: 20px;
+  background: #eee;
+  border: 1px solid #fff;
+  cursor: pointer;
+  border-radius: 50%;
+  font-size: 12px;
+  line-height: 1;
+}
+
+.edgebutton:hover {
+  box-shadow: 0 0 6px 2px rgba(0, 0, 0, 0.08);
+}
+
+
+.react-flow__edge-path-selector:hover { cursor: pointer; }
+.react-flow__edge-path-selector:hover + .react-flow__edge-path, .react-flow__edge-path:hover  {
+    stroke: #555;
+    cursor: pointer;
+}
+.react-flow__edge-path-selector {
+    fill: none;
+    stroke: transparent;
+    stroke-width: 10;
+}

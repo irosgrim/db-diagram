@@ -1,0 +1,56 @@
+.header {
+    height: 40px;
+    background-color: #5cc9f5;
+    display: flex;
+    justify-content: center;
+}
+
+.db-name {
+    background-color: transparent;
+    border: none;
+    outline: none;
+    font-size: 1.5rem;
+    color: white;
+}
+
+.new-btn {
+    width: 100%;
+    padding: 0.5rem;
+    border: none;
+    background-color: #3ba39e;
+    font-size: 1rem;
+    color: #ffffff;
+}
+
+.tables-nav, .table-props {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.tables-nav li {
+    padding: 0;
+}
+
+.tables-nav button {
+    width: 100%;
+}
+
+.table-props li {
+    padding: 1rem 0;
+}
+
+.table-props li .row {
+    display: flex;
+}
+
+.border-bottom {
+    border-bottom: 1px solid #e1e1e1;
+}
+.padding-top {
+    padding-top: 1rem;
+}
+
+.d-flex {
+    display: flex;
+}
