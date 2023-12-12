@@ -7,7 +7,8 @@ const App = () => {
   return (
     <>
       <header className="header">
-        <input type="text" value="ma_db" className="db-name" />
+        <h3>DB diagram</h3>
+        <span></span>
       </header>
       <Flow />
     </>

@@ -1,5 +1,5 @@
 export const generateCssClass = (...args: any): string => {
-  const k = args.map(a => {
+  const k = args.map((a: any) => {
     if(a instanceof Array) {
       return generateCssClass(...a);
     }

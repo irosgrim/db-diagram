@@ -8,6 +8,9 @@
   min-width: 200px;
   width: 100%;
   display: flex;
+  &:hover {
+    background-color: rgb(232, 233, 234);
+  }
 }
 
 .column-container label {
@@ -22,6 +25,8 @@
   margin-bottom: 0.25rem;
   width: 100%;
 }
+
+
 .col input {
     border: none;
     background-color: transparent;

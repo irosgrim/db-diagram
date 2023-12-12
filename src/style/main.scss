@@ -2,7 +2,13 @@
     height: 40px;
     background-color: #5cc9f5;
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
+    align-items: center;
+    h3 {
+        margin: 0;
+        margin-left: 1rem;
+        color: #ffffff;
+    }
 }
 
 .db-name {
@@ -71,4 +77,13 @@
     height: 30px;
     border: 1px solid #ababab;
     border-radius: 3px;
+}
+
+.table-name-input {
+    background-color: transparent;
+    border: 1px solid #ababab;
+    font-size: 1rem;
+    &:disabled {
+        border: none;
+    }
 }

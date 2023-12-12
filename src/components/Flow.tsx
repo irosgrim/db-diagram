@@ -1,17 +1,16 @@
-import { useCallback, useState } from 'react';
-import ReactFlow, { addEdge, applyNodeChanges, ConnectionMode, Controls, Edge, MarkerType, useEdgesState } from 'reactflow';
-import 'reactflow/dist/style.css';
+import { useCallback, useState } from "react";
+import ReactFlow, { addEdge, applyNodeChanges, ConnectionMode, Controls, Edge, MarkerType, useEdgesState } from "reactflow";
+import "reactflow/dist/style.css";
 import "../style/edge.scss"
-import FloatingEdge from './FloatingEdge';
-import CustomNode from './CustomNode';
-import Column from './Column';
+import FloatingEdge from "./FloatingEdge";
+import Column from "./Column";
 import { v4 } from "uuid";
 
-import '../style/table.scss';
-import { Table } from './Table';
-import Autocomplete from './Autocomplete';
-import { Icon } from './Icon';
-import { generateCssClass } from '../utils/styling';
+import "../style/table.scss";
+import { Table } from "./Table";
+import Autocomplete from "./Autocomplete";
+import { Icon } from "./Icon";
+import { generateCssClass } from "../utils/styling";
 
 const randomColor = () => {
     const minVal = 150; // light factor
@@ -25,18 +24,18 @@ const randomColor = () => {
 const fitViewOptions = { padding: 4 };
 const books = [
     {
-        id: 'table_1',
-        data: { name: 'books', nameBg: "#f78ae0" },
+        id: "table_1",
+        data: { name: "books", nameBg: "#f78ae0" },
         position: { x: 10, y: 200 },
-        className: 'light',
-        style: { backgroundColor: '#ffffff', width: "200px", padding: 0 },
+        className: "light",
+        style: { backgroundColor: "#ffffff", width: "200px", padding: 0 },
         resizing: true,
         type: "group",
     },
 
     {
-        id: 'table_1/col_1',
-        type: 'column',
+        id: "table_1/col_1",
+        type: "column",
         position: { x: 0, y: 20 },
         data: { name: "id", type: "serial", primaryKey: true, nullable: true, index: false },
         parentNode: "table_1", extent: "parent",
@@ -44,8 +43,8 @@ const books = [
         expandParent: true,
     },
     {
-        id: 'table_1/col_2',
-        type: 'column',
+        id: "table_1/col_2",
+        type: "column",
         position: { x: 0, y: 40 },
         data: { name: "title", type: "varchar(50)", primaryKey: false, nullable: false, index: false },
         parentNode: "table_1", extent: "parent",
@@ -53,8 +52,8 @@ const books = [
         expandParent: true,
     },
     {
-        id: 'table_1/col_3',
-        type: 'column',
+        id: "table_1/col_3",
+        type: "column",
         position: { x: 0, y: 60 },
         data: { name: "isbn", type: "varchar(50)", primaryKey: false, nullable: false, index: false },
         parentNode: "table_1", extent: "parent",
@@ -62,8 +61,8 @@ const books = [
         expandParent: true,
     },
     {
-        id: 'table_1/col_4',
-        type: 'column',
+        id: "table_1/col_4",
+        type: "column",
         position: { x: 0, y: 80 },
         data: { name: "date", type: "date", primaryKey: false, nullable: false, index: false },
         parentNode: "table_1", extent: "parent",
@@ -74,18 +73,18 @@ const books = [
 
 const users = [
     {
-        id: 'table_2',
-        data: { name: 'users', nameBg: "#6638f0" },
+        id: "table_2",
+        data: { name: "users", nameBg: "#6638f0" },
         position: { x: 20, y: 200 },
-        className: 'light',
-        style: { backgroundColor: '#ffffff', width: 200, height: 20, padding: 0 },
+        className: "light",
+        style: { backgroundColor: "#ffffff", width: 200, height: 20, padding: 0 },
         resizing: true,
         type: "group",
     },
 
     {
-        id: 'table_2/col_1',
-        type: 'column',
+        id: "table_2/col_1",
+        type: "column",
         position: { x: 0, y: 20 },
         data: { name: "id", type: "serial", primaryKey: false, nullable: false, index: false },
         parentNode: "table_2", extent: "parent",
@@ -93,8 +92,8 @@ const users = [
         expandParent: true,
     },
     {
-        id: 'table_2/col_2',
-        type: 'column',
+        id: "table_2/col_2",
+        type: "column",
         position: { x: 0, y: 40 },
         data: { name: "name", type: "varchar(30)", primaryKey: false, nullable: false, index: false },
         parentNode: "table_2", extent: "parent",
@@ -102,8 +101,8 @@ const users = [
         expandParent: true,
     },
     {
-        id: 'table_2/col_3',
-        type: 'column',
+        id: "table_2/col_3",
+        type: "column",
         position: { x: 0, y: 60 },
         data: { name: "age", type: "int(2)", primaryKey: false, nullable: false, index: false },
         parentNode: "table_2", extent: "parent",
@@ -112,7 +111,7 @@ const users = [
     },
 ];
 
-const nodeTypes = { column: Column, group: Table, custom: CustomNode };
+const nodeTypes = { column: Column, group: Table };
 
 const edgeTypes = {
     floating: FloatingEdge,
@@ -125,6 +124,7 @@ export const Flow = () => {
     const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
     const [selectedTable, setSelectedTable] = useState<string | null>(null);
     const [, setSelectedColumn] = useState<string | null>(null);
+    const [changingTableName, setChangingTableName] = useState<string | null>(null);
 
     const onNodesChange = useCallback(
         (changes: any) => {
@@ -137,7 +137,7 @@ export const Flow = () => {
         //@ts-ignore
         (params) =>
             setEdges((eds) =>
-                addEdge({ ...params, type: 'floating', markerEnd: { type: MarkerType.Arrow }, data: { label: "meow" } }, eds)
+                addEdge({ ...params, type: "floating", markerEnd: { type: MarkerType.Arrow }, data: { label: "meow" } }, eds)
             ),
         []
     );
@@ -169,14 +169,14 @@ export const Flow = () => {
                 id: newId,
                 data: { name: newName, nameBg: randomColor() },
                 position: { x: 10 + highestNum + 10, y: 200 + highestNum + 10 },
-                className: 'light',
-                style: { backgroundColor: '#ffffff', width: "200px", padding: 0 },
+                className: "light",
+                style: { backgroundColor: "#ffffff", width: "200px", padding: 0 },
                 resizing: true,
                 type: "group",
             },
             {
                 id: `table_${highestNum + 1}/col_1`,
-                type: 'column',
+                type: "column",
                 position: { x: 0, y: 20 },
                 data: { name: "id", type: "serial", primaryKey: true, nullable: false, index: false },
                 parentNode: newId, extent: "parent",
@@ -205,12 +205,60 @@ export const Flow = () => {
                         <li>
                             {
                                 nodes.filter(n => n.type === "group").map(t => (
-                                    <details open={selectedTable === t.id} key={t.id} style={{ borderLeft: `6px solid ${t.data.nameBg}` }}>
-                                        <summary style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                                            <div>{t.data.name}</div>
-                                            <button
+                                    <details
+                                        open={selectedTable === t.id}
+                                        key={t.id}
+                                        style={{ borderLeft: `6px solid ${t.data.nameBg}`, opacity: selectedTable === t.id ? 1 : selectedTable === null ? 1 : 0.5 }}
+                                        onToggle={(e: any) => {
+                                            if (e.target.open && selectedTable !== t.id) {
+                                                setSelectedTable(t.id);
+                                            } else if (!e.target.open && selectedTable === t.id) {
+                                                setSelectedTable(null);
+                                            }
+                                        }}
+                                    >
+                                        <summary
+                                            style={{ display: "flex", justifyContent: "space-between", alignItems: "center", position: "relative" }}
+                                            className="table-props"
+                                        >
+                                            <input
+                                                className="table-name-input"
+                                                type="text"
+                                                value={t.data.name}
+                                                onChange={(e) => {
+                                                    const value = e.target.value;
+                                                    let nCopies = [...nodes];
+                                                    const curr = nCopies.findIndex(x => x.id === t.id);
+                                                    // TODO: prevent renaming to existing table name
+                                                    nCopies[curr].data.name = value;
+                                                    setNodes(nCopies);
+                                                }}
+                                                disabled={changingTableName !== t.id}
+                                            />
+                                            <div style={{ position: "absolute", height: "100%", width: "150px", display: changingTableName === t.id ? "none" : "block" }}></div>
+                                            {/* <button
                                                 className={generateCssClass("icon-btn")}
                                                 style={{ width: "40px", height: "40px" }}
+                                                onClick={() => true}
+                                            >
+                                                <Icon type="color-palette" width="19" height="19" />
+                                            </button> */}
+                                            {
+                                                changingTableName === t.id && <input type="color" style={{ height: "30px", width: "30px", border: "none" }} value={t.data.nameBg} onChange={(e) => {
+                                                    const value = e.target.value;
+                                                    let nCopies = [...nodes];
+                                                    const curr = nCopies.findIndex(x => x.id === t.id);
+                                                    nCopies[curr].data.nameBg = value;
+                                                    setNodes(nCopies);
+                                                }}
+                                                    title="change table color"
+                                                />
+                                            }
+                                            <button
+                                                className={generateCssClass("icon-btn", { active: changingTableName === t.id })}
+                                                style={{ width: "40px", height: "40px" }}
+                                                onClick={() => setChangingTableName(x => (x === null ? t.id : null))}
+                                                title="edit table name and color"
                                             >
                                                 <Icon type="edit" />
                                             </button>
@@ -305,7 +353,7 @@ export const Flow = () => {
                                                 ))
                                             }
                                             <div className="row padding-top">
-                                                <button>add index</button>
+                                                <button disabled>add index</button>
                                                 <button onClick={() => {
                                                     const colNr: number = nodes.filter(x => {
                                                         const [table, column] = x.id.split("/");
@@ -314,7 +362,7 @@ export const Flow = () => {
 
                                                     const col = {
                                                         id: `${t.id}/col_${v4()}`,
-                                                        type: 'column',
+                                                        type: "column",
                                                         position: { x: 0, y: (colNr * 20) + 20 },
                                                         data: { name: `column_${colNr}`, type: "varchar", primaryKey: false, nullable: false },
                                                         parentNode: t.id, extent: "parent",
