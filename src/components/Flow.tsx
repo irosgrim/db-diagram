@@ -6,13 +6,12 @@ import FloatingEdge from './FloatingEdge';
 import CustomNode from './CustomNode';
 import Column from './Column';
 import { v4 } from "uuid";
-import DeleteIcon from "../icons/delete.svg"
-import KeyIcon from "../icons/key.svg"
-import NullIcon from "../icons/null.svg"
 
 import '../style/table.scss';
 import { Table } from './Table';
 import Autocomplete from './Autocomplete';
+import { Icon } from './Icon';
+import { generateCssClass } from '../utils/styling';
 
 const randomColor = () => {
     const minVal = 150; // light factor
@@ -125,12 +124,10 @@ export const Flow = () => {
     const [nodes, setNodes] = useState<any[]>([...users, ...books]);
     const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
     const [selectedTable, setSelectedTable] = useState<string | null>(null);
-    //@ts-ignore
-    const [selectedColumn, setSelectedColumn] = useState<string | null>(null);
+    const [, setSelectedColumn] = useState<string | null>(null);
 
     const onNodesChange = useCallback(
         (changes: any) => {
-            //@ts-ignore
             return setNodes((nds) => applyNodeChanges(changes, nds))
         },
         [setNodes]
@@ -146,14 +143,31 @@ export const Flow = () => {
     );
 
     const newTable = () => {
-        const highestNum = nodes.filter(x => x.type === "group").map(x => {
+        const allTables = nodes.filter(x => x.type === "group");
+        let highestNum = allTables.map(x => {
             const [, n] = x.id.split("_");
             return +n;
-        }).sort((a, b) => b - a)[0];
+        }).sort((a, b) => b - a)[0] || 0;
+
+        let newId = `table_${highestNum + 1}`;
+        let newName = `table_${highestNum + 1}`;
+
+        let nameExists = true;
+
+        while (nameExists) {
+            const name = allTables.find(x => x.data.name === newName);
+            if (name) {
+                highestNum += 1;
+                newName = `table_${highestNum}`;
+            } else {
+                nameExists = false;
+            }
+        }
+
         const nT = [
             {
-                id: `table_${highestNum + 1}`,
-                data: { name: `new_table_${highestNum + 1}`, nameBg: randomColor() },
+                id: newId,
+                data: { name: newName, nameBg: randomColor() },
                 position: { x: 10 + highestNum + 10, y: 200 + highestNum + 10 },
                 className: 'light',
                 style: { backgroundColor: '#ffffff', width: "200px", padding: 0 },
@@ -165,13 +179,21 @@ export const Flow = () => {
                 type: 'column',
                 position: { x: 0, y: 20 },
                 data: { name: "id", type: "serial", primaryKey: true, nullable: false, index: false },
-                parentNode: `table_${highestNum + 1}`, extent: "parent",
+                parentNode: newId, extent: "parent",
                 draggable: false,
                 expandParent: true,
             },
         ];
 
         setNodes(oldNodes => [...oldNodes, ...nT]);
+    }
+
+    const getProperty = (node: any) => {
+        return {
+            isNullabe: node.data.nullable,
+            isIndex: node.data.index,
+            isPrimaryKey: node.data.primaryKey,
+        }
     }
 
     return (
@@ -185,8 +207,12 @@ export const Flow = () => {
                                 nodes.filter(n => n.type === "group").map(t => (
                                     <details open={selectedTable === t.id} key={t.id} style={{ borderLeft: `6px solid ${t.data.nameBg}` }}>
                                         <summary style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                                            <div>{t.data.name}</div> <button style={{ width: "40px" }}>
-                                                <img src={DeleteIcon} alt="" />
+                                            <div>{t.data.name}</div>
+                                            <button
+                                                className={generateCssClass("icon-btn")}
+                                                style={{ width: "40px", height: "40px" }}
+                                            >
+                                                <Icon type="edit" />
                                             </button>
                                         </summary>
                                         <ul className="table-props">
@@ -195,6 +221,7 @@ export const Flow = () => {
                                                     <li className="border-bottom" key={c.id}>
                                                         <div className="row border-bottom">
                                                             <input
+                                                                className="table-input"
                                                                 type="text"
                                                                 value={c.data.name}
                                                                 onChange={(e) => {
@@ -213,43 +240,65 @@ export const Flow = () => {
                                                                     setNodes(cp);
                                                                 }}
                                                             />
-                                                            <button>
-                                                                <img src={NullIcon} alt="" />
+                                                            <button
+                                                                className={generateCssClass("icon-btn", { active: getProperty(c).isNullabe })}
+                                                                onClick={() => {
+                                                                    let nCopies = [...nodes];
+                                                                    const curr = nCopies.findIndex(x => x.id === c.id);
+                                                                    nCopies[curr].data.nullable = !nCopies[curr].data.nullable;
+                                                                    setNodes(nCopies);
+                                                                }}
+                                                                title="nullable value"
+                                                            >
+                                                                <Icon type="null" />
                                                             </button>
-                                                            <button>
-                                                                <img src={KeyIcon} alt="" />
+                                                            <button
+                                                                className={generateCssClass("icon-btn", { active: getProperty(c).isPrimaryKey })}
+                                                                onClick={() => {
+                                                                    let nCopies = [...nodes];
+                                                                    const curr = nCopies.findIndex(x => x.id === c.id);
+                                                                    nCopies[curr].data.primaryKey = !nCopies[curr].data.primaryKey;
+                                                                    setNodes(nCopies)
+                                                                }}
+                                                                title="primary key"
+                                                            >
+                                                                <Icon type="key" />
                                                             </button>
-                                                            <button onClick={() => {
+                                                            <button
+                                                                className="icon-btn"
+                                                                onClick={() => {
 
-                                                                const curr = nodes.findIndex(x => x.id === c.id);
-                                                                let nCopies = [...nodes];
-                                                                nCopies.splice(curr, 1);
+                                                                    const curr = nodes.findIndex(x => x.id === c.id);
+                                                                    let nCopies = [...nodes];
+                                                                    nCopies.splice(curr, 1);
 
-                                                                const cols = nCopies.filter(xx => {
-                                                                    const [table, column] = xx.id.split("/");
-                                                                    return table === t.id && column !== undefined;
-                                                                })
-                                                                console.log(cols.length)
-                                                                let cur = -1;
-                                                                const newCopies = nCopies.map((y) => {
-                                                                    const [table, column] = y.id.split("/");
-                                                                    console.log(table)
-                                                                    if (table === t.id && column !== undefined) {
-                                                                        cur += 1;
-                                                                        return { ...y, position: { x: 0, y: (cur * 20) + 20 } }
-                                                                    }
-                                                                    if (table === t.id && column === undefined) {
-                                                                        const d = { ...y, data: { ...y.data, height: 20 * cols.length }, style: { ...y.style, height: (20 * cols.length) + 20 } };
-                                                                        return JSON.parse(JSON.stringify(d))
-                                                                    } else {
-                                                                        return y;
-                                                                    }
+                                                                    const cols = nCopies.filter(xx => {
+                                                                        const [table, column] = xx.id.split("/");
+                                                                        return table === t.id && column !== undefined;
+                                                                    })
+                                                                    console.log(cols.length)
+                                                                    let cur = -1;
+                                                                    const newCopies = nCopies.map((y) => {
+                                                                        const [table, column] = y.id.split("/");
+                                                                        console.log(table)
+                                                                        if (table === t.id && column !== undefined) {
+                                                                            cur += 1;
+                                                                            return { ...y, position: { x: 0, y: (cur * 20) + 20 } }
+                                                                        }
+                                                                        if (table === t.id && column === undefined) {
+                                                                            const d = { ...y, data: { ...y.data, height: 20 * cols.length }, style: { ...y.style, height: (20 * cols.length) + 20 } };
+                                                                            return JSON.parse(JSON.stringify(d))
+                                                                        } else {
+                                                                            return y;
+                                                                        }
 
-                                                                })
-                                                                //@ts-ignore
-                                                                setNodes(newCopies);
-                                                            }}>
-                                                                <img src={DeleteIcon} alt="" />
+                                                                    })
+                                                                    //@ts-ignore
+                                                                    setNodes(newCopies);
+                                                                }}
+                                                                title="delete column"
+                                                            >
+                                                                <Icon type="delete" />
                                                             </button>
                                                         </div>
                                                     </li>
@@ -291,6 +340,15 @@ export const Flow = () => {
                 onNodesChange={onNodesChange}
                 onEdgesChange={onEdgesChange}
                 onConnect={onConnect}
+                onNodeDragStart={(e: any) => {
+                    if (e.currentTarget.dataset.id) {
+                        const [table, column] = e.currentTarget.dataset.id.split("/");
+                        if (column) {
+                            setSelectedColumn(e.currentTarget.dataset.id);
+                        }
+                        setSelectedTable(table);
+                    }
+                }}
                 onNodeClick={(e: any) => {
                     if (e.currentTarget.dataset.id) {
                         const [table, column] = e.currentTarget.dataset.id.split("/");

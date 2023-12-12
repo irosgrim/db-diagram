@@ -32,10 +32,6 @@
     padding: 0;
 }
 
-.tables-nav button {
-    width: 100%;
-}
-
 .table-props li {
     padding: 1rem 0;
 }
@@ -53,4 +49,26 @@
 
 .d-flex {
     display: flex;
+}
+
+.icon-btn {
+    height: 30px;
+    width: 24px;
+    padding: 0;
+    border: none;
+    outline: none;
+    background-color: transparent;
+    &:hover {
+        background-color: #eeeeee;
+    }
+}
+
+.active {
+    background-color: #abece4;
+}
+
+.table-input {
+    height: 30px;
+    border: 1px solid #ababab;
+    border-radius: 3px;
 }

@@ -60,6 +60,7 @@ const Autocomplete = ({ suggestions, value, onChange }: AutocompleteProps) => {
     return (
         <div className="autocomplete-container">
             <input
+                className="table-input"
                 type="text"
                 onChange={onEdit}
                 value={input}

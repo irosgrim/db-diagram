@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { Handle, Position } from 'reactflow';
-import KeyIcon from "../icons/key.svg"
+import { Icon } from './Icon';
 
 type ColumnProps = {
     data: {
@@ -23,7 +23,7 @@ function Column({ data }: ColumnProps) {
 
             <div className="col">
                 <div style={{ position: "relative" }}>
-                    {data.primaryKey && < img src={KeyIcon} alt="" style={{ position: "absolute", top: "6px", height: "12px", width: "6px", }} />}
+                    {data.primaryKey && <span style={{ position: "absolute" }}> <Icon type="key" height="12" width="6" /> </span>}
                     <div className="col-name" style={{ marginLeft: "0.7rem" }}>{data.name}</div>
                 </div>
                 {/* <input className="col-name" defaultValue={data.name} /> */}

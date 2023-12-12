@@ -4,16 +4,24 @@ const getParams = (nodeA: any, nodeB: any) => {
   const centerA = getNodeCenter(nodeA);
   const centerB = getNodeCenter(nodeB);
 
-  const horizontalDiff = Math.abs(centerA.x - centerB.x);
-  const verticalDiff = Math.abs(centerA.y - centerB.y);
+  // const horizontalDiff = Math.abs(centerA.x - centerB.x);
+  // const verticalDiff = Math.abs(centerA.y - centerB.y);
 
   let position;
 
-  if (horizontalDiff > verticalDiff) {
-    position = centerA.x > centerB.x ? Position.Left : Position.Right;
-  } 
-  else {
-    position = centerA.y > centerB.y ? Position.Left : Position.Right;
+
+  // if (horizontalDiff > verticalDiff) {
+  //   position = centerA.x > centerB.x ? Position.Left : Position.Right;
+  // } 
+  // else {
+  //   position = centerA.y > centerB.y ? Position.Left : Position.Right;
+  // }
+
+  if (centerA.x > centerB.x) {
+    position = Position.Left
+  }
+  if (centerA.x < centerB.x) {
+    position = Position.Right
   }
 
   const [x, y] = getHandleCoordsByPosition(nodeA, position);
