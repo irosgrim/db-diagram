@@ -10,108 +10,52 @@ import "../style/table.scss";
 import { Table } from "./Table";
 import Autocomplete from "./Autocomplete";
 import { Icon } from "./Icon";
-import { generateCssClass } from "../utils/styling";
-
-const randomColor = () => {
-    const minVal = 150; // light factor
-    const red = Math.floor(Math.random() * (256 - minVal) + minVal);
-    const green = Math.floor(Math.random() * (256 - minVal) + minVal);
-    const blue = Math.floor(Math.random() * (256 - minVal) + minVal);
-
-    return "#" + ((1 << 24) + (red << 16) + (green << 8) + blue).toString(16).slice(1);
-}
+import { generateCssClass, getGoodContrastColor, randomColor } from "../utils/styling";
+import { Index } from "./Index";
+import { MultiSelect } from "./MultiSelect";
+import { generateSqlSchema, postgresTypes } from "../utils/sql";
 
 const fitViewOptions = { padding: 4 };
-const books = [
+const defaultTable = [
     {
         id: "table_1",
-        data: { name: "books", nameBg: "#f78ae0" },
+        data: { name: "table_1", backgroundColor: "#f78ae0" },
         position: { x: 10, y: 200 },
         className: "light",
-        style: { backgroundColor: "#ffffff", width: "200px", padding: 0 },
+        style: { backgroundColor: "#ffffff", minWidth: "200px", padding: 0 },
         resizing: true,
         type: "group",
     },
-
     {
         id: "table_1/col_1",
         type: "column",
         position: { x: 0, y: 20 },
-        data: { name: "id", type: "serial", primaryKey: true, nullable: true, index: false },
+        data: { name: "id", type: "SERIAL", primaryKey: true, nullable: true, index: false },
         parentNode: "table_1", extent: "parent",
         draggable: false,
         expandParent: true,
     },
-    {
-        id: "table_1/col_2",
-        type: "column",
-        position: { x: 0, y: 40 },
-        data: { name: "title", type: "varchar(50)", primaryKey: false, nullable: false, index: false },
-        parentNode: "table_1", extent: "parent",
-        draggable: false,
-        expandParent: true,
-    },
-    {
-        id: "table_1/col_3",
-        type: "column",
-        position: { x: 0, y: 60 },
-        data: { name: "isbn", type: "varchar(50)", primaryKey: false, nullable: false, index: false },
-        parentNode: "table_1", extent: "parent",
-        draggable: false,
-        expandParent: true,
-    },
-    {
-        id: "table_1/col_4",
-        type: "column",
-        position: { x: 0, y: 80 },
-        data: { name: "date", type: "date", primaryKey: false, nullable: false, index: false },
-        parentNode: "table_1", extent: "parent",
-        draggable: false,
-        expandParent: true,
-    },
-];
-
-const users = [
     {
         id: "table_2",
-        data: { name: "users", nameBg: "#6638f0" },
-        position: { x: 20, y: 200 },
+        data: { name: "table_2", backgroundColor: "#6638f0" },
+        position: { x: 100, y: 250 },
         className: "light",
-        style: { backgroundColor: "#ffffff", width: 200, height: 20, padding: 0 },
+        style: { backgroundColor: "#ffffff", minWidth: "200px", padding: 0 },
         resizing: true,
         type: "group",
     },
-
     {
         id: "table_2/col_1",
         type: "column",
         position: { x: 0, y: 20 },
-        data: { name: "id", type: "serial", primaryKey: false, nullable: false, index: false },
-        parentNode: "table_2", extent: "parent",
-        draggable: false,
-        expandParent: true,
-    },
-    {
-        id: "table_2/col_2",
-        type: "column",
-        position: { x: 0, y: 40 },
-        data: { name: "name", type: "varchar(30)", primaryKey: false, nullable: false, index: false },
-        parentNode: "table_2", extent: "parent",
-        draggable: false,
-        expandParent: true,
-    },
-    {
-        id: "table_2/col_3",
-        type: "column",
-        position: { x: 0, y: 60 },
-        data: { name: "age", type: "int(2)", primaryKey: false, nullable: false, index: false },
+        data: { name: "id", type: "SERIAL", primaryKey: true, nullable: true, index: false },
         parentNode: "table_2", extent: "parent",
         draggable: false,
         expandParent: true,
     },
 ];
 
-const nodeTypes = { column: Column, group: Table };
+const nodeTypes = { column: Column, group: Table, index: Index, separator: ({ data }: any) => <div style={{ marginLeft: "1rem" }}>{data.label}</div> };
 
 const edgeTypes = {
     floating: FloatingEdge,
@@ -120,11 +64,13 @@ const edgeTypes = {
 const initialEdges: Edge<any>[] = [];
 
 export const Flow = () => {
-    const [nodes, setNodes] = useState<any[]>([...users, ...books]);
+
+    const [nodes, setNodes] = useState<any[]>([...defaultTable]);
     const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
     const [selectedTable, setSelectedTable] = useState<string | null>(null);
     const [, setSelectedColumn] = useState<string | null>(null);
     const [changingTableName, setChangingTableName] = useState<string | null>(null);
+    const [schema, setSchema] = useState<string | null>(null)
 
     const onNodesChange = useCallback(
         (changes: any) => {
@@ -137,10 +83,12 @@ export const Flow = () => {
         //@ts-ignore
         (params) =>
             setEdges((eds) =>
-                addEdge({ ...params, type: "floating", markerEnd: { type: MarkerType.Arrow }, data: { label: "meow" } }, eds)
+                addEdge({ ...params, type: "floating", markerEnd: { type: MarkerType.Arrow }, data: { label: "relation", type: "foreign-key" } }, eds)
             ),
         []
     );
+
+    // useEffect(() => setSchema(generateSqlSchema(nodes)), [nodes])
 
     const newTable = () => {
         const allTables = nodes.filter(x => x.type === "group");
@@ -196,225 +144,346 @@ export const Flow = () => {
         }
     }
 
+    const addColumn = (currentTable: any) => {
+        const nodesCopy = [...nodes];
+        const { id } = currentTable;
+        let lastColumnIndex = 0;
+        let colNr = 0;
+        const columnNames = [];
+
+        for (let i = 0; i < nodesCopy.length; i++) {
+            if (nodesCopy[i].id === currentTable.id) {
+                nodesCopy[i].data.height += 20;
+                nodesCopy[i].style.height += 20;
+            }
+
+            if (nodesCopy[i].type === "column" && nodesCopy[i].parentNode === id) {
+                lastColumnIndex = i;
+                colNr += 1;
+                columnNames.push(nodesCopy[i].data.name);
+            }
+            // move the indexes section down by 20px
+            if ((nodesCopy[i].type === "separator" || nodesCopy[i].type === "index") && nodesCopy[i].parentNode === id) {
+                nodesCopy[i].position.y += 20;
+            }
+        }
+
+        let newColName = `column_${colNr}`;
+        if (columnNames.indexOf(newColName) > -1) {
+            newColName += "_" + 1;
+        }
+        const col = {
+            id: `${currentTable.id}/col_${v4()}`,
+            type: "column",
+            position: { x: 0, y: (colNr * 20) + 20 },
+            data: { name: newColName, type: "varchar", primaryKey: false, nullable: false },
+            parentNode: currentTable.id, extent: "parent",
+            draggable: false,
+            expandParent: true,
+        };
+
+        nodesCopy.splice(lastColumnIndex + 1, 0, col);
+
+        setNodes(nodesCopy)
+    }
+
+    const deleteColumn = (currentTable: any, currentColumn: any) => {
+
+        const curr = nodes.findIndex(x => x.id === currentColumn.id);
+        let nCopies = [...nodes];
+        nCopies.splice(curr, 1);
+
+        const cols = nCopies.filter(xx => xx.type !== "group" && xx.parentNode === currentTable.id);
+
+        let cur = -1;
+        const newCopies = nCopies.map((y) => {
+            if (y.type !== "group" && y.parentNode === currentTable.id) {
+                cur += 1;
+                return { ...y, position: { x: 0, y: (cur * 20) + 20 } }
+            }
+            if (y.type === "group" && y.id === currentTable.id) {
+                const d = { ...y, data: { ...y.data, height: 20 * cols.length }, style: { ...y.style, height: (20 * cols.length) + 20 } };
+                return d;
+            } else {
+                return y;
+            }
+        });
+
+        setNodes(newCopies);
+    }
+
+    const addIndex = (currentTable: any) => {
+        const nodesCopy = [...nodes];
+        let totalColumns = 0;
+        let totalIndexes = 0;
+        let lastIndex = 0;
+        let lastColumnIndex = 0;
+
+        for (let i = 0; i < nodes.length; i++) {
+            const currNode = nodes[i];
+            if (currNode.id === currentTable.id) {
+                nodesCopy[i].data.height += 20;
+                nodesCopy[i].style.height += 20;
+            }
+            if (currNode.type === "column" && currNode.parentNode === currentTable.id) {
+                totalColumns += 1;
+                lastColumnIndex = i;
+            }
+            if (currNode.type === "index" && currNode.parentNode === currentTable.id) {
+                totalIndexes += 1;
+                lastIndex = i;
+            }
+        }
+
+        const newIndexNode = {
+            id: `${currentTable.id}/index_${v4()}`,
+            type: "index",
+            position: { x: 0, y: (20 * (totalColumns + totalIndexes)) + 20 },
+            data: { columns: [], unique: true },
+            parentNode: currentTable.id,
+            extent: "parent",
+            draggable: false,
+            expandParent: true,
+        };
+
+        if (lastIndex === 0) {
+            nodesCopy.splice(lastColumnIndex + 1, 0, newIndexNode);
+        } else {
+            nodesCopy.splice(lastIndex + 1, 0, newIndexNode);
+        }
+        setNodes(nodesCopy);
+
+    }
+
+    const changeIndexes = (currentIndexNode: any, newIndexes: { id: string; name: string }[]) => {
+        const nodesCopy = [...nodes];
+        let deletion = false;
+        let nodeIndexToUpdate = 0;
+
+
+        if (!newIndexes.length) {
+            for (let i = 0; i < nodes.length; i++) {
+                const currentNode = nodes[i];
+
+                if (currentNode.id === currentIndexNode.parentNode) {
+                    nodesCopy[i].data.height -= 20;
+                    nodesCopy[i].style.height -= 20;
+                }
+                if (currentNode.id === currentIndexNode.id) {
+                    deletion = true;
+                    nodeIndexToUpdate = i;
+                }
+                if (currentNode.type === "index" && currentNode.parentNode === currentIndexNode.parentNode && deletion === true) {
+                    nodesCopy[i].position.y -= 20;
+                }
+            }
+            nodesCopy.splice(nodeIndexToUpdate, 1);
+
+        } else {
+            const index = nodes.findIndex(x => x.id === currentIndexNode.id);
+            nodes[index].data.columns = newIndexes;
+        }
+        setNodes(nodesCopy);
+    }
+
+
+    const showDbSchema = () => {
+        if (schema) {
+            setSchema(null);
+        } else {
+            setSchema(generateSqlSchema(nodes))
+        }
+    }
     return (
-        <div className="flow">
-            <aside style={{ backgroundColor: "#ffffff", width: "300px", height: "100%", borderRight: "1px solid rgb(220 220 220)" }}>
-                <button className="new-btn" onClick={newTable}>+ New Table</button>
-                <nav>
-                    <ul className="tables-nav">
-                        <li>
-                            {
-                                nodes.filter(n => n.type === "group").map(t => (
-                                    <details
-                                        open={selectedTable === t.id}
-                                        key={t.id}
-                                        style={{ borderLeft: `6px solid ${t.data.nameBg}`, opacity: selectedTable === t.id ? 1 : selectedTable === null ? 1 : 0.5 }}
-                                        onToggle={(e: any) => {
-                                            if (e.target.open && selectedTable !== t.id) {
-                                                setSelectedTable(t.id);
-                                            } else if (!e.target.open && selectedTable === t.id) {
-                                                setSelectedTable(null);
-                                            }
-                                        }}
-                                    >
-                                        <summary
-                                            style={{ display: "flex", justifyContent: "space-between", alignItems: "center", position: "relative" }}
-                                            className="table-props"
+        <>
+            <header className="header">
+                <h3>DB diagram</h3>
+                <button onClick={() => showDbSchema()}>show db schema</button>
+                {
+                    schema && <pre className="schema-preview">
+                        {schema}
+                    </pre>
+                }
+            </header>
+            <div className="flow">
+                <aside style={{ backgroundColor: "#ffffff", width: "300px", height: "100%", borderRight: "1px solid rgb(220 220 220)" }}>
+                    <button className="new-btn" onClick={newTable}>+ New Table</button>
+                    <nav>
+                        <ul className="tables-nav">
+                            <li>
+                                {
+                                    nodes.filter(n => n.type === "group").map(t => (
+                                        <details
+                                            open={selectedTable === t.id}
+                                            key={t.id}
+                                            style={{ borderLeft: `6px solid ${t.data.nameBg}`, opacity: selectedTable === t.id ? 1 : selectedTable === null ? 1 : 0.5 }}
+                                            onToggle={(e: any) => {
+                                                if (e.target.open && selectedTable !== t.id) {
+                                                    setSelectedTable(t.id);
+                                                } else if (!e.target.open && selectedTable === t.id) {
+                                                    setSelectedTable(null);
+                                                }
+                                            }}
+                                            className="table-props-container"
                                         >
-                                            <input
-                                                className="table-name-input"
-                                                type="text"
-                                                value={t.data.name}
-                                                onChange={(e) => {
-                                                    const value = e.target.value;
-                                                    let nCopies = [...nodes];
-                                                    const curr = nCopies.findIndex(x => x.id === t.id);
-                                                    // TODO: prevent renaming to existing table name
-                                                    nCopies[curr].data.name = value;
-                                                    setNodes(nCopies);
-                                                }}
-                                                disabled={changingTableName !== t.id}
-                                            />
-                                            <div style={{ position: "absolute", height: "100%", width: "150px", display: changingTableName === t.id ? "none" : "block" }}></div>
-                                            {/* <button
-                                                className={generateCssClass("icon-btn")}
-                                                style={{ width: "40px", height: "40px" }}
-                                                onClick={() => true}
+                                            <summary
+                                                style={{ display: "flex", justifyContent: "space-between", alignItems: "center", position: "relative", backgroundColor: selectedTable === t.id ? t.data.nameBg : "initial" }}
+                                                className="table-props"
                                             >
-                                                <Icon type="color-palette" width="19" height="19" />
-                                            </button> */}
-                                            {
-                                                changingTableName === t.id && <input type="color" style={{ height: "30px", width: "30px", border: "none" }} value={t.data.nameBg} onChange={(e) => {
-                                                    const value = e.target.value;
-                                                    let nCopies = [...nodes];
-                                                    const curr = nCopies.findIndex(x => x.id === t.id);
-                                                    nCopies[curr].data.nameBg = value;
-                                                    setNodes(nCopies);
-                                                }}
-                                                    title="change table color"
+                                                <input
+                                                    style={{ color: selectedTable === t.id ? getGoodContrastColor(t.data.nameBg) : "initial" }}
+                                                    className="table-name-input"
+                                                    type="text"
+                                                    value={t.data.name}
+                                                    onChange={(e) => {
+                                                        const value = e.target.value;
+                                                        let nCopies = [...nodes];
+                                                        const curr = nCopies.findIndex(x => x.id === t.id);
+                                                        // TODO: prevent renaming to existing table name
+                                                        nCopies[curr].data.name = value;
+                                                        setNodes(nCopies);
+                                                    }}
+                                                    disabled={changingTableName !== t.id}
                                                 />
-                                            }
-                                            <button
-                                                className={generateCssClass("icon-btn", { active: changingTableName === t.id })}
-                                                style={{ width: "40px", height: "40px" }}
-                                                onClick={() => setChangingTableName(x => (x === null ? t.id : null))}
-                                                title="edit table name and color"
-                                            >
-                                                <Icon type="edit" />
-                                            </button>
-                                        </summary>
-                                        <ul className="table-props">
-                                            {
-                                                nodes.filter(n => n.parentNode === t.id).map(c => (
-                                                    <li className="border-bottom" key={c.id}>
-                                                        <div className="row border-bottom">
-                                                            <input
-                                                                className="table-input"
-                                                                type="text"
-                                                                value={c.data.name}
-                                                                onChange={(e) => {
-                                                                    c.data.name = e.target.value;
-                                                                    const cp = [...nodes];
-                                                                    setNodes(cp);
-                                                                }}
-                                                                style={{ width: "100px" }}
+                                                <div style={{ position: "absolute", height: "100%", width: "210px", display: changingTableName === t.id ? "none" : "block" }}></div>
+
+                                                {
+                                                    changingTableName === t.id && <input type="color" style={{ height: "30px", width: "30px", border: "none" }} value={t.data.nameBg} onChange={(e) => {
+                                                        const value = e.target.value;
+                                                        let nCopies = [...nodes];
+                                                        const curr = nCopies.findIndex(x => x.id === t.id);
+                                                        nCopies[curr].data.nameBg = value;
+                                                        setNodes(nCopies);
+                                                    }}
+                                                        title="change table color"
+                                                    />
+                                                }
+                                                <button
+                                                    className={generateCssClass("icon-btn", { active: changingTableName === t.id })}
+                                                    style={{ width: "40px", height: "40px" }}
+                                                    onClick={() => setChangingTableName(x => (x === null ? t.id : null))}
+                                                    title="edit table name and color"
+                                                >
+                                                    <Icon type="edit" color={selectedTable === t.id ? getGoodContrastColor(t.data.nameBg) : "#000000"} />
+                                                </button>
+                                            </summary>
+                                            <ul className="table-props">
+                                                {
+                                                    nodes.filter(n => n.parentNode === t.id && n.type === "column").map(c => (
+                                                        <li className="border-bottom" key={c.id}>
+                                                            <div className="row border-bottom">
+                                                                <input
+                                                                    className="table-input"
+                                                                    type="text"
+                                                                    value={c.data.name}
+                                                                    onChange={(e) => {
+                                                                        c.data.name = e.target.value;
+                                                                        const cp = [...nodes];
+                                                                        setNodes(cp);
+                                                                    }}
+                                                                    style={{ width: "100px" }}
+                                                                />
+                                                                <Autocomplete
+                                                                    suggestions={postgresTypes}
+                                                                    value={c.data.type || ""}
+                                                                    onChange={(value) => {
+                                                                        c.data.type = value;
+                                                                        const cp = [...nodes];
+                                                                        setNodes(cp);
+                                                                    }}
+                                                                />
+                                                                <button
+                                                                    className={generateCssClass("icon-btn", { active: getProperty(c).isNullabe })}
+                                                                    onClick={() => {
+                                                                        let nCopies = [...nodes];
+                                                                        const curr = nCopies.findIndex(x => x.id === c.id);
+                                                                        nCopies[curr].data.nullable = !nCopies[curr].data.nullable;
+                                                                        setNodes(nCopies);
+                                                                    }}
+                                                                    title="nullable value"
+                                                                >
+                                                                    <Icon type="null" />
+                                                                </button>
+                                                                <button
+                                                                    className={generateCssClass("icon-btn", { active: getProperty(c).isPrimaryKey })}
+                                                                    onClick={() => {
+                                                                        let nCopies = [...nodes];
+                                                                        const curr = nCopies.findIndex(x => x.id === c.id);
+                                                                        nCopies[curr].data.primaryKey = !nCopies[curr].data.primaryKey;
+                                                                        setNodes(nCopies)
+                                                                    }}
+                                                                    title="primary key"
+                                                                >
+                                                                    <Icon type="key" />
+                                                                </button>
+                                                                <button
+                                                                    className="icon-btn"
+                                                                    onClick={() => deleteColumn(t, c)}
+                                                                    title="delete column"
+                                                                >
+                                                                    <Icon type="delete" />
+                                                                </button>
+                                                            </div>
+                                                        </li>
+                                                    ))
+                                                }
+                                                <div className="row padding-top">
+                                                    <h5>Indexes::</h5>
+                                                    {
+                                                        nodes.filter(x => x.parentNode === t.id && x.type === "index").map(x => (
+                                                            <MultiSelect
+                                                                options={nodes.filter((cols) => cols.parentNode === t.id && cols.type === "column").map(cc => ({ id: cc.id, name: cc.data.name }))}
+                                                                selected={x.data.columns}
+                                                                onSelectionChange={(value) => changeIndexes(x, value)}
+                                                                key={x.id}
                                                             />
-                                                            <Autocomplete
-                                                                suggestions={["int", "varchar(x)", "date", "bigint", "serial", "time"]}
-                                                                value={c.data.type || ""}
-                                                                onChange={(value) => {
-                                                                    c.data.type = value;
-                                                                    const cp = [...nodes];
-                                                                    setNodes(cp);
-                                                                }}
-                                                            />
-                                                            <button
-                                                                className={generateCssClass("icon-btn", { active: getProperty(c).isNullabe })}
-                                                                onClick={() => {
-                                                                    let nCopies = [...nodes];
-                                                                    const curr = nCopies.findIndex(x => x.id === c.id);
-                                                                    nCopies[curr].data.nullable = !nCopies[curr].data.nullable;
-                                                                    setNodes(nCopies);
-                                                                }}
-                                                                title="nullable value"
-                                                            >
-                                                                <Icon type="null" />
-                                                            </button>
-                                                            <button
-                                                                className={generateCssClass("icon-btn", { active: getProperty(c).isPrimaryKey })}
-                                                                onClick={() => {
-                                                                    let nCopies = [...nodes];
-                                                                    const curr = nCopies.findIndex(x => x.id === c.id);
-                                                                    nCopies[curr].data.primaryKey = !nCopies[curr].data.primaryKey;
-                                                                    setNodes(nCopies)
-                                                                }}
-                                                                title="primary key"
-                                                            >
-                                                                <Icon type="key" />
-                                                            </button>
-                                                            <button
-                                                                className="icon-btn"
-                                                                onClick={() => {
-
-                                                                    const curr = nodes.findIndex(x => x.id === c.id);
-                                                                    let nCopies = [...nodes];
-                                                                    nCopies.splice(curr, 1);
-
-                                                                    const cols = nCopies.filter(xx => {
-                                                                        const [table, column] = xx.id.split("/");
-                                                                        return table === t.id && column !== undefined;
-                                                                    })
-                                                                    console.log(cols.length)
-                                                                    let cur = -1;
-                                                                    const newCopies = nCopies.map((y) => {
-                                                                        const [table, column] = y.id.split("/");
-                                                                        console.log(table)
-                                                                        if (table === t.id && column !== undefined) {
-                                                                            cur += 1;
-                                                                            return { ...y, position: { x: 0, y: (cur * 20) + 20 } }
-                                                                        }
-                                                                        if (table === t.id && column === undefined) {
-                                                                            const d = { ...y, data: { ...y.data, height: 20 * cols.length }, style: { ...y.style, height: (20 * cols.length) + 20 } };
-                                                                            return JSON.parse(JSON.stringify(d))
-                                                                        } else {
-                                                                            return y;
-                                                                        }
-
-                                                                    })
-                                                                    //@ts-ignore
-                                                                    setNodes(newCopies);
-                                                                }}
-                                                                title="delete column"
-                                                            >
-                                                                <Icon type="delete" />
-                                                            </button>
-                                                        </div>
-                                                    </li>
-                                                ))
-                                            }
-                                            <div className="row padding-top">
-                                                <button disabled>add index</button>
-                                                <button onClick={() => {
-                                                    const colNr: number = nodes.filter(x => {
-                                                        const [table, column] = x.id.split("/");
-                                                        return column !== undefined && table === t.id
-                                                    }).length;
-
-                                                    const col = {
-                                                        id: `${t.id}/col_${v4()}`,
-                                                        type: "column",
-                                                        position: { x: 0, y: (colNr * 20) + 20 },
-                                                        data: { name: `column_${colNr}`, type: "varchar", primaryKey: false, nullable: false },
-                                                        parentNode: t.id, extent: "parent",
-                                                        draggable: false,
-                                                        expandParent: true,
-                                                    };
-                                                    const newNodes = [...nodes, col];
-                                                    //@ts-ignore
-                                                    setNodes(newNodes)
-                                                }}>+ add column</button>
-                                            </div>
-                                        </ul>
-                                    </details>
-                                ))
+                                                        ))
+                                                    }
+                                                    <button onClick={() => addIndex(t)}>add index</button>
+                                                    <button onClick={() => addColumn(t)}>+ add column</button>
+                                                </div>
+                                            </ul>
+                                        </details>
+                                    ))
+                                }
+                            </li>
+                        </ul>
+                    </nav>
+                </aside>
+                <ReactFlow
+                    nodes={nodes}
+                    edges={edges}
+                    onNodesChange={onNodesChange}
+                    onEdgesChange={onEdgesChange}
+                    onConnect={onConnect}
+                    onNodeDragStart={(e: any) => {
+                        if (e.currentTarget.dataset.id) {
+                            const [table, column] = e.currentTarget.dataset.id.split("/");
+                            if (column) {
+                                setSelectedColumn(e.currentTarget.dataset.id);
                             }
-                        </li>
-                    </ul>
-                </nav>
-            </aside>
-            <ReactFlow
-                nodes={nodes}
-                edges={edges}
-                onNodesChange={onNodesChange}
-                onEdgesChange={onEdgesChange}
-                onConnect={onConnect}
-                onNodeDragStart={(e: any) => {
-                    if (e.currentTarget.dataset.id) {
-                        const [table, column] = e.currentTarget.dataset.id.split("/");
-                        if (column) {
-                            setSelectedColumn(e.currentTarget.dataset.id);
+                            setSelectedTable(table);
                         }
-                        setSelectedTable(table);
-                    }
-                }}
-                onNodeClick={(e: any) => {
-                    if (e.currentTarget.dataset.id) {
-                        const [table, column] = e.currentTarget.dataset.id.split("/");
-                        if (column) {
-                            setSelectedColumn(e.currentTarget.dataset.id);
+                    }}
+                    onNodeClick={(e: any) => {
+                        if (e.currentTarget.dataset.id) {
+                            const [table, column] = e.currentTarget.dataset.id.split("/");
+                            if (column) {
+                                setSelectedColumn(e.currentTarget.dataset.id);
+                            }
+                            setSelectedTable(table);
                         }
-                        setSelectedTable(table);
-                    }
-                }}
-                edgeTypes={edgeTypes}
-                nodeTypes={nodeTypes}
-                fitView
-                fitViewOptions={fitViewOptions}
-                connectionMode={ConnectionMode.Loose}
-                style={{ backgroundColor: "rgb(242 242 242)", width: "calc(100% - 300px)!important" }}
-            >
-                <Controls position="bottom-right" />
-            </ReactFlow>
-        </div>
+                    }}
+                    edgeTypes={edgeTypes}
+                    nodeTypes={nodeTypes}
+                    fitView
+                    fitViewOptions={fitViewOptions}
+                    connectionMode={ConnectionMode.Loose}
+                    style={{ backgroundColor: "rgb(242 242 242)", width: "calc(100% - 300px)!important" }}
+                >
+                    <Controls position="bottom-right" />
+                </ReactFlow>
+            </div>
+        </>
     );
 }

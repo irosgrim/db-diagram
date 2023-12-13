@@ -21,13 +21,13 @@ function Column({ data }: ColumnProps) {
         <div className="column-container nodrag" onClick={onClick}>
             <Handle type="source" position={Position.Right} id="b" />
 
-            <div className="col">
+            <div className="col" style={{ fontSize: "0.75rem" }}>
                 <div style={{ position: "relative" }}>
-                    {data.primaryKey && <span style={{ position: "absolute" }}> <Icon type="key" height="12" width="6" /> </span>}
-                    <div className="col-name" style={{ marginLeft: "0.7rem" }}>{data.name}</div>
+                    {data.primaryKey && <span style={{ position: "absolute", top: "1px" }}> <Icon type="key" height="10" width="5" /> </span>}
+                    <div style={{ marginLeft: "0.7rem", fontSize: "0.75rem" }}>{data.name}</div>
                 </div>
                 {/* <input className="col-name" defaultValue={data.name} /> */}
-                <div className="col-type">{data.type}{data.nullable && "?"}</div>
+                <div className="col-type" style={{ marginLeft: "1rem" }}>{data.type}{data.nullable && "?"}</div>
             </div>
 
             <Handle type="source" position={Position.Left} id="d" />

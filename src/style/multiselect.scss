@@ -1,0 +1,29 @@
+.multi-select-dropdown {
+    &:not(:first-child) {
+        margin-top: 0.5rem;
+    }
+    .input {
+        border: 1px solid #ccc;
+        height: 30px;
+        cursor: pointer;
+    }
+}
+
+.multi-select-dropdown .dropdown-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    border: 1px solid #ccc;
+    position: absolute;
+    background-color: white;
+    z-index: 100;
+}
+
+.multi-select-dropdown .dropdown-menu li {
+    padding: 8px;
+    cursor: pointer;
+}
+
+.multi-select-dropdown .dropdown-menu li.selected {
+    background-color: #efefef;
+}

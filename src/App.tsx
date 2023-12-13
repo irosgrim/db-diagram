@@ -6,10 +6,6 @@ const App = () => {
 
   return (
     <>
-      <header className="header">
-        <h3>DB diagram</h3>
-        <span></span>
-      </header>
       <Flow />
     </>
   );

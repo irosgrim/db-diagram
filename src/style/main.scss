@@ -1,4 +1,5 @@
 .header {
+    position: relative;
     height: 40px;
     background-color: #5cc9f5;
     display: flex;
@@ -9,6 +10,20 @@
         margin-left: 1rem;
         color: #ffffff;
     }
+}
+.schema-preview {
+    position: absolute;
+    top: 30px;
+    height: auto;
+    right: 1rem;
+    z-index: 6;
+    background: #ffffff;
+    padding: 1rem;
+    border: 1px solid #ababab;
+}
+
+button {
+    cursor: pointer;
 }
 
 .db-name {
@@ -33,6 +48,18 @@
     margin: 0;
     padding: 0;
 }
+
+
+.table-props-container > summary {
+    // background-color: pink
+    &:hover {
+        background-color: #f1f1f1;
+        cursor: pointer;
+    }
+}
+// .table-props-container[open] > summary {
+//     background-color: #e0e0e0;
+// }
 
 .tables-nav li {
     padding: 0;
@@ -64,13 +91,13 @@
     border: none;
     outline: none;
     background-color: transparent;
-    &:hover {
-        background-color: #eeeeee;
-    }
+    // &:hover {
+    //     background-color: #eeeeee;
+    // }
 }
 
 .active {
-    background-color: #abece4;
+    border: 1px solid black;
 }
 
 .table-input {

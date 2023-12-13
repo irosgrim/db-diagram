@@ -39,7 +39,7 @@ const Autocomplete = ({ suggestions, value, onChange }: AutocompleteProps) => {
         if (timer) clearTimeout(timer);
         setTimer(setTimeout(() => {
             setFilteredSuggestions([]);
-        }, 3000));
+        }, 5000));
     };
 
     useEffect(() => {
