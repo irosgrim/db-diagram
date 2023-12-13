@@ -176,7 +176,7 @@ export const Flow = () => {
             id: `${currentTable.id}/col_${v4()}`,
             type: "column",
             position: { x: 0, y: (colNr * 20) + 20 },
-            data: { name: newColName, type: "varchar", primaryKey: false, nullable: false },
+            data: { name: newColName, type: "VARCHAR", primaryKey: false, nullable: false },
             parentNode: currentTable.id, extent: "parent",
             draggable: false,
             expandParent: true,
