@@ -115,7 +115,7 @@ export const Flow = () => {
         const nT = [
             {
                 id: newId,
-                data: { name: newName, nameBg: randomColor() },
+                data: { name: newName, backgroundColor: randomColor() },
                 position: { x: 10 + highestNum + 10, y: 200 + highestNum + 10 },
                 className: "light",
                 style: { backgroundColor: "#ffffff", width: "200px", padding: 0 },
@@ -316,7 +316,7 @@ export const Flow = () => {
                                         <details
                                             open={selectedTable === t.id}
                                             key={t.id}
-                                            style={{ borderLeft: `6px solid ${t.data.nameBg}`, opacity: selectedTable === t.id ? 1 : selectedTable === null ? 1 : 0.5 }}
+                                            style={{ borderLeft: `6px solid ${t.data.backgroundColor}`, opacity: selectedTable === t.id ? 1 : selectedTable === null ? 1 : 0.5 }}
                                             onToggle={(e: any) => {
                                                 if (e.target.open && selectedTable !== t.id) {
                                                     setSelectedTable(t.id);
@@ -327,11 +327,11 @@ export const Flow = () => {
                                             className="table-props-container"
                                         >
                                             <summary
-                                                style={{ display: "flex", justifyContent: "space-between", alignItems: "center", position: "relative", backgroundColor: selectedTable === t.id ? t.data.nameBg : "initial" }}
+                                                style={{ display: "flex", justifyContent: "space-between", alignItems: "center", position: "relative", backgroundColor: selectedTable === t.id ? t.data.backgroundColor : "initial" }}
                                                 className="table-props"
                                             >
                                                 <input
-                                                    style={{ color: selectedTable === t.id ? getGoodContrastColor(t.data.nameBg) : "initial" }}
+                                                    style={{ color: selectedTable === t.id ? getGoodContrastColor(t.data.backgroundColor) : "initial" }}
                                                     className="table-name-input"
                                                     type="text"
                                                     value={t.data.name}
@@ -348,11 +348,11 @@ export const Flow = () => {
                                                 <div style={{ position: "absolute", height: "100%", width: "210px", display: changingTableName === t.id ? "none" : "block" }}></div>
 
                                                 {
-                                                    changingTableName === t.id && <input type="color" style={{ height: "30px", width: "30px", border: "none" }} value={t.data.nameBg} onChange={(e) => {
+                                                    changingTableName === t.id && <input type="color" style={{ height: "30px", width: "30px", border: "none" }} value={t.data.backgroundColor} onChange={(e) => {
                                                         const value = e.target.value;
                                                         let nCopies = [...nodes];
                                                         const curr = nCopies.findIndex(x => x.id === t.id);
-                                                        nCopies[curr].data.nameBg = value;
+                                                        nCopies[curr].data.backgroundColor = value;
                                                         setNodes(nCopies);
                                                     }}
                                                         title="change table color"
