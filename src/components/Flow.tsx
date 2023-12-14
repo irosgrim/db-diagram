@@ -444,13 +444,7 @@ export const Flow = () => {
                                                                 >
                                                                     <Icon type="null" />
                                                                 </button>
-                                                                {/* <button
-                                                                    className={generateCssClass("icon-btn", { active: getProperty(c).isPrimaryKey })}
-                                                                    onClick={() => togglePrimaryKey(c)}
-                                                                    title="primary key"
-                                                                >
-                                                                    <Icon type="key" />
-                                                                </button> */}
+
                                                                 <div
                                                                     className={generateCssClass("icon-btn")}
                                                                     title="constraint"
@@ -462,7 +456,7 @@ export const Flow = () => {
                                                                             { id: "none", icon: "circle", name: "none" },
                                                                         ]}
                                                                         selected={c.data.constraint}
-                                                                        onSelectionChange={(type) => toggleConstraint(c, type)}
+                                                                        onSelectionChange={(type) => toggleConstraint(c, type as "primary_key" | "unique" | "none")}
                                                                     />
                                                                 </div>
                                                                 <button
