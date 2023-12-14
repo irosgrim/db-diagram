@@ -30,7 +30,7 @@ const defaultTable = [
         id: "table_1/col_1",
         type: "column",
         position: { x: 0, y: 20 },
-        data: { name: "id", type: "SERIAL", primaryKey: true, nullable: true, index: false },
+        data: { name: "id", type: "SERIAL", primaryKey: true, notNull: true, index: false },
         parentNode: "table_1", extent: "parent",
         draggable: false,
         expandParent: true,
@@ -48,7 +48,7 @@ const defaultTable = [
         id: "table_2/col_1",
         type: "column",
         position: { x: 0, y: 20 },
-        data: { name: "id", type: "SERIAL", primaryKey: true, nullable: true, index: false },
+        data: { name: "id", type: "SERIAL", primaryKey: true, notNull: true, index: false },
         parentNode: "table_2", extent: "parent",
         draggable: false,
         expandParent: true,
@@ -126,7 +126,7 @@ export const Flow = () => {
                 id: `table_${highestNum + 1}/col_1`,
                 type: "column",
                 position: { x: 0, y: 20 },
-                data: { name: "id", type: "serial", primaryKey: true, nullable: false, index: false },
+                data: { name: "id", type: "serial", primaryKey: true, notNull: false, index: false },
                 parentNode: newId, extent: "parent",
                 draggable: false,
                 expandParent: true,
@@ -138,7 +138,7 @@ export const Flow = () => {
 
     const getProperty = (node: any) => {
         return {
-            isNullabe: node.data.nullable,
+            isNullabe: node.data.notNull,
             isIndex: node.data.index,
             isPrimaryKey: node.data.primaryKey,
         }
@@ -176,7 +176,7 @@ export const Flow = () => {
             id: `${currentTable.id}/col_${v4()}`,
             type: "column",
             position: { x: 0, y: (colNr * 20) + 20 },
-            data: { name: newColName, type: "VARCHAR", primaryKey: false, nullable: false },
+            data: { name: newColName, type: "VARCHAR", primaryKey: false, notNull: false },
             parentNode: currentTable.id, extent: "parent",
             draggable: false,
             expandParent: true,
@@ -284,6 +284,21 @@ export const Flow = () => {
             nodes[index].data.columns = newIndexes;
         }
         setNodes(nodesCopy);
+    }
+
+    const togglePrimaryKey = (column: any) => {
+        let nodesCopy = [...nodes];
+
+        for (let i = 0; i < nodesCopy.length; i++) {
+            const currentNode = nodesCopy[i];
+            if (currentNode.parentNode === column.parentNode && currentNode.data.primaryKey === true && currentNode.id !== column.id) {
+                currentNode.data.primaryKey = false;
+            }
+            if (currentNode.id === column.id) {
+                currentNode.data.primaryKey = !currentNode.data.primaryKey;
+            }
+        }
+        setNodes(nodesCopy)
     }
 
 
@@ -397,7 +412,7 @@ export const Flow = () => {
                                                                     onClick={() => {
                                                                         let nCopies = [...nodes];
                                                                         const curr = nCopies.findIndex(x => x.id === c.id);
-                                                                        nCopies[curr].data.nullable = !nCopies[curr].data.nullable;
+                                                                        nCopies[curr].data.notNull = !nCopies[curr].data.notNull;
                                                                         setNodes(nCopies);
                                                                     }}
                                                                     title="nullable value"
@@ -406,12 +421,7 @@ export const Flow = () => {
                                                                 </button>
                                                                 <button
                                                                     className={generateCssClass("icon-btn", { active: getProperty(c).isPrimaryKey })}
-                                                                    onClick={() => {
-                                                                        let nCopies = [...nodes];
-                                                                        const curr = nCopies.findIndex(x => x.id === c.id);
-                                                                        nCopies[curr].data.primaryKey = !nCopies[curr].data.primaryKey;
-                                                                        setNodes(nCopies)
-                                                                    }}
+                                                                    onClick={() => togglePrimaryKey(c)}
                                                                     title="primary key"
                                                                 >
                                                                     <Icon type="key" />

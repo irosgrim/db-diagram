@@ -7,7 +7,7 @@ type ColumnProps = {
         name: string;
         type: string;
         primaryKey: boolean;
-        nullable: boolean;
+        notNull: boolean;
         index: boolean;
     },
 }
@@ -27,7 +27,7 @@ function Column({ data }: ColumnProps) {
                     <div style={{ marginLeft: "0.7rem", fontSize: "0.75rem" }}>{data.name}</div>
                 </div>
                 {/* <input className="col-name" defaultValue={data.name} /> */}
-                <div className="col-type" style={{ marginLeft: "1rem" }}>{data.type}{data.nullable && "?"}</div>
+                <div className="col-type" style={{ marginLeft: "1rem" }}>{data.type}{!data.notNull && "?"}</div>
             </div>
 
             <Handle type="source" position={Position.Left} id="d" />

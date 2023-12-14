@@ -16,7 +16,7 @@ export const generateSqlSchema = (nodes: any[]) =>{
                 name: node.data.name,
                 type: node.data.type,
                 primaryKey: node.data.primaryKey,
-                notNull: !node.data.nullable
+                notNull: node.data.notNull
             };
             tables[tableId].columns.push(columnData);
         } else if (node.type === "index") {
