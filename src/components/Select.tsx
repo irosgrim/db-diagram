@@ -5,30 +5,37 @@ import { Icon } from "./Icon";
 
 type SelectProps = {
     type: "single" | "multi";
-    options: { id: string; name: string }[];
-    selected?: { id: string; name: string }[];
-    onSelectionChange?: (options: { id: string; name: string }[]) => void;
+    options: { id: "primary_key" | "unique" | "none"; icon: "key" | "star" | "circle", name: string }[];
+    selected?: "primary_key" | "unique" | "none";
+    onSelectionChange?: (id: string) => void;
 }
 
-export const Select = ({ type = "single", options, selected, onSelectionChange }: SelectProps) => {
+const ICON_MAPPING: Record<"primary_key" | "unique" | "none", "key" | "star" | "circle"> = {
+    primary_key: "key",
+    unique: "star",
+    none: "circle",
+}
+
+export const Select = ({ type = "single", options, selected = "none", onSelectionChange }: SelectProps) => {
     const [isOpen, setIsOpen] = useState(false);
-    const [selectedOptions, setSelectedOptions] = useState<{ id: string; name: string }[]>(selected || []);
+    const [selectedOption, setSelectedOption] = useState<"primary_key" | "unique" | "none">(selected || "none");
 
     const dropdownRef = useRef(null);
 
     const toggleDropdown = () => setIsOpen(!isOpen);
 
-    const handleSelectOption = (option: { id: string; name: string }) => {
+    const handleSelectOption = (option: { id: "primary_key" | "unique" | "none"; icon: "key" | "star" | "circle", name: string }) => {
 
         if (type === "single") {
-            const newSelectedOptions = [option];
+            const newSelectedOption = option.id;
 
-            setSelectedOptions(newSelectedOptions);
+            setSelectedOption(newSelectedOption);
 
             if (onSelectionChange) {
-                onSelectionChange(newSelectedOptions);
+                onSelectionChange(newSelectedOption);
             }
         }
+        setIsOpen(false);
     };
 
     useEffect(() => {
@@ -50,8 +57,7 @@ export const Select = ({ type = "single", options, selected, onSelectionChange }
     return (
         <div className="multi-select-dropdown" ref={dropdownRef}>
             <div className="input" onClick={toggleDropdown}>
-                {type === "single" && selectedOptions.length ? <Icon type={selectedOptions[0].id as "key" | "star"} /> : <></>}
-                {type === "multi" && selectedOptions.map(x => x.name).join(', ')}
+                {type === "single" && selectedOption.length ? <Icon type={ICON_MAPPING[selected]} /> : <></>}
             </div>
             {isOpen && (
                 <ul className="dropdown-menu">
@@ -59,9 +65,8 @@ export const Select = ({ type = "single", options, selected, onSelectionChange }
                         <li
                             key={option.id}
                             onClick={() => handleSelectOption(option)}
-                            className={selectedOptions.find(o => o.id === option.id) ? 'selected' : ''}
                         >
-                            <Icon type={option.id as "key" | "star"} />
+                            <Icon type={option.icon} /> <span>{option.name}</span>
                         </li>
                     ))}
                 </ul>

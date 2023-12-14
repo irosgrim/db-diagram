@@ -1,6 +1,6 @@
 
 type IconProps = {
-    type: "delete" | "key" | "dots" | "edit" | "null" | "color-palette" | "star";
+    type: "delete" | "key" | "dots" | "edit" | "null" | "color-palette" | "star" | "circle";
     color?: string;
     height?: string;
     width?: string;
@@ -72,6 +72,16 @@ export const Icon = ({ type, color = "black", height, width }: IconProps) => {
                 type === "star" && (
                     <svg width={width || "16"} height={height || "15"} viewBox="0 0 16 15" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M8 1.61803L9.32058 5.68237L9.43284 6.02786H9.79611H14.0696L10.6123 8.53976L10.3184 8.75329L10.4306 9.09878L11.7512 13.1631L8.29389 10.6512L8 10.4377L7.70611 10.6512L4.24877 13.1631L5.56936 9.09878L5.68162 8.75329L5.38772 8.53976L1.93039 6.02786H6.20389H6.56716L6.67942 5.68237L8 1.61803Z" stroke={color} />
+                    </svg>
+
+                )
+            }
+
+            {
+                type === "circle" && (
+                    <svg width={width || "9"} height={height || "9"} viewBox="0 0 9 9" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="4.5" cy="4.5" r="4" stroke={color} />
+                        <circle cx="4.5" cy="4.5" r="0.5" fill={color} />
                     </svg>
 
                 )

@@ -14,6 +14,7 @@ import { generateCssClass, getGoodContrastColor, randomColor } from "../utils/st
 import { Index } from "./Index";
 import { MultiSelect } from "./MultiSelect";
 import { generateSqlSchema, postgresTypes } from "../utils/sql";
+import { Select } from "./Select";
 
 const fitViewOptions = { padding: 4 };
 const defaultTable = [
@@ -30,7 +31,7 @@ const defaultTable = [
         id: "table_1/col_1",
         type: "column",
         position: { x: 0, y: 20 },
-        data: { name: "id", type: "SERIAL", primaryKey: true, notNull: true, index: false },
+        data: { name: "id", type: "SERIAL", constraint: "primary_key", notNull: true, index: false },
         parentNode: "table_1", extent: "parent",
         draggable: false,
         expandParent: true,
@@ -48,7 +49,7 @@ const defaultTable = [
         id: "table_2/col_1",
         type: "column",
         position: { x: 0, y: 20 },
-        data: { name: "id", type: "SERIAL", primaryKey: true, notNull: true, index: false },
+        data: { name: "id", type: "SERIAL", constraint: "primary_key", notNull: true, index: false },
         parentNode: "table_2", extent: "parent",
         draggable: false,
         expandParent: true,
@@ -88,7 +89,7 @@ export const Flow = () => {
         []
     );
 
-    // useEffect(() => setSchema(generateSqlSchema(nodes)), [nodes])
+    // useEffect(() => console.log(edges), [edges])
 
     const newTable = () => {
         const allTables = nodes.filter(x => x.type === "group");
@@ -126,7 +127,7 @@ export const Flow = () => {
                 id: `table_${highestNum + 1}/col_1`,
                 type: "column",
                 position: { x: 0, y: 20 },
-                data: { name: "id", type: "serial", primaryKey: true, notNull: false, index: false },
+                data: { name: "id", type: "serial", constraint: "primary_key", notNull: false, index: false },
                 parentNode: newId, extent: "parent",
                 draggable: false,
                 expandParent: true,
@@ -138,9 +139,9 @@ export const Flow = () => {
 
     const getProperty = (node: any) => {
         return {
-            isNullabe: node.data.notNull,
+            isNotNull: node.data.notNull,
             isIndex: node.data.index,
-            isPrimaryKey: node.data.primaryKey,
+            constraint: node.data.constraint,
         }
     }
 
@@ -176,7 +177,7 @@ export const Flow = () => {
             id: `${currentTable.id}/col_${v4()}`,
             type: "column",
             position: { x: 0, y: (colNr * 20) + 20 },
-            data: { name: newColName, type: "VARCHAR", primaryKey: false, notNull: false },
+            data: { name: newColName, type: "VARCHAR", constraint: "none", notNull: false },
             parentNode: currentTable.id, extent: "parent",
             draggable: false,
             expandParent: true,
@@ -286,16 +287,16 @@ export const Flow = () => {
         setNodes(nodesCopy);
     }
 
-    const togglePrimaryKey = (column: any) => {
+    const toggleConstraint = (column: any, type: "primary_key" | "unique" | "none") => {
         let nodesCopy = [...nodes];
 
         for (let i = 0; i < nodesCopy.length; i++) {
             const currentNode = nodesCopy[i];
-            if (currentNode.parentNode === column.parentNode && currentNode.data.primaryKey === true && currentNode.id !== column.id) {
-                currentNode.data.primaryKey = false;
+            if (currentNode.parentNode === column.parentNode && type === "primary_key" && currentNode.data.constraint === "primary_key" && currentNode.id !== column.id) {
+                currentNode.data.constraint = "none";
             }
             if (currentNode.id === column.id) {
-                currentNode.data.primaryKey = !currentNode.data.primaryKey;
+                currentNode.data.constraint = type;
             }
         }
         setNodes(nodesCopy)
@@ -306,9 +307,33 @@ export const Flow = () => {
         if (schema) {
             setSchema(null);
         } else {
-            setSchema(generateSqlSchema(nodes))
+            setSchema(generateSqlSchema(nodes, edges))
         }
     }
+
+    const getEdgeName = (edge: any) => {
+        const sourceC = edge.source;
+        const targetC = edge.target;
+
+        const sourceTable = nodes.find(x => x.id === sourceC.split("/")[0]);
+        const sourceColumn = nodes.find(x => x.id === sourceC);
+
+        const targetTable = nodes.find(x => x.id === targetC.split("/")[0]);
+        const targetColumn = nodes.find(x => x.id === targetC);
+
+        const data = {
+            sourceTable: sourceTable.data.name,
+            sourceColumn: sourceColumn.data.name,
+            targetTable: targetTable.data.name,
+            targetColumn: targetColumn.data.name
+        }
+
+        return <>
+            {data.sourceColumn} to {data.targetTable}({data.targetColumn})
+
+        </>
+    }
+
     return (
         <>
             <header className="header">
@@ -408,7 +433,7 @@ export const Flow = () => {
                                                                     }}
                                                                 />
                                                                 <button
-                                                                    className={generateCssClass("icon-btn", { active: getProperty(c).isNullabe })}
+                                                                    className={generateCssClass("icon-btn", { active: !getProperty(c).isNotNull })}
                                                                     onClick={() => {
                                                                         let nCopies = [...nodes];
                                                                         const curr = nCopies.findIndex(x => x.id === c.id);
@@ -419,13 +444,27 @@ export const Flow = () => {
                                                                 >
                                                                     <Icon type="null" />
                                                                 </button>
-                                                                <button
+                                                                {/* <button
                                                                     className={generateCssClass("icon-btn", { active: getProperty(c).isPrimaryKey })}
                                                                     onClick={() => togglePrimaryKey(c)}
                                                                     title="primary key"
                                                                 >
                                                                     <Icon type="key" />
-                                                                </button>
+                                                                </button> */}
+                                                                <div
+                                                                    className={generateCssClass("icon-btn")}
+                                                                    title="constraint"
+                                                                >
+                                                                    <Select
+                                                                        type="single" options={[
+                                                                            { id: "primary_key", icon: "key", name: "primary key" },
+                                                                            { id: "unique", icon: "star", name: "unique" },
+                                                                            { id: "none", icon: "circle", name: "none" },
+                                                                        ]}
+                                                                        selected={c.data.constraint}
+                                                                        onSelectionChange={(type) => toggleConstraint(c, type)}
+                                                                    />
+                                                                </div>
                                                                 <button
                                                                     className="icon-btn"
                                                                     onClick={() => deleteColumn(t, c)}
@@ -438,6 +477,7 @@ export const Flow = () => {
                                                     ))
                                                 }
                                                 <div className="row padding-top">
+                                                    <button onClick={() => addColumn(t)}>+ add column</button>
                                                     <h5>Indexes::</h5>
                                                     {
                                                         nodes.filter(x => x.parentNode === t.id && x.type === "index").map(x => (
@@ -450,7 +490,19 @@ export const Flow = () => {
                                                         ))
                                                     }
                                                     <button onClick={() => addIndex(t)}>add index</button>
-                                                    <button onClick={() => addColumn(t)}>+ add column</button>
+                                                </div>
+                                                <div>
+                                                    <h5>Foreign Keys</h5>
+                                                    {
+                                                        edges.filter(x => {
+                                                            const [sourceTable,] = x.source.split("/");
+                                                            return sourceTable === t.id;
+                                                        }).map(x => (
+                                                            <div key={x.id}>
+                                                                {getEdgeName(x)}
+                                                            </div>
+                                                        ))
+                                                    }
                                                 </div>
                                             </ul>
                                         </details>

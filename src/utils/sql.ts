@@ -1,47 +1,73 @@
-export const generateSqlSchema = (nodes: any[]) =>{
+export const generateSqlSchema = (nodes: any, edges: any) => {
     const tables: any = {};
     const indexes: any = {};
-    // const relations: any = {};
 
-    nodes.forEach(node => {
+    // create initial structure
+    nodes.forEach((node: any) => {
         if (node.type === "group") {
             tables[node.id] = {
                 tableName: node.data.name,
                 columns: [],
-                indexes: []
+                indexes: [],
+                foreignKeys: []
             };
         } else if (node.type === "column") {
             const tableId = node.parentNode;
             const columnData = {
                 name: node.data.name,
                 type: node.data.type,
-                primaryKey: node.data.primaryKey,
+                constraint: node.data.constraint,
                 notNull: node.data.notNull
             };
             tables[tableId].columns.push(columnData);
         } else if (node.type === "index") {
             const tableId = node.parentNode;
-            if (!indexes[tableId]) {
-                indexes[tableId] = [];
-            }
+            indexes[tableId] = indexes[tableId] || [];
             indexes[tableId].push(node.data);
         }
     });
 
+    // add indexes to each table
     Object.keys(indexes).forEach(tableId => {
         if (tables[tableId]) {
             tables[tableId].indexes = indexes[tableId];
         }
     });
-    console.log({tables, indexes})
-    // Generate SQL for each table
+
+    // create foreign keys from edges
+    edges.forEach((edge: any) => {
+        const sourceC = edge.source;
+        const targetC = edge.target;
+
+        const sourceTable = nodes.find((x: any) => x.id === sourceC.split("/")[0]);
+        const sourceColumn = nodes.find((x: any) => x.id === sourceC);
+        const targetTable = nodes.find((x: any) => x.id === targetC.split("/")[0]);
+        const targetColumn = nodes.find((x: any) => x.id === targetC);
+
+        if (sourceTable && sourceColumn && targetTable && targetColumn) {
+            const fkData = {
+                sourceTable: sourceTable.data.name,
+                sourceColumn: sourceColumn.data.name,
+                targetTable: targetTable.data.name,
+                targetColumn: targetColumn.data.name
+            };
+
+            tables[sourceTable.id].foreignKeys.push(fkData);
+        }
+    });
+
+    // generate sql for each table
     const sqlStatements = Object.values(tables).map((table: any) => {
         const columnDefs = table.columns.map((column: any) => {
-            const constraints = [
-                column.primaryKey ? "PRIMARY KEY" : "",
-                column.notNull ? "NOT NULL" : ""
-            ].filter(Boolean).join(" ");
-            return `\t${column.name} ${column.type} ${constraints}`;
+            let constraint = "";
+            if (column.constraint === "primary_key") {
+                constraint = "PRIMARY KEY";
+            } else if (column.constraint === "unique") {
+                constraint = "UNIQUE";
+            }
+
+            const notNull = column.notNull ? "NOT NULL" : "";
+            return `\t${column.name} ${column.type} ${[constraint, notNull].filter(Boolean).join(" ")}`;
         });
 
         const tableStatement = `CREATE TABLE IF NOT EXISTS ${table.tableName} (\n${columnDefs.join(",\n")}\n);`;
@@ -51,11 +77,16 @@ export const generateSqlSchema = (nodes: any[]) =>{
             return `CREATE ${unique} INDEX IF NOT EXISTS ON ${table.tableName} (${index.columns.map((x: any) => x.name).join(", ")});`;
         });
 
-        return [tableStatement].concat(indexStatements).join("\n\n");
+        const foreignKeyStatements = table.foreignKeys.map((fk: any) => {
+            return `ALTER TABLE ${table.tableName} ADD FOREIGN KEY (${fk.sourceColumn}) REFERENCES ${fk.targetTable}(${fk.targetColumn});`;
+        });
+
+        return [tableStatement].concat(indexStatements).concat(foreignKeyStatements).join("\n\n");
     });
 
     return sqlStatements.join("\n\n");
-}
+};
+
 
 
 export const postgresTypes = [

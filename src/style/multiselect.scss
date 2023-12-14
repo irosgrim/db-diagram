@@ -3,9 +3,12 @@
         margin-top: 0.5rem;
     }
     .input {
-        border: 1px solid #ccc;
+        // border: 1px solid #ccc;
         height: 30px;
         cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 }
 
@@ -17,12 +20,16 @@
     position: absolute;
     background-color: white;
     z-index: 100;
+    li {
+        padding: 8px;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 0.85rem;
+    }
 }
 
-.multi-select-dropdown .dropdown-menu li {
-    padding: 8px;
-    cursor: pointer;
-}
 
 .multi-select-dropdown .dropdown-menu li.selected {
     background-color: #efefef;
