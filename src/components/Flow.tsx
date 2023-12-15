@@ -81,12 +81,22 @@ export const Flow = () => {
     );
 
     const onConnect = useCallback(
-        //@ts-ignore
-        (params) =>
-            setEdges((eds) =>
-                addEdge({ ...params, type: "floating", markerEnd: { type: MarkerType.Arrow }, data: { label: "relation", type: "foreign-key" } }, eds)
-            ),
-        []
+        (params: any) => {
+            const sourceTable = params.source.split('/')[0];
+            const targetTable = params.target.split('/')[0];
+
+            if (sourceTable !== targetTable) {
+                setEdges((eds) =>
+                    addEdge(
+                        { ...params, type: "floating", markerEnd: { type: MarkerType.Arrow }, data: { label: "relation", type: "foreign-key" } },
+                        eds
+                    )
+                );
+            } else {
+                return;
+            }
+        },
+        [setEdges]
     );
 
     // useEffect(() => console.log(edges), [edges])
