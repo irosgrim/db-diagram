@@ -1,5 +1,6 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import "../style/multiselect.scss"
+import { useOnClickOutside } from '../hooks/onClickOutside';
 
 type MultiSelectProps = {
     options: { id: string; name: string }[];
@@ -26,21 +27,7 @@ export const MultiSelect = ({ options, selected = [], onSelectionChange }: Multi
         }
     };
 
-    useEffect(() => {
-        const handleClickOutside = (event: any) => {
-            //@ts-ignore
-            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-                setIsOpen(false);
-            }
-        };
-
-        document.addEventListener('mousedown', handleClickOutside);
-
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-        };
-    }, []);
-
+    useOnClickOutside(dropdownRef, () => setIsOpen(false))
 
     return (
         <div className="multi-select-dropdown" ref={dropdownRef}>

@@ -1,5 +1,6 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { Icon } from "./Icon";
+import { useOnClickOutside } from "../hooks/onClickOutside";
 
 
 
@@ -38,20 +39,7 @@ export const Select = ({ type = "single", options, selected = "none", onSelectio
         setIsOpen(false);
     };
 
-    useEffect(() => {
-        const handleClickOutside = (event: any) => {
-            //@ts-ignore
-            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-                setIsOpen(false);
-            }
-        };
-
-        document.addEventListener('mousedown', handleClickOutside);
-
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-        };
-    }, []);
+    useOnClickOutside(dropdownRef, () => setIsOpen(false));
 
 
     return (

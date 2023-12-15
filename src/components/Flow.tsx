@@ -142,7 +142,7 @@ export const Flow = () => {
                 id: `table_${highestNum + 1}/col_1`,
                 type: "column",
                 position: { x: 0, y: 20 },
-                data: { name: "id", type: "serial", constraint: "primary_key", notNull: false, index: false },
+                data: { name: "id", type: "SERIAL", constraint: "primary_key", notNull: true, index: false },
                 parentNode: newId, extent: "parent",
                 draggable: false,
                 expandParent: true,
