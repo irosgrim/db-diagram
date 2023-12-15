@@ -371,6 +371,44 @@ export const Flow = () => {
         </>
     }
 
+    const handleDragStart = (e: any, node: any) => {
+        const nodeIndex = nodes.findIndex(x => x.id === node.id);
+        e.dataTransfer.setData("text/plain", nodeIndex);
+    };
+
+    const handleDrop = (e: any, node: any) => {
+        e.preventDefault();
+
+        const nodeIndex = nodes.findIndex(x => x.id === node.id);
+        const draggedPosition = parseInt(e.dataTransfer.getData("text/plain"), 10);
+        e.dataTransfer.clearData();
+
+        // Assuming the parent table ID is stored in a property like `parentNode`
+        const parentTableId = node.parentNode;
+
+        let reorderedNodes = [...nodes];
+
+        // remove the original
+        const [draggedItem] = reorderedNodes.splice(draggedPosition, 1);
+        // reinsert at the new index
+        reorderedNodes.splice(nodeIndex, 0, draggedItem);
+
+        reorderedNodes = reorderedNodes.map((n, index) => {
+            if (n.type !== "group" && n.parentNode === parentTableId) {
+                n.position.y = (index * 20);
+            }
+            return n;
+        });
+
+        setNodes(reorderedNodes);
+    };
+
+
+    const handleDragOver = (e: any) => {
+        e.preventDefault(); // Necessary for the onDrop event to fire
+    };
+
+
     return (
         <>
             <header className="header">
@@ -387,9 +425,9 @@ export const Flow = () => {
                     <button className="new-btn" onClick={newTable}>+ New Table</button>
                     <nav>
                         <ul className="tables-nav">
-                            <li>
-                                {
-                                    nodes.filter(n => n.type === "group").map(t => (
+                            {
+                                nodes.filter(n => n.type === "group").map(t => (
+                                    <li key={t.id}>
                                         <details
                                             open={selectedTable === t.id}
                                             key={t.id}
@@ -446,8 +484,15 @@ export const Flow = () => {
                                             </summary>
                                             <ul className="table-props">
                                                 {
-                                                    nodes.filter(n => n.parentNode === t.id && n.type === "column").map(c => (
-                                                        <li className="border-bottom" key={c.id}>
+                                                    nodes.filter(n => n.parentNode === t.id && n.type === "column").map((c, i: number) => (
+                                                        <li
+                                                            className="border-bottom"
+                                                            key={c.id}
+                                                            onDragStart={(e) => handleDragStart(e, c)}
+                                                            onDrop={(e) => handleDrop(e, c)}
+                                                            onDragOver={handleDragOver}
+                                                            draggable
+                                                        >
                                                             <div className="row border-bottom">
                                                                 <input
                                                                     className="table-input"
@@ -537,9 +582,9 @@ export const Flow = () => {
                                                 </div>
                                             </ul>
                                         </details>
-                                    ))
-                                }
-                            </li>
+                                    </li>
+                                ))
+                            }
                         </ul>
                     </nav>
                 </aside>

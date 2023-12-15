@@ -49,6 +49,11 @@ button {
     padding: 0;
 }
 
+.table-props li {
+    &[draggable="true"] {
+        cursor: move;
+    }
+}
 
 .table-props-container > summary {
     // background-color: pink

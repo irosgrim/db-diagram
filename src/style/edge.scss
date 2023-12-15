@@ -6,14 +6,19 @@
 }
 
 .flow .react-flow__handle {
-  width: 8px;
-  height: 8px;
-  background-color: #c2c2c2;
+  background-color: #bcc1c2;
+  height: 100%;
+  width: 6px;
+  border-radius: 1px;
 }
 
-/* .flow .react-flow__handle-left {
-  left: -15px;
-} */
+.flow .react-flow__handle-left {
+  left: -3px;
+}
+
+.flow .react-flow__handle-right {
+  right: -3px;
+}
 
 
 .flow .react-flow__node-custom {
