@@ -7,6 +7,7 @@ import Column from "./Column";
 import { v4 } from "uuid";
 
 import "../style/table.scss";
+import "../style/modal.scss";
 import { Table } from "./Table";
 import Autocomplete from "./Autocomplete";
 import { Icon } from "./Icon";
@@ -17,43 +18,43 @@ import { generateSqlSchema, postgresTypes } from "../utils/sql";
 import { Select } from "./Select";
 
 const fitViewOptions = { padding: 4 };
-const defaultTable = [
-    {
-        id: "table_1",
-        data: { name: "table_1", backgroundColor: "#f78ae0" },
-        position: { x: 10, y: 200 },
-        className: "light",
-        style: { backgroundColor: "#ffffff", minWidth: "200px", padding: 0 },
-        resizing: true,
-        type: "group",
-    },
-    {
-        id: "table_1/col_1",
-        type: "column",
-        position: { x: 0, y: 20 },
-        data: { name: "id", type: "SERIAL", constraint: "primary_key", notNull: true, index: false },
-        parentNode: "table_1", extent: "parent",
-        draggable: false,
-        expandParent: true,
-    },
-    {
-        id: "table_2",
-        data: { name: "table_2", backgroundColor: "#6638f0" },
-        position: { x: 100, y: 250 },
-        className: "light",
-        style: { backgroundColor: "#ffffff", minWidth: "200px", padding: 0 },
-        resizing: true,
-        type: "group",
-    },
-    {
-        id: "table_2/col_1",
-        type: "column",
-        position: { x: 0, y: 20 },
-        data: { name: "id", type: "SERIAL", constraint: "primary_key", notNull: true, index: false },
-        parentNode: "table_2", extent: "parent",
-        draggable: false,
-        expandParent: true,
-    },
+const defaultTable: any = [
+    // {
+    //     id: "table_1",
+    //     data: { name: "table_1", backgroundColor: "#f78ae0" },
+    //     position: { x: 10, y: 200 },
+    //     className: "light",
+    //     style: { backgroundColor: "#ffffff", minWidth: "200px", padding: 0 },
+    //     resizing: true,
+    //     type: "group",
+    // },
+    // {
+    //     id: "table_1/col_1",
+    //     type: "column",
+    //     position: { x: 0, y: 20 },
+    //     data: { name: "id", type: "SERIAL", constraint: "primary_key", notNull: true, index: false },
+    //     parentNode: "table_1", extent: "parent",
+    //     draggable: false,
+    //     expandParent: true,
+    // },
+    // {
+    //     id: "table_2",
+    //     data: { name: "table_2", backgroundColor: "#6638f0" },
+    //     position: { x: 100, y: 250 },
+    //     className: "light",
+    //     style: { backgroundColor: "#ffffff", minWidth: "200px", padding: 0 },
+    //     resizing: true,
+    //     type: "group",
+    // },
+    // {
+    //     id: "table_2/col_1",
+    //     type: "column",
+    //     position: { x: 0, y: 20 },
+    //     data: { name: "id", type: "SERIAL", constraint: "primary_key", notNull: true, index: false },
+    //     parentNode: "table_2", extent: "parent",
+    //     draggable: false,
+    //     expandParent: true,
+    // },
 ];
 
 const nodeTypes = { column: Column, group: Table, index: Index, separator: ({ data }: any) => <div style={{ marginLeft: "1rem" }}>{data.label}</div> };
@@ -405,12 +406,231 @@ export const Flow = () => {
 
 
     const handleDragOver = (e: any) => {
-        e.preventDefault(); // Necessary for the onDrop event to fire
+        e.preventDefault();
+    };
+
+
+    const [firstTable, setFirstTable] = useState<any[] | null>([
+        {
+            id: "table_1",
+            data: { name: "table_1", backgroundColor: "#f78ae0" },
+            position: { x: 10, y: 200 },
+            className: "light",
+            style: { backgroundColor: "#ffffff", minWidth: "200px", padding: 0 },
+            resizing: true,
+            type: "group",
+        },
+        {
+            id: "table_1/col_1",
+            type: "column",
+            position: { x: 0, y: 20 },
+            data: { name: "id", type: "SERIAL", constraint: "primary_key", notNull: true, index: false },
+            parentNode: "table_1", extent: "parent",
+            draggable: false,
+            expandParent: true,
+        },
+    ]);
+
+
+    const firstDragStart = (e: any, node: any) => {
+        const nodeIndex = firstTable!.findIndex(x => x.id === node.id);
+        e.dataTransfer.setData("text/plain", nodeIndex);
+    };
+
+    const firstDrop = (e: any, node: any) => {
+        e.preventDefault();
+
+        const nodeIndex = firstTable!.findIndex(x => x.id === node.id);
+        const draggedPosition = parseInt(e.dataTransfer.getData("text/plain"), 10);
+        e.dataTransfer.clearData();
+
+        // Assuming the parent table ID is stored in a property like `parentNode`
+        const parentTableId = node.parentNode;
+
+        let reorderedNodes = [...firstTable!];
+
+        // remove the original
+        const [draggedItem] = reorderedNodes.splice(draggedPosition, 1);
+        // reinsert at the new index
+        reorderedNodes.splice(nodeIndex, 0, draggedItem);
+
+        reorderedNodes = reorderedNodes.map((n, index) => {
+            if (n.type !== "group" && n.parentNode === parentTableId) {
+                n.position.y = (index * 20);
+            }
+            return n;
+        });
+
+        setFirstTable(reorderedNodes);
+    };
+
+
+    const firstDragOver = (e: any) => {
+        e.preventDefault();
     };
 
 
     return (
         <>
+            {
+                firstTable && (
+                    <div className="modal">
+                        <div className="modal-body">
+                            <h4 className="heading">Create table:</h4>
+                            <section>
+                                <div className="new-table-props">
+                                    <input
+                                        placeholder="table name"
+                                        className="table-name-input"
+                                        type="text"
+                                        maxLength={20}
+                                        defaultValue={firstTable[0].data.name}
+                                        onChange={(e) => {
+                                            const firstTableCopy = [...firstTable];
+                                            firstTableCopy[0].data.name = e.target.value;
+                                            setFirstTable(firstTableCopy);
+                                        }}
+                                    />
+
+                                    <input
+                                        type="color"
+                                        style={{ height: "30px", width: "30px", border: "none" }}
+                                        onBlur={() => true}
+                                        onChange={(e) => {
+                                            const firstTableCopy = [...firstTable];
+                                            firstTableCopy[0].data.backgroundColor = e.target.value;
+                                            setFirstTable(firstTableCopy);
+                                        }}
+                                        value={firstTable[0].data.backgroundColor}
+                                        title="change table color"
+                                    />
+                                </div>
+                                <h4 className="heading">Columns:</h4>
+                                <ul className="new-columns">
+                                    {
+                                        firstTable.filter(x => x.type === "column").map(col => (
+                                            <li
+                                                key={col.id}
+                                                draggable
+                                                onDragStart={(e) => firstDragStart(e, col)}
+                                                onDrop={(e) => firstDrop(e, col)}
+                                                onDragOver={firstDragOver}
+                                            >
+                                                <div className="table-col-props-wrapper">
+                                                    <div className="table-name-input-wrapper">
+                                                        <span>
+                                                            <Icon type="dots-grid" height="20" width="14" color="#ababab" />
+                                                        </span>
+                                                        <input
+                                                            placeholder="column name"
+                                                            className="table-name-input"
+                                                            type="text"
+                                                            maxLength={30}
+                                                            defaultValue={col.data.name}
+                                                            onChange={(e) => {
+                                                                const firstTableCopy = [...firstTable];
+                                                                const currentNodeIndex = firstTableCopy.findIndex(x => x.id === col.id);
+                                                                firstTableCopy[currentNodeIndex].data.name = e.target.value;
+                                                                setFirstTable(firstTableCopy);
+                                                            }}
+                                                        />
+                                                    </div>
+                                                    <Autocomplete
+                                                        suggestions={postgresTypes}
+                                                        value={col.data.type}
+                                                        onChange={(val) => {
+                                                            const firstTableCopy = [...firstTable];
+                                                            const currentNodeIndex = firstTableCopy.findIndex(x => x.id === col.id);
+                                                            firstTableCopy[currentNodeIndex].data.type = val;
+                                                            setFirstTable(firstTableCopy);
+                                                        }}
+                                                    />
+                                                    <button
+                                                        className={generateCssClass("icon-btn", { active: !col.data.notNull })}
+                                                        onClick={() => {
+                                                            const firstTableCopy = [...firstTable];
+                                                            const currentNodeIndex = firstTableCopy.findIndex(x => x.id === col.id);
+                                                            firstTableCopy[currentNodeIndex].data.notNull = !firstTableCopy[currentNodeIndex].data.notNull;
+                                                            setFirstTable(firstTableCopy);
+                                                        }}
+                                                        title="nullable value"
+                                                    >
+                                                        <Icon type={"null"} />
+                                                    </button>
+
+                                                    <div
+                                                        className={generateCssClass("icon-btn")}
+                                                        title={col.data.constraint}
+                                                    >
+                                                        <Select
+                                                            type="single" options={[
+                                                                { id: "primary_key", icon: "key", name: "primary key" },
+                                                                { id: "unique", icon: "star", name: "unique" },
+                                                                { id: "none", icon: "circle", name: "none" },
+                                                            ]}
+                                                            selected={col.data.constraint}
+                                                            onSelectionChange={(val) => {
+                                                                const firstTableCopy = [...firstTable];
+                                                                const currentNodeIndex = firstTableCopy.findIndex(x => x.id === col.id);
+                                                                firstTableCopy[currentNodeIndex].data.constraint = val;
+                                                                setFirstTable(firstTableCopy);
+                                                            }}
+                                                        />
+                                                    </div>
+                                                </div>
+                                                <button
+                                                    className="icon-btn"
+                                                    title="delete column"
+                                                    onClick={() => {
+                                                        const firstTableCopy = [...firstTable];
+                                                        const currentNodeIndex = firstTableCopy.findIndex(x => x.id === col.id);
+                                                        firstTableCopy.splice(currentNodeIndex, 1);
+                                                        setFirstTable(firstTableCopy);
+                                                    }}
+                                                >
+                                                    <Icon type="delete" />
+                                                </button>
+                                            </li>
+                                        ))
+                                    }
+
+                                </ul>
+                                <div className="new-column-wrapper">
+                                    <button type="button" onClick={() => {
+                                        const tableId = firstTable[0].id;
+                                        const colId = `${tableId}/${v4()}`;
+                                        const n = firstTable.reduce((acc, curr) => {
+                                            if (curr.type === "column") {
+                                                acc += 1;
+                                            }
+                                            return acc;
+                                        }, 0);
+                                        const colTemplate = {
+                                            id: colId,
+                                            type: "column",
+                                            position: { x: 0, y: 20 + (n * 20) },
+                                            data: { name: "new_column_" + n, type: "VARCHAR(30)", constraint: "none", notNull: false, index: false },
+                                            parentNode: tableId, extent: "parent",
+                                            draggable: false,
+                                            expandParent: true,
+                                        };
+                                        setFirstTable([...firstTable, colTemplate])
+                                    }}>+ add column</button>
+                                </div>
+                            </section>
+                            <footer className="modal-footer">
+                                <button onClick={() => {
+                                    setNodes(firstTable);
+                                    setFirstTable(null);
+                                }}>
+                                    OK
+                                </button>
+                                <button type="button" onClick={() => setFirstTable(null)}>Cancel</button>
+                            </footer>
+                        </div>
+                    </div>
+                )
+            }
             <header className="header">
                 <h3>DB diagram</h3>
                 <button onClick={() => showDbSchema()}>show db schema</button>
@@ -446,9 +666,10 @@ export const Flow = () => {
                                                 className="table-props"
                                             >
                                                 <input
-                                                    style={{ color: selectedTable === t.id ? getGoodContrastColor(t.data.backgroundColor) : "initial" }}
+                                                    style={{ color: changingTableName !== t.id ? getGoodContrastColor(t.data.backgroundColor) : "initial" }}
                                                     className="table-name-input"
                                                     type="text"
+                                                    maxLength={20}
                                                     value={t.data.name}
                                                     onChange={(e) => {
                                                         const value = e.target.value;
@@ -463,15 +684,30 @@ export const Flow = () => {
                                                 <div style={{ position: "absolute", height: "100%", width: "210px", display: changingTableName === t.id ? "none" : "block" }}></div>
 
                                                 {
-                                                    changingTableName === t.id && <input type="color" style={{ height: "30px", width: "30px", border: "none" }} value={t.data.backgroundColor} onChange={(e) => {
-                                                        const value = e.target.value;
-                                                        let nCopies = [...nodes];
-                                                        const curr = nCopies.findIndex(x => x.id === t.id);
-                                                        nCopies[curr].data.backgroundColor = value;
-                                                        setNodes(nCopies);
-                                                    }}
-                                                        title="change table color"
-                                                    />
+                                                    changingTableName === t.id && (
+                                                        <>
+                                                            <button
+                                                                style={{ backgroundColor: "#ffffff", border: "1px solid #000000", height: "22px", width: "22px" }}
+                                                                onClick={() => setChangingTableName(null)}
+                                                            >
+                                                                <Icon type="check" />
+                                                            </button>
+                                                            <input
+                                                                type="color"
+                                                                style={{ height: "30px", width: "30px", border: "none" }}
+                                                                value={t.data.backgroundColor}
+                                                                onBlur={() => setChangingTableName(null)}
+                                                                onChange={(e) => {
+                                                                    const value = e.target.value;
+                                                                    let nCopies = [...nodes];
+                                                                    const curr = nCopies.findIndex(x => x.id === t.id);
+                                                                    nCopies[curr].data.backgroundColor = value;
+                                                                    setNodes(nCopies);
+                                                                }}
+                                                                title="change table color"
+                                                            />
+                                                        </>
+                                                    )
                                                 }
                                                 <button
                                                     className={generateCssClass("icon-btn", { active: changingTableName === t.id })}
@@ -479,12 +715,12 @@ export const Flow = () => {
                                                     onClick={() => setChangingTableName(x => (x === null ? t.id : null))}
                                                     title="edit table name and color"
                                                 >
-                                                    <Icon type="edit" color={selectedTable === t.id ? getGoodContrastColor(t.data.nameBg) : "#000000"} />
+                                                    <Icon type="edit" color={selectedTable === t.id ? getGoodContrastColor(t.data.backgroundColor) : "#000000"} />
                                                 </button>
                                             </summary>
                                             <ul className="table-props">
                                                 {
-                                                    nodes.filter(n => n.parentNode === t.id && n.type === "column").map((c, i: number) => (
+                                                    nodes.filter(n => n.parentNode === t.id && n.type === "column").map((c) => (
                                                         <li
                                                             className="border-bottom"
                                                             key={c.id}
@@ -497,6 +733,7 @@ export const Flow = () => {
                                                                 <input
                                                                     className="table-input"
                                                                     type="text"
+                                                                    maxLength={30}
                                                                     value={c.data.name}
                                                                     onChange={(e) => {
                                                                         c.data.name = e.target.value;

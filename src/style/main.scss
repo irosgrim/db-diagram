@@ -51,7 +51,7 @@ button {
 
 .table-props li {
     &[draggable="true"] {
-        cursor: move;
+        cursor: grab;
     }
 }
 
@@ -112,10 +112,13 @@ button {
 }
 
 .table-name-input {
-    background-color: transparent;
-    border: 1px solid #ababab;
+    position: relative;
+    background-color: #ffffff;
+    border: 1px solid #3a3a3a;
+    border-radius: 3px;
     font-size: 1rem;
     &:disabled {
         border: none;
+        background-color: transparent;
     }
 }

@@ -1,0 +1,77 @@
+.modal {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(0,0,0,0.3);
+    bottom: 0;
+    z-index: 10;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    input{
+        height: 30px;
+    }
+}
+
+.modal-body {
+    background-color: #ffffff;
+    border-radius: 5px;
+    min-width: 400px;
+    max-height: 600;
+    padding: 1rem;
+    section {
+        margin-bottom: 1rem;
+    }
+    
+}
+
+.new-columns {
+    margin: 0;
+    padding: 0;
+    max-height: 450px;
+    overflow-y: auto;
+    li {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        &[draggable="true"] {
+            cursor: grab;
+        }
+        &:not(:first-child) {
+            margin-top: 0.5rem;
+        }
+    }
+}
+
+.new-table-props {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #ababab;
+}
+
+.new-column-wrapper {
+    display: flex;
+    justify-content: end;
+    margin-top: 1rem;
+}
+.table-name-input-wrapper {
+    display: flex;
+    align-items: center;
+    position: relative;
+    padding-left: 1rem;
+    span {
+        position: absolute;
+        left: 0;
+        top: 6px;
+    }
+}
+
+.table-col-props-wrapper {
+    display: flex;
+
+}
