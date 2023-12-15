@@ -19,7 +19,7 @@ function Column({ data }: ColumnProps) {
 
     return (
         <div className="column-container nodrag" onClick={onClick}>
-            <Handle type="source" position={Position.Right} id="b" />
+            <Handle type="source" position={Position.Right} id="right" />
 
             <div className="col" style={{ fontSize: "0.75rem" }}>
                 <div style={{ position: "relative" }}>
@@ -31,7 +31,7 @@ function Column({ data }: ColumnProps) {
                 <div className="col-type" style={{ marginLeft: "1rem" }}>{data.type}{!data.notNull && "?"}</div>
             </div>
 
-            <Handle type="source" position={Position.Left} id="d" />
+            <Handle type="source" position={Position.Left} id="left" />
         </div>
     );
 }

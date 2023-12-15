@@ -82,10 +82,14 @@ export const Flow = () => {
 
     const onConnect = useCallback(
         (params: any) => {
-            const sourceTable = params.source.split('/')[0];
-            const targetTable = params.target.split('/')[0];
+            const edgeExists = edges.some(edge =>
+                edge.source === params.source &&
+                edge.target === params.target &&
+                edge.sourceHandle === params.sourceHandle &&
+                edge.targetHandle === params.targetHandle
+            );
 
-            if (sourceTable !== targetTable) {
+            if (!edgeExists) {
                 setEdges((eds) =>
                     addEdge(
                         { ...params, type: "floating", markerEnd: { type: MarkerType.Arrow }, data: { label: "relation", type: "foreign-key" } },
@@ -93,11 +97,12 @@ export const Flow = () => {
                     )
                 );
             } else {
-                return;
+                console.log('This edge already exists.');
             }
         },
-        [setEdges]
+        [edges, setEdges]
     );
+
 
     // useEffect(() => console.log(edges), [edges])
 
@@ -198,30 +203,52 @@ export const Flow = () => {
         setNodes(nodesCopy)
     }
 
-    const deleteColumn = (currentTable: any, currentColumn: any) => {
+    const deleteNodes = (nodesToDelete: any[]) => {
+        let nodesCopy = [...nodes];
+        let edgesCopy = [...edges];
 
-        const curr = nodes.findIndex(x => x.id === currentColumn.id);
-        let nCopies = [...nodes];
-        nCopies.splice(curr, 1);
+        for (const nodeToDelete of nodesToDelete) {
+            // getthe parent table of the node
+            const parentTableId = nodeToDelete.parentNode;
+            const parentTable = nodesCopy.find(node => node.id === parentTableId);
 
-        const cols = nCopies.filter(xx => xx.type !== "group" && xx.parentNode === currentTable.id);
-
-        let cur = -1;
-        const newCopies = nCopies.map((y) => {
-            if (y.type !== "group" && y.parentNode === currentTable.id) {
-                cur += 1;
-                return { ...y, position: { x: 0, y: (cur * 20) + 20 } }
-            }
-            if (y.type === "group" && y.id === currentTable.id) {
-                const d = { ...y, data: { ...y.data, height: 20 * cols.length }, style: { ...y.style, height: (20 * cols.length) + 20 } };
-                return d;
+            if (nodeToDelete.type === "group") {
+                // delete table and nodes, edges associated with table
+                nodesCopy = nodesCopy.filter(node => node.id !== nodeToDelete.id && node.parentNode !== nodeToDelete.id);
+                edgesCopy = edgesCopy.filter(edge => edge.source.split('/')[0] !== nodeToDelete.id && edge.target.split('/')[0] !== nodeToDelete.id);
             } else {
-                return y;
-            }
-        });
+                // delete  column
+                nodesCopy = nodesCopy.filter(node => node.id !== nodeToDelete.id);
 
-        setNodes(newCopies);
-    }
+                // delete edges connected to this column
+                edgesCopy = edgesCopy.filter(edge => edge.source !== nodeToDelete.id && edge.target !== nodeToDelete.id);
+
+                if (parentTable) {
+                    // update positions of remaining columns and resize the table
+                    const remainingColumns = nodesCopy.filter(node => node.parentNode === parentTableId && node.type !== 'group');
+                    let yPos = 20; // initial Y position for the first column
+
+                    nodesCopy = nodesCopy.map(node => {
+                        if (node.parentNode === parentTableId && node.type !== 'group') {
+                            const updatedNode = { ...node, position: { x: 0, y: yPos } };
+                            yPos += 20; // increment Y position for the next column
+                            return updatedNode;
+                        }
+                        return node;
+                    });
+
+                    // update the table size
+                    const updatedTable = { ...parentTable, data: { ...parentTable.data, height: 20 * remainingColumns.length }, style: { ...parentTable.style, height: (20 * remainingColumns.length) + 20 } };
+                    nodesCopy = nodesCopy.map(node => node.id === parentTableId ? updatedTable : node);
+                }
+            }
+        }
+
+        // Update the state
+        setNodes(nodesCopy);
+        setEdges(edgesCopy);
+    };
+
 
     const addIndex = (currentTable: any) => {
         const nodesCopy = [...nodes];
@@ -471,7 +498,7 @@ export const Flow = () => {
                                                                 </div>
                                                                 <button
                                                                     className="icon-btn"
-                                                                    onClick={() => deleteColumn(t, c)}
+                                                                    onClick={() => deleteNodes([c])}
                                                                     title="delete column"
                                                                 >
                                                                     <Icon type="delete" />
@@ -522,6 +549,7 @@ export const Flow = () => {
                     onNodesChange={onNodesChange}
                     onEdgesChange={onEdgesChange}
                     onConnect={onConnect}
+                    onNodesDelete={deleteNodes}
                     onNodeDragStart={(e: any) => {
                         if (e.currentTarget.dataset.id) {
                             const [table, column] = e.currentTarget.dataset.id.split("/");
