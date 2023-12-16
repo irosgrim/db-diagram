@@ -24,7 +24,18 @@
     section {
         margin-bottom: 1rem;
     }
-    
+}
+
+.heading-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-footer {
+    display: flex;
+    // justify-content: space-between;
+    align-items: center;
 }
 
 .new-columns {

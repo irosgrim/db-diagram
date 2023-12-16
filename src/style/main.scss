@@ -1,6 +1,8 @@
+@import "./vars";
+
 .header {
     position: relative;
-    height: 40px;
+    height: $header-height;
     background-color: #5cc9f5;
     display: flex;
     justify-content: space-between;
@@ -11,6 +13,30 @@
         color: #ffffff;
     }
 }
+
+.aside {
+    position: relative;
+    .hide-btn {
+        position: absolute;
+        z-index: 11;
+        left: 300px;
+    }
+    .sidebar-content {
+        background-color: rgb(255, 255, 255);
+        width: 300px;
+        height: 100%;
+        border-right: 1px solid rgb(220, 220, 220);
+        position: absolute;
+        top: 0;
+        z-index: 10;
+        overflow-y: auto;
+    }
+    &.hidden {
+        left: -300px;
+    }
+}
+
+
 .schema-preview {
     position: absolute;
     top: 30px;
@@ -20,6 +46,8 @@
     background: #ffffff;
     padding: 1rem;
     border: 1px solid #ababab;
+    max-height: 600px;
+    overflow: auto;
 }
 
 button {
@@ -102,7 +130,7 @@ button {
 }
 
 .active {
-    border: 1px solid black;
+    background-color: #bddbf6;
 }
 
 .table-input {
