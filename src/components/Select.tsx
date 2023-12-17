@@ -6,13 +6,13 @@ import { useOnClickOutside } from "../hooks/onClickOutside";
 
 type SelectProps = {
     type: "single" | "multi";
-    options: { id: "primary_key" | "unique" | "none"; icon: "key" | "star" | "circle", name: string }[];
+    options: { id: "primary_key" | "unique" | "none"; icon: "flag" | "star" | "circle", name: string }[];
     selected?: "primary_key" | "unique" | "none";
     onSelectionChange?: (id: string) => void;
 }
 
-const ICON_MAPPING: Record<"primary_key" | "unique" | "none", "key" | "star" | "circle"> = {
-    primary_key: "key",
+const ICON_MAPPING: Record<"primary_key" | "unique" | "none", "flag" | "star" | "circle"> = {
+    primary_key: "flag",
     unique: "star",
     none: "circle",
 }
@@ -25,7 +25,7 @@ export const Select = ({ type = "single", options, selected = "none", onSelectio
 
     const toggleDropdown = () => setIsOpen(!isOpen);
 
-    const handleSelectOption = (option: { id: "primary_key" | "unique" | "none"; icon: "key" | "star" | "circle", name: string }) => {
+    const handleSelectOption = (option: { id: "primary_key" | "unique" | "none"; icon: "flag" | "star" | "circle", name: string }) => {
 
         if (type === "single") {
             const newSelectedOption = option.id;

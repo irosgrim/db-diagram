@@ -13,15 +13,14 @@ import Autocomplete from "./Autocomplete";
 import { Icon } from "./Icon";
 import { generateCssClass, getGoodContrastColor, randomColor } from "../utils/styling";
 import { Index } from "./Index";
-import { MultiSelect } from "./MultiSelect";
 import { generateSqlSchema, postgresTypes } from "../utils/sql";
 import { Select } from "./Select";
 import { sampleEdges, sampleNodes } from "./sample";
-import { edgeOptions } from "../state/globalState";
+import { edgeOptions, state } from "../state/globalState";
 import { useOnClickOutside } from "../hooks/onClickOutside";
+import { TableOptions } from "./TableOptions";
 
 const fitViewOptions = { padding: 4 };
-const defaultTable: any = [];
 
 const nodeTypes = { column: Column, group: Table, index: Index, separator: ({ data }: any) => <div style={{ marginLeft: "1rem" }}>{data.label}</div> };
 
@@ -34,8 +33,7 @@ const initialEdges: Edge<any>[] = [];
 
 export const Flow = () => {
 
-    const [nodes, setNodes] = useState<any[]>([...defaultTable]);
-    const [edges, setEdges, onEdgesChange] = useEdgesState<any[]>(initialEdges);
+    const [, , onEdgesChange] = useEdgesState<any[]>(initialEdges);
     const [selectedTable, setSelectedTable] = useState<string | null>(null);
     const [, setSelectedColumn] = useState<string | null>(null);
     const [changingTableName, setChangingTableName] = useState<string | null>(null);
@@ -47,14 +45,15 @@ export const Flow = () => {
 
     const onNodesChange = useCallback(
         (changes: any) => {
-            return setNodes((nds) => applyNodeChanges(changes, nds))
+            return state.nodes$ = applyNodeChanges(changes, state.nodes$);
+            // return setNodes((nds) => applyNodeChanges(changes, nds))
         },
-        [setNodes]
+        [state.nodes$]
     );
 
     const onConnect = useCallback(
         (params: any) => {
-            const edgeExists = edges.some(edge =>
+            const edgeExists = state.edges$.some(edge =>
                 edge.source === params.source &&
                 edge.target === params.target &&
                 edge.sourceHandle === params.sourceHandle &&
@@ -62,23 +61,21 @@ export const Flow = () => {
             );
 
             if (!edgeExists) {
-                setEdges((eds) =>
-                    addEdge(
-                        { ...params, type: "floating", markerEnd: { type: MarkerType.Arrow }, data: { label: "relation", type: "foreign-key" } },
-                        eds
-                    )
+                state.edges$ = addEdge(
+                    { ...params, type: "floating", markerEnd: { type: MarkerType.Arrow }, data: { label: "relation", type: "foreign-key" } },
+                    state.edges$
                 );
             } else {
                 console.log("This edge already exists.");
             }
         },
-        [edges, setEdges]
+        [state.edges$]
     );
 
     // useEffect(() => console.log({ edges, nodes }), [edges, nodes])
 
     const newTable = () => {
-        const allTables = nodes.filter(x => x.type === "group");
+        const allTables = state.nodes$.filter(x => x.type === "group");
         let highestNum = allTables.map(x => {
             const [, n] = x.id.split("_");
             return +n;
@@ -120,7 +117,7 @@ export const Flow = () => {
             },
         ];
 
-        setNodes(oldNodes => [...oldNodes, ...nT]);
+        state.nodes$ = [...state.nodes$, ...nT];
     }
 
     const getProperty = (node: any) => {
@@ -132,7 +129,7 @@ export const Flow = () => {
     }
 
     const addColumn = (currentTable: any) => {
-        const nodesCopy = [...nodes];
+        const nodesCopy = [...state.nodes$];
         const { id } = currentTable;
         let lastColumnIndex = 0;
         let colNr = 0;
@@ -171,12 +168,13 @@ export const Flow = () => {
 
         nodesCopy.splice(lastColumnIndex + 1, 0, col);
 
-        setNodes(nodesCopy)
+        // setNodes(nodesCopy)
+        state.nodes$ = [...nodesCopy];
     }
 
     const deleteNodes = (nodesToDelete: any[]) => {
-        let nodesCopy = [...nodes];
-        let edgesCopy = [...edges];
+        let nodesCopy = [...state.nodes$];
+        let edgesCopy = [...state.edges$];
 
         for (const nodeToDelete of nodesToDelete) {
             // getthe parent table of the node
@@ -216,87 +214,12 @@ export const Flow = () => {
         }
 
         // Update the state
-        setNodes(nodesCopy);
-        setEdges(edgesCopy);
+        state.nodes$ = [...nodesCopy];
+        state.edges$ = [...edgesCopy];
     };
 
-
-    const addIndex = (currentTable: any) => {
-        const nodesCopy = [...nodes];
-        let totalColumns = 0;
-        let totalIndexes = 0;
-        let lastIndex = 0;
-        let lastColumnIndex = 0;
-
-        for (let i = 0; i < nodes.length; i++) {
-            const currNode = nodes[i];
-            if (currNode.id === currentTable.id) {
-                nodesCopy[i].data.height += 20;
-                nodesCopy[i].style.height += 20;
-            }
-            if (currNode.type === "column" && currNode.parentNode === currentTable.id) {
-                totalColumns += 1;
-                lastColumnIndex = i;
-            }
-            if (currNode.type === "index" && currNode.parentNode === currentTable.id) {
-                totalIndexes += 1;
-                lastIndex = i;
-            }
-        }
-
-        const newIndexNode = {
-            id: `${currentTable.id}/index_${v4()}`,
-            type: "index",
-            position: { x: 0, y: (20 * (totalColumns + totalIndexes)) + 20 },
-            data: { columns: [], unique: true },
-            parentNode: currentTable.id,
-            extent: "parent",
-            draggable: false,
-            expandParent: true,
-        };
-
-        if (lastIndex === 0) {
-            nodesCopy.splice(lastColumnIndex + 1, 0, newIndexNode);
-        } else {
-            nodesCopy.splice(lastIndex + 1, 0, newIndexNode);
-        }
-        setNodes(nodesCopy);
-
-    }
-
-    const changeIndexes = (currentIndexNode: any, newIndexes: { id: string; name: string }[]) => {
-        const nodesCopy = [...nodes];
-        let deletion = false;
-        let nodeIndexToUpdate = 0;
-
-
-        if (!newIndexes.length) {
-            for (let i = 0; i < nodes.length; i++) {
-                const currentNode = nodes[i];
-
-                if (currentNode.id === currentIndexNode.parentNode) {
-                    nodesCopy[i].data.height -= 20;
-                    nodesCopy[i].style.height -= 20;
-                }
-                if (currentNode.id === currentIndexNode.id) {
-                    deletion = true;
-                    nodeIndexToUpdate = i;
-                }
-                if (currentNode.type === "index" && currentNode.parentNode === currentIndexNode.parentNode && deletion === true) {
-                    nodesCopy[i].position.y -= 20;
-                }
-            }
-            nodesCopy.splice(nodeIndexToUpdate, 1);
-
-        } else {
-            const index = nodes.findIndex(x => x.id === currentIndexNode.id);
-            nodes[index].data.columns = newIndexes;
-        }
-        setNodes(nodesCopy);
-    }
-
     const toggleConstraint = (column: any, type: "primary_key" | "unique" | "none") => {
-        let nodesCopy = [...nodes];
+        let nodesCopy = [...state.nodes$];
 
         for (let i = 0; i < nodesCopy.length; i++) {
             const currentNode = nodesCopy[i];
@@ -307,7 +230,7 @@ export const Flow = () => {
                 currentNode.data.constraint = type;
             }
         }
-        setNodes(nodesCopy)
+        state.nodes$ = [...nodesCopy];
     }
 
 
@@ -315,49 +238,27 @@ export const Flow = () => {
         if (schema) {
             setSchema(null);
         } else {
-            setSchema(generateSqlSchema(nodes, edges))
+            setSchema(generateSqlSchema())
         }
     }
 
-    const getEdgeName = (edge: any) => {
-        const sourceC = edge.source;
-        const targetC = edge.target;
-
-        const sourceTable = nodes.find(x => x.id === sourceC.split("/")[0]);
-        const sourceColumn = nodes.find(x => x.id === sourceC);
-
-        const targetTable = nodes.find(x => x.id === targetC.split("/")[0]);
-        const targetColumn = nodes.find(x => x.id === targetC);
-
-        const data = {
-            sourceTable: sourceTable.data.name,
-            sourceColumn: sourceColumn.data.name,
-            targetTable: targetTable.data.name,
-            targetColumn: targetColumn.data.name
-        }
-
-        return <>
-            {data.sourceColumn} to {data.targetTable}({data.targetColumn})
-
-        </>
-    }
 
     const handleDragStart = (e: any, node: any) => {
-        const nodeIndex = nodes.findIndex(x => x.id === node.id);
+        const nodeIndex = state.nodes$.findIndex(x => x.id === node.id);
         e.dataTransfer.setData("text/plain", nodeIndex);
     };
 
     const handleDrop = (e: any, node: any) => {
         e.preventDefault();
 
-        const nodeIndex = nodes.findIndex(x => x.id === node.id);
-        const parentIndex = nodes.findIndex(x => x.id === node.parentNode);
+        const nodeIndex = state.nodes$.findIndex(x => x.id === node.id);
+        const parentIndex = state.nodes$.findIndex(x => x.id === node.parentNode);
         const draggedPosition = parseInt(e.dataTransfer.getData("text/plain"), 10);
         e.dataTransfer.clearData();
 
         const parentTableId = node.parentNode;
 
-        let reorderedNodes = [...nodes];
+        let reorderedNodes = [...state.nodes$];
 
         // remove the original
         const [draggedItem] = reorderedNodes.splice(draggedPosition, 1);
@@ -371,7 +272,7 @@ export const Flow = () => {
             return n;
         });
 
-        setNodes(reorderedNodes);
+        state.nodes$ = [...reorderedNodes];
     };
 
     const handleDragOver = (e: any) => {
@@ -458,9 +359,8 @@ export const Flow = () => {
                             <span className="heading-wrapper">
                                 <h4 className="heading">Create table</h4>
                                 <button type="button" onClick={() => {
-                                    setNodes(sampleNodes);
-                                    //@ts-ignore
-                                    setEdges(sampleEdges);
+                                    state.nodes$ = [...sampleNodes];
+                                    state.edges$ = sampleEdges;
                                     setFirstTable(null);
                                 }}>Load sample</button>
                             </span>
@@ -552,7 +452,7 @@ export const Flow = () => {
                                                         >
                                                             <Select
                                                                 type="single" options={[
-                                                                    { id: "primary_key", icon: "key", name: "primary key" },
+                                                                    { id: "primary_key", icon: "flag", name: "primary key" },
                                                                     { id: "unique", icon: "star", name: "unique" },
                                                                     { id: "none", icon: "circle", name: "none" },
                                                                 ]}
@@ -610,7 +510,7 @@ export const Flow = () => {
                             <footer className="modal-footer">
                                 <span>
                                     <button onClick={() => {
-                                        setNodes(firstTable);
+                                        state.nodes$ = [...firstTable]
                                         setFirstTable(null);
                                     }}>
                                         OK
@@ -624,7 +524,9 @@ export const Flow = () => {
             }
             <header className="header">
                 <h3>DB diagram</h3>
-                <button onClick={() => showDbSchema()}>show db schema</button>
+                <button
+                    style={{ backgroundColor: "transparent", borderRadius: "5px", border: "1px solid #9fc8b9", color: "#9fc8b9" }}
+                    onClick={() => showDbSchema()}>Show DB schema</button>
                 {
                     schema && <pre className="schema-preview">
                         {schema}
@@ -637,11 +539,11 @@ export const Flow = () => {
                         sidebarHidden ? "►" : "◀︎"
                     } </button>
                     <div className="sidebar-content">
-                        <button className="new-btn" onClick={newTable}>+ New Table</button>
+                        <button className="new-btn" onClick={newTable}><Icon type="plus" width="12" /> <span style={{ marginLeft: "1rem" }}>Add new table</span></button>
                         <nav>
                             <ul className="tables-nav">
                                 {
-                                    nodes.filter(n => n.type === "group").map(t => (
+                                    state.nodes$.filter(n => n.type === "group").map(t => (
                                         <li key={t.id}>
                                             <details
                                                 open={selectedTable === t.id}
@@ -668,11 +570,11 @@ export const Flow = () => {
                                                         value={t.data.name}
                                                         onChange={(e) => {
                                                             const value = e.target.value;
-                                                            let nCopies = [...nodes];
+                                                            let nCopies = [...state.nodes$];
                                                             const curr = nCopies.findIndex(x => x.id === t.id);
                                                             // TODO: prevent renaming to existing table name
                                                             nCopies[curr].data.name = value;
-                                                            setNodes(nCopies);
+                                                            state.nodes$ = [...nCopies];
                                                         }}
                                                         disabled={changingTableName !== t.id}
                                                     />
@@ -694,10 +596,10 @@ export const Flow = () => {
                                                                     onBlur={() => setChangingTableName(null)}
                                                                     onChange={(e) => {
                                                                         const value = e.target.value;
-                                                                        let nCopies = [...nodes];
+                                                                        let nCopies = [...state.nodes$];
                                                                         const curr = nCopies.findIndex(x => x.id === t.id);
                                                                         nCopies[curr].data.backgroundColor = value;
-                                                                        setNodes(nCopies);
+                                                                        state.nodes$ = [...nCopies];
                                                                     }}
                                                                     title="change table color"
                                                                 />
@@ -715,16 +617,15 @@ export const Flow = () => {
                                                 </summary>
                                                 <ul className="table-props">
                                                     {
-                                                        nodes.filter(n => n.parentNode === t.id && n.type === "column").map((c) => (
+                                                        state.nodes$.filter(n => n.parentNode === t.id && n.type === "column").map((c) => (
                                                             <li
-                                                                className="border-bottom"
                                                                 key={c.id}
                                                                 onDragStart={(e) => handleDragStart(e, c)}
                                                                 onDrop={(e) => handleDrop(e, c)}
                                                                 onDragOver={handleDragOver}
                                                                 draggable
                                                             >
-                                                                <div className="row border-bottom">
+                                                                <div className="row">
                                                                     <input
                                                                         className="table-input"
                                                                         type="text"
@@ -732,8 +633,8 @@ export const Flow = () => {
                                                                         value={c.data.name}
                                                                         onChange={(e) => {
                                                                             c.data.name = e.target.value;
-                                                                            const cp = [...nodes];
-                                                                            setNodes(cp);
+                                                                            const cp = [...state.nodes$];
+                                                                            state.nodes$ = cp;
                                                                         }}
                                                                         style={{ width: "100px" }}
                                                                     />
@@ -742,17 +643,17 @@ export const Flow = () => {
                                                                         value={c.data.type || ""}
                                                                         onChange={(value) => {
                                                                             c.data.type = value;
-                                                                            const cp = [...nodes];
-                                                                            setNodes(cp);
+                                                                            const cp = [...state.nodes$];
+                                                                            state.nodes$ = cp;
                                                                         }}
                                                                     />
                                                                     <button
                                                                         className={generateCssClass("icon-btn", { active: !getProperty(c).isNotNull })}
                                                                         onClick={() => {
-                                                                            let nCopies = [...nodes];
+                                                                            let nCopies = [...state.nodes$];
                                                                             const curr = nCopies.findIndex(x => x.id === c.id);
                                                                             nCopies[curr].data.notNull = !nCopies[curr].data.notNull;
-                                                                            setNodes(nCopies);
+                                                                            state.nodes$ = nCopies;
                                                                         }}
                                                                         title="nullable value"
                                                                     >
@@ -765,7 +666,7 @@ export const Flow = () => {
                                                                     >
                                                                         <Select
                                                                             type="single" options={[
-                                                                                { id: "primary_key", icon: "key", name: "primary key" },
+                                                                                { id: "primary_key", icon: "flag", name: "primary key" },
                                                                                 { id: "unique", icon: "star", name: "unique" },
                                                                                 { id: "none", icon: "circle", name: "none" },
                                                                             ]}
@@ -784,35 +685,25 @@ export const Flow = () => {
                                                             </li>
                                                         ))
                                                     }
-                                                    <div className="row padding-top">
-                                                        <button onClick={() => addColumn(t)}>+ add column</button>
-                                                        <h5>Indexes::</h5>
-                                                        {
-                                                            nodes.filter(x => x.parentNode === t.id && x.type === "index").map(x => (
-                                                                <MultiSelect
-                                                                    options={nodes.filter((cols) => cols.parentNode === t.id && cols.type === "column").map(cc => ({ id: cc.id, name: cc.data.name }))}
-                                                                    selected={x.data.columns}
-                                                                    onSelectionChange={(value) => changeIndexes(x, value)}
-                                                                    key={x.id}
-                                                                />
-                                                            ))
-                                                        }
-                                                        <button onClick={() => addIndex(t)}>add index</button>
-                                                    </div>
-                                                    <div>
-                                                        <h5>Foreign Keys</h5>
-                                                        {
-                                                            edges.filter(x => {
-                                                                const [sourceTable,] = x.source.split("/");
-                                                                return sourceTable === t.id;
-                                                            }).map(x => (
-                                                                <div key={x.id}>
-                                                                    {getEdgeName(x)}
-                                                                </div>
-                                                            ))
-                                                        }
-                                                    </div>
+
                                                 </ul>
+                                                <span style={{ width: "100%", display: "flex", justifyContent: "flex-end" }}>
+                                                    <button
+                                                        onClick={() => addColumn(t)}
+                                                        title="add column"
+                                                        style={{
+                                                            display: "flex",
+                                                            alignItems: "center",
+                                                            justifyContent: "center",
+                                                            backgroundColor: "#9fc8b9", border: "none", padding: "0.5rem", color: "#092635", borderRadius: "5px", marginRight: "1rem", fontWeight: "bold"
+                                                        }}
+                                                    >
+                                                        <Icon type="plus" height="12" />
+                                                        <span style={{ marginLeft: "0.5rem" }}>Add new column</span>
+                                                    </button>
+                                                </span>
+
+                                                <TableOptions currentTable={t} />
                                             </details>
                                         </li>
                                     ))
@@ -822,8 +713,8 @@ export const Flow = () => {
                     </div>
                 </aside>
                 <ReactFlow
-                    nodes={nodes}
-                    edges={edges}
+                    nodes={state.nodes$}
+                    edges={state.edges$}
                     onNodesChange={onNodesChange}
                     onEdgesChange={onEdgesChange}
                     onConnect={onConnect}

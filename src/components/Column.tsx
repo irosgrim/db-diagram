@@ -23,11 +23,10 @@ function Column({ data }: ColumnProps) {
 
             <div className="col" style={{ fontSize: "0.75rem" }}>
                 <div style={{ position: "relative" }}>
-                    {data.constraint === "primary_key" && <span style={{ position: "absolute", top: "1px" }}> <Icon type="key" height="10" width="5" /> </span>}
+                    {data.constraint === "primary_key" && <span style={{ position: "absolute", top: "1px" }}> <Icon type="flag" height="10" width="10" /> </span>}
                     {data.constraint === "unique" && <span style={{ position: "absolute", top: "1px" }}> <Icon type="star" height="10" width="10" /> </span>}
                     <div style={{ marginLeft: "0.7rem", fontSize: "0.75rem" }}>{data.name}</div>
                 </div>
-                {/* <input className="col-name" defaultValue={data.name} /> */}
                 <div className="col-type" style={{ marginLeft: "1rem" }}>{data.type}{!data.notNull && "?"}</div>
             </div>
 

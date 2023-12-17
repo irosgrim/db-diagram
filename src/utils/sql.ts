@@ -1,9 +1,11 @@
-export const generateSqlSchema = (nodes: any, edges: any) => {
+import { state } from "../state/globalState";
+
+export const generateSqlSchema = () => {
     const tables: any = {};
     const indexes: any = {};
 
     // create initial structure
-    nodes.forEach((node: any) => {
+    state.nodes$.forEach((node: any) => {
         if (node.type === "group") {
             tables[node.id] = {
                 tableName: node.data.name,
@@ -35,14 +37,14 @@ export const generateSqlSchema = (nodes: any, edges: any) => {
     });
 
     // create foreign keys from edges
-    edges.forEach((edge: any) => {
+    state.edges$.forEach((edge: any) => {
         const sourceC = edge.source;
         const targetC = edge.target;
 
-        const sourceTable = nodes.find((x: any) => x.id === sourceC.split("/")[0]);
-        const sourceColumn = nodes.find((x: any) => x.id === sourceC);
-        const targetTable = nodes.find((x: any) => x.id === targetC.split("/")[0]);
-        const targetColumn = nodes.find((x: any) => x.id === targetC);
+        const sourceTable = state.nodes$.find((x: any) => x.id === sourceC.split("/")[0]);
+        const sourceColumn = state.nodes$.find((x: any) => x.id === sourceC);
+        const targetTable = state.nodes$.find((x: any) => x.id === targetC.split("/")[0]);
+        const targetColumn = state.nodes$.find((x: any) => x.id === targetC);
 
         if (sourceTable && sourceColumn && targetTable && targetColumn) {
             const fkData = {
