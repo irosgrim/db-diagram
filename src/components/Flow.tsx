@@ -493,95 +493,97 @@ export const Flow = () => {
                                     />
                                 </div>
                                 <h4 className="heading">Columns:</h4>
-                                <ul className="new-columns">
-                                    {
-                                        firstTable.filter(x => x.type === "column").map(col => (
-                                            <li
-                                                key={col.id}
-                                                draggable
-                                                onDragStart={(e) => firstDragStart(e, col)}
-                                                onDrop={(e) => firstDrop(e, col)}
-                                                onDragOver={firstDragOver}
-                                            >
-                                                <div className="table-col-props-wrapper">
-                                                    <div className="table-name-input-wrapper">
-                                                        <span>
-                                                            <Icon type="dots-grid" height="20" width="14" color="#ababab" />
-                                                        </span>
-                                                        <input
-                                                            placeholder="column name"
-                                                            className="table-name-input"
-                                                            type="text"
-                                                            maxLength={30}
-                                                            defaultValue={col.data.name}
-                                                            onChange={(e) => {
+                                <div className="new-columns-list-wrapper">
+                                    <ul className="new-columns">
+                                        {
+                                            firstTable.filter(x => x.type === "column").map(col => (
+                                                <li
+                                                    key={col.id}
+                                                    draggable
+                                                    onDragStart={(e) => firstDragStart(e, col)}
+                                                    onDrop={(e) => firstDrop(e, col)}
+                                                    onDragOver={firstDragOver}
+                                                >
+                                                    <div className="table-col-props-wrapper">
+                                                        <div className="table-name-input-wrapper">
+                                                            <span>
+                                                                <Icon type="dots-grid" height="20" width="14" color="#ababab" />
+                                                            </span>
+                                                            <input
+                                                                placeholder="column name"
+                                                                className="table-name-input"
+                                                                type="text"
+                                                                maxLength={30}
+                                                                defaultValue={col.data.name}
+                                                                onChange={(e) => {
+                                                                    const firstTableCopy = [...firstTable];
+                                                                    const currentNodeIndex = firstTableCopy.findIndex(x => x.id === col.id);
+                                                                    firstTableCopy[currentNodeIndex].data.name = e.target.value;
+                                                                    setFirstTable(firstTableCopy);
+                                                                }}
+                                                            />
+                                                        </div>
+                                                        <Autocomplete
+                                                            suggestions={postgresTypes}
+                                                            value={col.data.type}
+                                                            onChange={(val) => {
                                                                 const firstTableCopy = [...firstTable];
                                                                 const currentNodeIndex = firstTableCopy.findIndex(x => x.id === col.id);
-                                                                firstTableCopy[currentNodeIndex].data.name = e.target.value;
+                                                                firstTableCopy[currentNodeIndex].data.type = val;
                                                                 setFirstTable(firstTableCopy);
                                                             }}
                                                         />
+                                                        <button
+                                                            className={generateCssClass("icon-btn", { active: !col.data.notNull })}
+                                                            onClick={() => {
+                                                                const firstTableCopy = [...firstTable];
+                                                                const currentNodeIndex = firstTableCopy.findIndex(x => x.id === col.id);
+                                                                firstTableCopy[currentNodeIndex].data.notNull = !firstTableCopy[currentNodeIndex].data.notNull;
+                                                                setFirstTable(firstTableCopy);
+                                                            }}
+                                                            title="nullable value"
+                                                        >
+                                                            <Icon type={"null"} />
+                                                        </button>
+
+                                                        <div
+                                                            className={generateCssClass("icon-btn")}
+                                                            title={col.data.constraint}
+                                                        >
+                                                            <Select
+                                                                type="single" options={[
+                                                                    { id: "primary_key", icon: "key", name: "primary key" },
+                                                                    { id: "unique", icon: "star", name: "unique" },
+                                                                    { id: "none", icon: "circle", name: "none" },
+                                                                ]}
+                                                                selected={col.data.constraint}
+                                                                onSelectionChange={(val) => {
+                                                                    const firstTableCopy = [...firstTable];
+                                                                    const currentNodeIndex = firstTableCopy.findIndex(x => x.id === col.id);
+                                                                    firstTableCopy[currentNodeIndex].data.constraint = val;
+                                                                    setFirstTable(firstTableCopy);
+                                                                }}
+                                                            />
+                                                        </div>
                                                     </div>
-                                                    <Autocomplete
-                                                        suggestions={postgresTypes}
-                                                        value={col.data.type}
-                                                        onChange={(val) => {
-                                                            const firstTableCopy = [...firstTable];
-                                                            const currentNodeIndex = firstTableCopy.findIndex(x => x.id === col.id);
-                                                            firstTableCopy[currentNodeIndex].data.type = val;
-                                                            setFirstTable(firstTableCopy);
-                                                        }}
-                                                    />
                                                     <button
-                                                        className={generateCssClass("icon-btn", { active: !col.data.notNull })}
+                                                        className="icon-btn"
+                                                        title="delete column"
                                                         onClick={() => {
                                                             const firstTableCopy = [...firstTable];
                                                             const currentNodeIndex = firstTableCopy.findIndex(x => x.id === col.id);
-                                                            firstTableCopy[currentNodeIndex].data.notNull = !firstTableCopy[currentNodeIndex].data.notNull;
+                                                            firstTableCopy.splice(currentNodeIndex, 1);
                                                             setFirstTable(firstTableCopy);
                                                         }}
-                                                        title="nullable value"
                                                     >
-                                                        <Icon type={"null"} />
+                                                        <Icon type="delete" />
                                                     </button>
+                                                </li>
+                                            ))
+                                        }
 
-                                                    <div
-                                                        className={generateCssClass("icon-btn")}
-                                                        title={col.data.constraint}
-                                                    >
-                                                        <Select
-                                                            type="single" options={[
-                                                                { id: "primary_key", icon: "key", name: "primary key" },
-                                                                { id: "unique", icon: "star", name: "unique" },
-                                                                { id: "none", icon: "circle", name: "none" },
-                                                            ]}
-                                                            selected={col.data.constraint}
-                                                            onSelectionChange={(val) => {
-                                                                const firstTableCopy = [...firstTable];
-                                                                const currentNodeIndex = firstTableCopy.findIndex(x => x.id === col.id);
-                                                                firstTableCopy[currentNodeIndex].data.constraint = val;
-                                                                setFirstTable(firstTableCopy);
-                                                            }}
-                                                        />
-                                                    </div>
-                                                </div>
-                                                <button
-                                                    className="icon-btn"
-                                                    title="delete column"
-                                                    onClick={() => {
-                                                        const firstTableCopy = [...firstTable];
-                                                        const currentNodeIndex = firstTableCopy.findIndex(x => x.id === col.id);
-                                                        firstTableCopy.splice(currentNodeIndex, 1);
-                                                        setFirstTable(firstTableCopy);
-                                                    }}
-                                                >
-                                                    <Icon type="delete" />
-                                                </button>
-                                            </li>
-                                        ))
-                                    }
-
-                                </ul>
+                                    </ul>
+                                </div>
                                 <div className="new-column-wrapper">
                                     <button type="button" onClick={() => {
                                         const tableId = firstTable[0].id;

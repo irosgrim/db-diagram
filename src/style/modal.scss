@@ -38,11 +38,14 @@
     align-items: center;
 }
 
+.new-columns-list-wrapper {
+    min-height: 200px;
+    max-height: 450px;
+    overflow-y: auto;
+}
 .new-columns {
     margin: 0;
     padding: 0;
-    max-height: 450px;
-    overflow-y: auto;
     li {
         display: flex;
         justify-content: space-between;
