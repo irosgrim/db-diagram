@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import ReactFlow, { addEdge, applyNodeChanges, ConnectionMode, Controls, Edge, MarkerType, useEdgesState } from "reactflow";
 import "reactflow/dist/style.css";
 import "../style/edge.scss"
@@ -17,46 +17,11 @@ import { MultiSelect } from "./MultiSelect";
 import { generateSqlSchema, postgresTypes } from "../utils/sql";
 import { Select } from "./Select";
 import { sampleEdges, sampleNodes } from "./sample";
+import { edgeOptions } from "../state/globalState";
+import { useOnClickOutside } from "../hooks/onClickOutside";
 
 const fitViewOptions = { padding: 4 };
-const defaultTable: any = [
-    // {
-    //     id: "table_1",
-    //     data: { name: "table_1", backgroundColor: "#f78ae0" },
-    //     position: { x: 10, y: 200 },
-    //     className: "light",
-    //     style: { backgroundColor: "#ffffff", minWidth: "200px", padding: 0 },
-    //     resizing: true,
-    //     type: "group",
-    // },
-    // {
-    //     id: "table_1/col_1",
-    //     type: "column",
-    //     position: { x: 0, y: 20 },
-    //     data: { name: "id", type: "SERIAL", constraint: "primary_key", notNull: true, index: false },
-    //     parentNode: "table_1", extent: "parent",
-    //     draggable: false,
-    //     expandParent: true,
-    // },
-    // {
-    //     id: "table_2",
-    //     data: { name: "table_2", backgroundColor: "#6638f0" },
-    //     position: { x: 100, y: 250 },
-    //     className: "light",
-    //     style: { backgroundColor: "#ffffff", minWidth: "200px", padding: 0 },
-    //     resizing: true,
-    //     type: "group",
-    // },
-    // {
-    //     id: "table_2/col_1",
-    //     type: "column",
-    //     position: { x: 0, y: 20 },
-    //     data: { name: "id", type: "SERIAL", constraint: "primary_key", notNull: true, index: false },
-    //     parentNode: "table_2", extent: "parent",
-    //     draggable: false,
-    //     expandParent: true,
-    // },
-];
+const defaultTable: any = [];
 
 const nodeTypes = { column: Column, group: Table, index: Index, separator: ({ data }: any) => <div style={{ marginLeft: "1rem" }}>{data.label}</div> };
 
@@ -65,6 +30,7 @@ const edgeTypes = {
 };
 
 const initialEdges: Edge<any>[] = [];
+
 
 export const Flow = () => {
 
@@ -75,6 +41,9 @@ export const Flow = () => {
     const [changingTableName, setChangingTableName] = useState<string | null>(null);
     const [schema, setSchema] = useState<string | null>(null);
     const [sidebarHidden, setSidebarHidden] = useState(false);
+    const fkOpts = useRef(null);
+
+    useOnClickOutside(fkOpts, () => edgeOptions.value = { ...edgeOptions.value, showEdgeOptions: null })
 
     const onNodesChange = useCallback(
         (changes: any) => {
@@ -100,14 +69,13 @@ export const Flow = () => {
                     )
                 );
             } else {
-                console.log('This edge already exists.');
+                console.log("This edge already exists.");
             }
         },
         [edges, setEdges]
     );
 
-
-    useEffect(() => console.log({ edges, nodes }), [edges, nodes])
+    // useEffect(() => console.log({ edges, nodes }), [edges, nodes])
 
     const newTable = () => {
         const allTables = nodes.filter(x => x.type === "group");
@@ -218,7 +186,7 @@ export const Flow = () => {
             if (nodeToDelete.type === "group") {
                 // delete table and nodes, edges associated with table
                 nodesCopy = nodesCopy.filter(node => node.id !== nodeToDelete.id && node.parentNode !== nodeToDelete.id);
-                edgesCopy = edgesCopy.filter(edge => edge.source.split('/')[0] !== nodeToDelete.id && edge.target.split('/')[0] !== nodeToDelete.id);
+                edgesCopy = edgesCopy.filter(edge => edge.source.split("/")[0] !== nodeToDelete.id && edge.target.split("/")[0] !== nodeToDelete.id);
             } else {
                 // delete  column
                 nodesCopy = nodesCopy.filter(node => node.id !== nodeToDelete.id);
@@ -228,11 +196,11 @@ export const Flow = () => {
 
                 if (parentTable) {
                     // update positions of remaining columns and resize the table
-                    const remainingColumns = nodesCopy.filter(node => node.parentNode === parentTableId && node.type !== 'group');
+                    const remainingColumns = nodesCopy.filter(node => node.parentNode === parentTableId && node.type !== "group");
                     let yPos = 20; // initial Y position for the first column
 
                     nodesCopy = nodesCopy.map(node => {
-                        if (node.parentNode === parentTableId && node.type !== 'group') {
+                        if (node.parentNode === parentTableId && node.type !== "group") {
                             const updatedNode = { ...node, position: { x: 0, y: yPos } };
                             yPos += 20; // increment Y position for the next column
                             return updatedNode;
@@ -386,10 +354,7 @@ export const Flow = () => {
         const parentIndex = nodes.findIndex(x => x.id === node.parentNode);
         const draggedPosition = parseInt(e.dataTransfer.getData("text/plain"), 10);
         e.dataTransfer.clearData();
-        console.log({ draggedPosition })
 
-
-        // Assuming the parent table ID is stored in a property like `parentNode`
         const parentTableId = node.parentNode;
 
         let reorderedNodes = [...nodes];
@@ -409,11 +374,9 @@ export const Flow = () => {
         setNodes(reorderedNodes);
     };
 
-
     const handleDragOver = (e: any) => {
         e.preventDefault();
     };
-
 
     const [firstTable, setFirstTable] = useState<any[] | null>([
         {
@@ -477,6 +440,17 @@ export const Flow = () => {
 
     return (
         <>
+            {
+                edgeOptions.value.showEdgeOptions &&
+                <div className="modal">
+                    <div className="modal-body" ref={fkOpts}>
+                        <ul>
+                            <li><button onClick={() => edgeOptions.value = { ...edgeOptions.value, fkType: { ...edgeOptions.value.fkType, [edgeOptions.value.showEdgeOptions]: "simple" } }}>simple fk</button></li>
+                            <li><button onClick={() => edgeOptions.value = { ...edgeOptions.value, fkType: { ...edgeOptions.value.fkType, [edgeOptions.value.showEdgeOptions]: "composite" } }}>composite fk</button></li>
+                        </ul>
+                    </div>
+                </div>
+            }
             {
                 firstTable && (
                     <div className="modal">

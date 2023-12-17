@@ -2,14 +2,19 @@ import { useCallback, useState } from 'react';
 import { useStore, getSmoothStepPath, EdgeLabelRenderer } from 'reactflow';
 
 import { getEdgeParams } from './utils';
+import { Icon } from './Icon';
+import { edgeOptions } from '../state/globalState';
 
-const onEdgeClick = (evt: any, id: any) => {
-    evt.stopPropagation();
-    alert(`remove ${id}`);
-};
+type EdgeProps = {
+    id: string;
+    source: any;
+    target: any;
+    markerEnd?: any;
+    style?: any;
+}
 
 
-const FloatingEdge = ({ id, source, target, markerEnd, style }: any) => {
+const FloatingEdge = ({ id, source, target, markerEnd, style }: EdgeProps) => {
     const sourceNode = useStore(useCallback((store) => store.nodeInternals.get(source), [source]));
     const targetNode = useStore(useCallback((store) => store.nodeInternals.get(target), [target]));
     const [showOpts, setShowOpts] = useState(false);
@@ -29,6 +34,13 @@ const FloatingEdge = ({ id, source, target, markerEnd, style }: any) => {
     });
 
 
+    const onEdgeClick = (evt: any, id: any) => {
+        evt.stopPropagation();
+        edgeOptions.value = { ...edgeOptions.value, showEdgeOptions: id };
+    };
+
+
+
     return (
         <>
             <g onClick={() => setShowOpts(true)} onMouseLeave={() => setShowOpts(false)} >
@@ -45,8 +57,17 @@ const FloatingEdge = ({ id, source, target, markerEnd, style }: any) => {
                         className="nodrag nopan"
                     >
                         {
-                            showOpts && <button className="edgebutton" onClick={(event) => onEdgeClick(event, id)}>
-                                ×
+                            showOpts && (
+                                <button className="edgebutton" onClick={(event) => onEdgeClick(event, id)}>
+                                    {/* × */}
+                                    <Icon type="key" />
+                                </button>
+                            )
+                        }
+                        {
+                            edgeOptions.value.fkType[id] === "composite" && <button className="edgebutton" onClick={(event) => onEdgeClick(event, id)}>
+                                {/* × */}
+                                <Icon type="multi-key" />
                             </button>
                         }
                     </div>
