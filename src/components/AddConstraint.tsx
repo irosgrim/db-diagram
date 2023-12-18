@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { currentModal$, primaryKey$, state, uniqueKeys$ } from "../state/globalState";
+import { currentModal$, primaryKey$, uniqueKeys$ } from "../state/globalState";
+import { ColumnsSelector } from "./ColumnsSelector";
 
 export const AddConstraint = ({ onClose }: { onClose: () => void }) => {
     const [active, setActive] = useState<"pk" | "un">("pk");
     const currentModal = currentModal$.value;
     const [name, setName] = useState(currentModal ? currentModal.props.data.name + "_" + active : "");
-    const [selectedColumns, setSelectedColumns] = useState<string[]>([]);
 
     if (!currentModal) {
         return <></>
@@ -16,22 +16,7 @@ export const AddConstraint = ({ onClose }: { onClose: () => void }) => {
         setName(currentModal.props.data.name + "_" + a)
     }
 
-    const setConstraint = (colName: string) => {
-        const index = selectedColumns.indexOf(colName);
-        if (index < 0) {
-            setSelectedColumns([...selectedColumns, colName]);
-        } else {
-            const colsCopy = [...selectedColumns];
-            colsCopy.splice(index, 1);
-            setSelectedColumns(colsCopy);
-        }
-    }
-
-    const highlight = (colName: string) => {
-        return selectedColumns.findIndex(x => x === colName) > -1;
-    }
-
-    const onSave = () => {
+    const onSave = (selectedColumns: string[]) => {
         const tableName = currentModal.props.data.name;
 
         if (active === "pk") {
@@ -86,25 +71,7 @@ export const AddConstraint = ({ onClose }: { onClose: () => void }) => {
                     Unique Key
                 </button>
             </div>
-            <table>
-                <tbody>
-                    {
-                        state.nodes$.filter(x => x.parentNode === currentModal.props.id && x.type === "column").map(x => (
-                            <tr key={x.id} style={{ background: highlight(x.data.name) ? "#d3ebf8" : "transparent" }}>
-                                <td><input type="checkbox" onChange={() => setConstraint(x.data.name)} /></td>
-                                <td>{x.data.name}</td>
-                                <td>{x.data.type}</td>
-                            </tr>
-
-                        ))
-                    }
-                </tbody>
-            </table>
-
-            <div>
-                <button onClick={onClose}>Cancel</button>
-                <button onClick={onSave}>Ok</button>
-            </div>
+            <ColumnsSelector table={currentModal.props} onSave={onSave} onClose={onClose} />
         </div>
     )
 }

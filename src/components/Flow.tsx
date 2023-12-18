@@ -21,6 +21,7 @@ import { useOnClickOutside } from "../hooks/onClickOutside";
 import { TableOptions } from "./TableOptions";
 import { Modal } from "./Modal";
 import { AddConstraint } from "./AddConstraint";
+import { AddIndexes } from "./AddIndexes";
 
 const fitViewOptions = { padding: 4 };
 
@@ -344,8 +345,16 @@ export const Flow = () => {
     return (
         <>
             {
-                currentModal$.value && currentModal$.value.type === "add-constraint" && <Modal onClose={() => currentModal$.value = null}>
-                    <AddConstraint onClose={() => currentModal$.value = null} />
+                currentModal$.value && <Modal onClose={() => currentModal$.value = null}>
+                    <>
+                        {currentModal$.value.type === "add-constraint" && <AddConstraint onClose={() => currentModal$.value = null} />}
+                        {currentModal$.value.type === "add-index" && (
+                            <>
+                                <h3>Add index</h3>
+                                <AddIndexes onClose={() => currentModal$.value = null} />
+                            </>
+                        )}
+                    </>
                 </Modal>
             }
             {

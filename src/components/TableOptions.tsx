@@ -1,6 +1,5 @@
 import { v4 } from "uuid";
-import { currentModal$, primaryKey$, state, uniqueKeys$ } from "../state/globalState";
-import { MultiSelect } from "./MultiSelect";
+import { currentModal$, indexes$, primaryKey$, state, uniqueKeys$ } from "../state/globalState";
 import { useState } from "react";
 import "../style/tableOptions.scss";
 import { generateCssClass } from "../utils/styling";
@@ -17,81 +16,6 @@ const MyComponent = () => {
         </div>
     )
 }
-const changeIndexes = (currentIndexNode: any, newIndexes: { id: string; name: string }[]) => {
-    const nodesCopy = [...state.nodes$];
-    let deletion = false;
-    let nodeIndexToUpdate = 0;
-
-
-    if (!newIndexes.length) {
-        for (let i = 0; i < nodesCopy.length; i++) {
-            const currentNode = nodesCopy[i];
-
-            if (currentNode.id === currentIndexNode.parentNode) {
-                nodesCopy[i].data.height -= 20;
-                nodesCopy[i].style.height -= 20;
-            }
-            if (currentNode.id === currentIndexNode.id) {
-                deletion = true;
-                nodeIndexToUpdate = i;
-            }
-            if (currentNode.type === "index" && currentNode.parentNode === currentIndexNode.parentNode && deletion === true) {
-                nodesCopy[i].position.y -= 20;
-            }
-        }
-        nodesCopy.splice(nodeIndexToUpdate, 1);
-
-    } else {
-        const index = nodesCopy.findIndex(x => x.id === currentIndexNode.id);
-        nodesCopy[index].data.columns = newIndexes;
-    }
-    state.nodes$ = [...nodesCopy];
-}
-
-const addIndex = (currentTable: any) => {
-    const nodesCopy = [...state.nodes$];
-    let totalColumns = 0;
-    let totalIndexes = 0;
-    let lastIndex = 0;
-    let lastColumnIndex = 0;
-
-    for (let i = 0; i < state.nodes$.length; i++) {
-        const currNode = state.nodes$[i];
-        if (currNode.id === currentTable.id) {
-            nodesCopy[i].data.height += 20;
-            nodesCopy[i].style.height += 20;
-        }
-        if (currNode.type === "column" && currNode.parentNode === currentTable.id) {
-            totalColumns += 1;
-            lastColumnIndex = i;
-        }
-        if (currNode.type === "index" && currNode.parentNode === currentTable.id) {
-            totalIndexes += 1;
-            lastIndex = i;
-        }
-    }
-
-    const newIndexNode = {
-        id: `${currentTable.id}/index_${v4()}`,
-        type: "index",
-        position: { x: 0, y: (20 * (totalColumns + totalIndexes)) + 20 },
-        data: { columns: [], unique: true },
-        parentNode: currentTable.id,
-        extent: "parent",
-        draggable: false,
-        expandParent: true,
-    };
-
-    if (lastIndex === 0) {
-        nodesCopy.splice(lastColumnIndex + 1, 0, newIndexNode);
-    } else {
-        nodesCopy.splice(lastIndex + 1, 0, newIndexNode);
-    }
-    // setNodes(nodesCopy);
-    state.nodes$ = [...nodesCopy];
-
-}
-
 
 const getEdgeName = (edge: any) => {
     const sourceC = edge.source;
@@ -147,17 +71,19 @@ export const TableOptions = ({ currentTable }: TableOptionsProps) => {
             {
                 showSection === "indexes" && (
                     <div style={{ marginTop: "0.5rem" }}>
+
                         {
-                            state.nodes$.filter(x => x.parentNode === currentTable.id && x.type === "index").map((x) => (
-                                <MultiSelect
-                                    options={state.nodes$.filter((cols) => cols.parentNode === currentTable.id && cols.type === "column").map(cc => ({ id: cc.id, name: cc.data.name }))}
-                                    selected={x.data.columns}
-                                    onSelectionChange={(value) => changeIndexes(x, value)}
-                                    key={x.id}
-                                />
+                            indexes$.value[currentTable.data.name] && indexes$.value[currentTable.data.name].map((x, idx) => (
+                                <div key={x.name}>{x.name} - {x.cols} <button onClick={() => {
+                                    const indexesCopy = [...indexes$.value[currentTable.data.name]]
+                                    indexesCopy.splice(idx, 1);
+                                    //@ts-ignore
+                                    indexes$.value = { ...indexes$.value[currentTable.data.name], [currentTable.data.name]: indexesCopy }
+                                }}><Icon type="delete" /></button></div>
                             ))
                         }
-                        <button onClick={() => addIndex(currentTable)}>add index</button>
+                        <button onClick={() => currentModal$.value = { type: "add-index", props: { ...currentTable } }}>add index</button>
+
                     </div>
                 )
             }

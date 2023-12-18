@@ -167,7 +167,7 @@ export const sampleNodes = [
             "backgroundColor": "#ffffff",
             "width": "200px",
             "padding": 0,
-            "height": 220
+            "height": 180
         },
         "resizing": true,
         "type": "group",
@@ -343,52 +343,6 @@ export const sampleNodes = [
         "height": 20
     },
     {
-        "id": "table_2/index_996d3faf-1d71-476f-8835-9597aafbdcfd",
-        "type": "index",
-        "position": {
-            "x": 0,
-            "y": 180
-        },
-        "data": {
-            "columns": [
-                {
-                    "id": "table_2/col_b23d5a03-1d10-4846-8009-f5da92a2a5ef",
-                    "name": "title"
-                }
-            ],
-            "unique": true
-        },
-        "parentNode": "table_2",
-        "extent": "parent",
-        "draggable": false,
-        "expandParent": true,
-        "width": 200,
-        "height": 20
-    },
-    {
-        "id": "table_2/index_aa554743-fbb0-4973-8742-fb4d38529b75",
-        "type": "index",
-        "position": {
-            "x": 0,
-            "y": 200
-        },
-        "data": {
-            "columns": [
-                {
-                    "id": "table_2/col_9b0e1661-b78a-49f2-b492-ca7435631bbf",
-                    "name": "category_id"
-                }
-            ],
-            "unique": true
-        },
-        "parentNode": "table_2",
-        "extent": "parent",
-        "draggable": false,
-        "expandParent": true,
-        "width": 200,
-        "height": 20
-    },
-    {
         "id": "table_3",
         "data": {
             "name": "categories",
@@ -404,7 +358,7 @@ export const sampleNodes = [
             "backgroundColor": "#ffffff",
             "width": "200px",
             "padding": 0,
-            "height": 140
+            "height": 120
         },
         "resizing": true,
         "type": "group",
@@ -518,33 +472,7 @@ export const sampleNodes = [
         "width": 200,
         "height": 20
     },
-    {
-        "id": "table_3/index_d27db460-3450-4b78-8ef2-78c43133770a",
-        "type": "index",
-        "position": {
-            "x": 0,
-            "y": 120
-        },
-        "data": {
-            "columns": [
-                {
-                    "id": "table_3/col_12c99d46-6774-4d83-a6db-02e503ade7ab",
-                    "name": "user_id"
-                },
-                {
-                    "id": "table_3/col_6935a1da-1802-42cd-b15e-9d1e118df6bf",
-                    "name": "name"
-                }
-            ],
-            "unique": true
-        },
-        "parentNode": "table_3",
-        "extent": "parent",
-        "draggable": false,
-        "expandParent": true,
-        "width": 200,
-        "height": 20
-    }
+    
 ];
 
 export const sampleEdges = [
