@@ -6,14 +6,15 @@ export const edgeOptions: any = signal({
     fkType: {}
 });
 
-// export const nodes: Signal<any[]> = signal([]);
-export const edges: Signal<any[]> = signal([]);
-export const foreignKeys: Signal<any | null> = signal(null);
+export const currentModal$: Signal<{type: string; props?: any } | null> = signal(null);
 
+// export const nodes: Signal<any[]> = signal([]);
+export const primaryKey$: Signal<Record<string, {name: string; cols: string;}>> = signal({});
+export const uniqueKeys$: Signal<Record<string, {name: string; cols: string;}[]>> = signal({});
 
 class State {
-    nodes: Signal<any[]> = signal([]);
-    edges: Signal<(Edge | any)[]> = signal([]);
+    private nodes: Signal<any[]> = signal([]);
+    private edges: Signal<(Edge | any)[]> = signal([]);
 
     get nodes$() {
         return this.nodes.value;

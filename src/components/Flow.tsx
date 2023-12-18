@@ -16,9 +16,11 @@ import { Index } from "./Index";
 import { generateSqlSchema, postgresTypes } from "../utils/sql";
 import { Select } from "./Select";
 import { sampleEdges, sampleNodes } from "./sample";
-import { edgeOptions, state } from "../state/globalState";
+import { currentModal$, edgeOptions, state } from "../state/globalState";
 import { useOnClickOutside } from "../hooks/onClickOutside";
 import { TableOptions } from "./TableOptions";
+import { Modal } from "./Modal";
+import { AddConstraint } from "./AddConstraint";
 
 const fitViewOptions = { padding: 4 };
 
@@ -342,15 +344,18 @@ export const Flow = () => {
     return (
         <>
             {
+                currentModal$.value && currentModal$.value.type === "add-constraint" && <Modal onClose={() => currentModal$.value = null}>
+                    <AddConstraint onClose={() => currentModal$.value = null} />
+                </Modal>
+            }
+            {
                 edgeOptions.value.showEdgeOptions &&
-                <div className="modal">
-                    <div className="modal-body" ref={fkOpts}>
-                        <ul>
-                            <li><button onClick={() => edgeOptions.value = { ...edgeOptions.value, fkType: { ...edgeOptions.value.fkType, [edgeOptions.value.showEdgeOptions]: "simple" } }}>simple fk</button></li>
-                            <li><button onClick={() => edgeOptions.value = { ...edgeOptions.value, fkType: { ...edgeOptions.value.fkType, [edgeOptions.value.showEdgeOptions]: "composite" } }}>composite fk</button></li>
-                        </ul>
-                    </div>
-                </div>
+                <Modal onClose={() => edgeOptions.value = { ...edgeOptions.value, showEdgeOptions: null }}>
+                    <ul>
+                        <li><button onClick={() => edgeOptions.value = { ...edgeOptions.value, fkType: { ...edgeOptions.value.fkType, [edgeOptions.value.showEdgeOptions]: "simple" } }}>simple fk</button></li>
+                        <li><button onClick={() => edgeOptions.value = { ...edgeOptions.value, fkType: { ...edgeOptions.value.fkType, [edgeOptions.value.showEdgeOptions]: "composite" } }}>composite fk</button></li>
+                    </ul>
+                </Modal>
             }
             {
                 firstTable && (

@@ -41,13 +41,18 @@
     position: absolute;
     top: 30px;
     height: auto;
-    right: 1rem;
-    z-index: 6;
+    width: 100%;
+    right: 0;
+    z-index: 12;
     background: #ffffff;
     padding: 1rem;
     border: 1px solid #ababab;
     max-height: 600px;
     overflow: auto;
+    @media (min-width: 400px) {
+        width: auto;
+        max-height: 600px;
+    }
 }
 
 button {

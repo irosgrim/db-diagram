@@ -1,5 +1,5 @@
 import { v4 } from "uuid";
-import { state } from "../state/globalState";
+import { currentModal$, primaryKey$, state, uniqueKeys$ } from "../state/globalState";
 import { MultiSelect } from "./MultiSelect";
 import { useState } from "react";
 import "../style/tableOptions.scss";
@@ -10,7 +10,13 @@ type TableOptionsProps = {
     currentTable: any;
 }
 
-
+const MyComponent = () => {
+    return (
+        <div>
+            Hello world Componenet
+        </div>
+    )
+}
 const changeIndexes = (currentIndexNode: any, newIndexes: { id: string; name: string }[]) => {
     const nodesCopy = [...state.nodes$];
     let deletion = false;
@@ -123,7 +129,7 @@ export const TableOptions = ({ currentTable }: TableOptionsProps) => {
     }
 
     return (
-        <div className="row padding-top padding-bottom border-bottom">
+        <div className="row padding-top padding-bottom" style={{ position: "relative" }}>
             <nav className="table-options-nav">
                 <ul>
                     <li className={generateCssClass({ active: showSection === "indexes" })}>
@@ -140,7 +146,7 @@ export const TableOptions = ({ currentTable }: TableOptionsProps) => {
 
             {
                 showSection === "indexes" && (
-                    <div>
+                    <div style={{ marginTop: "0.5rem" }}>
                         {
                             state.nodes$.filter(x => x.parentNode === currentTable.id && x.type === "index").map((x) => (
                                 <MultiSelect
@@ -152,6 +158,29 @@ export const TableOptions = ({ currentTable }: TableOptionsProps) => {
                             ))
                         }
                         <button onClick={() => addIndex(currentTable)}>add index</button>
+                    </div>
+                )
+            }
+            {
+                showSection === "constraints" && (
+                    <div style={{ marginTop: "0.5rem" }}>
+                        <h5>Primary key</h5>
+                        {
+                            primaryKey$.value[currentTable.data.name] && (
+                                <>
+                                    <span>{primaryKey$.value[currentTable.data.name].name} - {primaryKey$.value[currentTable.data.name].cols}</span>
+                                </>
+                            )
+                        }
+                        <h5>Unique keys</h5>
+                        {
+                            uniqueKeys$.value[currentTable.data.name] && uniqueKeys$.value[currentTable.data.name].map(x => (
+                                <div key={x.name}>
+                                    <span>{x.name} - {x.cols}</span>
+                                </div>
+                            ))
+                        }
+                        <button onClick={() => currentModal$.value = { type: "add-constraint", props: { ...currentTable } }}>add constraint</button>
                     </div>
                 )
             }
@@ -174,6 +203,7 @@ export const TableOptions = ({ currentTable }: TableOptionsProps) => {
                     </div>
                 )
             }
+
         </div>
     )
 }

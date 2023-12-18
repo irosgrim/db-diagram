@@ -18,11 +18,16 @@
 .modal-body {
     background-color: #ffffff;
     border-radius: 5px;
-    min-width: 400px;
-    max-height: 600;
+    width: 100%;
+    height: auto;
     padding: 1rem;
     section {
         margin-bottom: 1rem;
+    }
+    @media (min-width: 400px) {
+        min-width: 400px;
+        width: initial;
+        max-height: 600px;
     }
 }
 
@@ -40,8 +45,12 @@
 
 .new-columns-list-wrapper {
     min-height: 200px;
-    max-height: 450px;
+    max-height: 200px;
     overflow-y: auto;
+    @media (min-width: 400px) {
+        width: auto;
+        max-height: 450px;
+    }
 }
 .new-columns {
     margin: 0;
