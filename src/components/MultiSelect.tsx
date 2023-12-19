@@ -1,5 +1,4 @@
 import { useRef, useState } from 'react';
-import "../style/multiselect.scss"
 import { useOnClickOutside } from '../hooks/onClickOutside';
 
 type MultiSelectProps = {

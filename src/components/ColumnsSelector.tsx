@@ -10,10 +10,10 @@ type ColumnsSelectorProps = {
 export const ColumnsSelector = ({ table, onClose, onSave }: ColumnsSelectorProps) => {
     const [selectedColumns, setSelectedColumns] = useState<string[]>([]);
 
-    const setConstraint = (colName: string) => {
-        const index = selectedColumns.indexOf(colName);
+    const setConstraint = (colId: string) => {
+        const index = selectedColumns.indexOf(colId);
         if (index < 0) {
-            setSelectedColumns([...selectedColumns, colName]);
+            setSelectedColumns([...selectedColumns, colId]);
         } else {
             const colsCopy = [...selectedColumns];
             colsCopy.splice(index, 1);
@@ -31,8 +31,8 @@ export const ColumnsSelector = ({ table, onClose, onSave }: ColumnsSelectorProps
                 <tbody>
                     {
                         state.nodes$.filter(x => x.parentNode === table.id && x.type === "column").map(x => (
-                            <tr key={x.id} style={{ background: highlight(x.data.name) ? "#d3ebf8" : "transparent" }}>
-                                <td><input type="checkbox" onChange={() => setConstraint(x.data.name)} /></td>
+                            <tr key={x.id} style={{ background: highlight(x.id) ? "#d3ebf8" : "transparent" }}>
+                                <td><input type="checkbox" onChange={() => setConstraint(x.id)} /></td>
                                 <td>{x.data.name}</td>
                                 <td>{x.data.type}</td>
                             </tr>

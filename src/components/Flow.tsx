@@ -12,11 +12,10 @@ import { Table } from "./Table";
 import Autocomplete from "./Autocomplete";
 import { Icon } from "./Icon";
 import { generateCssClass, getGoodContrastColor, randomColor } from "../utils/styling";
-import { Index } from "./Index";
 import { generateSqlSchema, postgresTypes } from "../utils/sql";
 import { Select } from "./Select";
 import { sampleEdges, sampleNodes } from "./sample";
-import { currentModal$, edgeOptions, state } from "../state/globalState";
+import { currentModal$, edgeOptions, indexes$, primaryKey$, state, uniqueKeys$ } from "../state/globalState";
 import { useOnClickOutside } from "../hooks/onClickOutside";
 import { TableOptions } from "./TableOptions";
 import { Modal } from "./Modal";
@@ -25,7 +24,7 @@ import { AddIndexes } from "./AddIndexes";
 
 const fitViewOptions = { padding: 4 };
 
-const nodeTypes = { column: Column, group: Table, index: Index, separator: ({ data }: any) => <div style={{ marginLeft: "1rem" }}>{data.label}</div> };
+const nodeTypes = { column: Column, group: Table };
 
 const edgeTypes = {
     floating: FloatingEdge,
@@ -69,7 +68,7 @@ export const Flow = () => {
                     state.edges$
                 );
             } else {
-                console.log("This edge already exists.");
+                console.log("edge already exists.");
             }
         },
         [state.edges$]
@@ -113,7 +112,7 @@ export const Flow = () => {
                 id: `table_${highestNum + 1}/col_1`,
                 type: "column",
                 position: { x: 0, y: 20 },
-                data: { name: "id", type: "SERIAL", constraint: "primary_key", notNull: true, index: false },
+                data: { name: "id", type: "SERIAL", unique: false, notNull: true, index: false },
                 parentNode: newId, extent: "parent",
                 draggable: false,
                 expandParent: true,
@@ -127,7 +126,7 @@ export const Flow = () => {
         return {
             isNotNull: node.data.notNull,
             isIndex: node.data.index,
-            constraint: node.data.constraint,
+            unique: node.data.unique,
         }
     }
 
@@ -163,7 +162,7 @@ export const Flow = () => {
             id: `${currentTable.id}/col_${v4()}`,
             type: "column",
             position: { x: 0, y: (colNr * 20) + 20 },
-            data: { name: newColName, type: "VARCHAR", constraint: "none", notNull: false },
+            data: { name: newColName, type: "VARCHAR", unique: false, notNull: false },
             parentNode: currentTable.id, extent: "parent",
             draggable: false,
             expandParent: true,
@@ -180,7 +179,7 @@ export const Flow = () => {
         let edgesCopy = [...state.edges$];
 
         for (const nodeToDelete of nodesToDelete) {
-            // getthe parent table of the node
+            // get the parent table of the node
             const parentTableId = nodeToDelete.parentNode;
             const parentTable = nodesCopy.find(node => node.id === parentTableId);
 
@@ -191,6 +190,27 @@ export const Flow = () => {
             } else {
                 // delete  column
                 nodesCopy = nodesCopy.filter(node => node.id !== nodeToDelete.id);
+
+                // delete indexes
+                const v = indexes$.value[parentTableId] ? indexes$.value[parentTableId].filter(idx => idx.cols.indexOf(nodeToDelete.id) === -1) : [];
+                if (v.length) {
+                    indexes$.value = { ...indexes$.value, [parentTableId]: v };
+                }
+
+                // delete pk
+                if (primaryKey$.value[parentTableId]) {
+                    const pkCopy = { ...primaryKey$.value[parentTableId] };
+                    const idx = pkCopy.cols.findIndex(x => x === nodeToDelete.id);
+                    pkCopy.cols.splice(idx, 1);
+                    primaryKey$.value = { ...primaryKey$.value, [parentTableId]: pkCopy }
+                }
+
+                // delete unique constraint
+                if (uniqueKeys$.value[parentTableId]) {
+                    const unCopy = [...uniqueKeys$.value[parentTableId]];
+                    const existingUn = unCopy.filter(u => !u.cols.includes(nodeToDelete.id));
+                    uniqueKeys$.value = { ...uniqueKeys$.value, [parentTableId]: existingUn };
+                }
 
                 // delete edges connected to this column
                 edgesCopy = edgesCopy.filter(edge => edge.source !== nodeToDelete.id && edge.target !== nodeToDelete.id);
@@ -222,16 +242,21 @@ export const Flow = () => {
     };
 
     const toggleConstraint = (column: any, type: "primary_key" | "unique" | "none") => {
-        let nodesCopy = [...state.nodes$];
-
-        for (let i = 0; i < nodesCopy.length; i++) {
-            const currentNode = nodesCopy[i];
-            if (currentNode.parentNode === column.parentNode && type === "primary_key" && currentNode.data.constraint === "primary_key" && currentNode.id !== column.id) {
-                currentNode.data.constraint = "none";
+        const nodesCopy = [...state.nodes$];
+        const currNodeIndex = nodesCopy.findIndex(x => x.id === column.id);
+        if (type === "primary_key") {
+            const pk = primaryKey$.value[column.parentNode] ? [...primaryKey$.value[column.parentNode].cols] : [];
+            const colIndex = pk.indexOf(column.id);
+            if (colIndex === -1) {
+                pk.push(column.id);
+                nodesCopy[currNodeIndex].data.unique = false;
+            } else {
+                pk.splice(colIndex, 1);
             }
-            if (currentNode.id === column.id) {
-                currentNode.data.constraint = type;
-            }
+            primaryKey$.value = { ...primaryKey$.value, [column.parentNode]: { cols: pk } };
+        }
+        if (type === "unique") {
+            nodesCopy[currNodeIndex].data.unique = !nodesCopy[currNodeIndex].data.unique;
         }
         state.nodes$ = [...nodesCopy];
     }
@@ -296,7 +321,7 @@ export const Flow = () => {
             id: "table_1/col_1",
             type: "column",
             position: { x: 0, y: 20 },
-            data: { name: "id", type: "SERIAL", constraint: "primary_key", notNull: true, index: false },
+            data: { name: "id", type: "SERIAL", unique: false, notNull: true, index: false },
             parentNode: "table_1", extent: "parent",
             draggable: false,
             expandParent: true,
@@ -316,7 +341,6 @@ export const Flow = () => {
         const draggedPosition = parseInt(e.dataTransfer.getData("text/plain"), 10);
         e.dataTransfer.clearData();
 
-        // Assuming the parent table ID is stored in a property like `parentNode`
         const parentTableId = node.parentNode;
 
         let reorderedNodes = [...firstTable!];
@@ -376,6 +400,7 @@ export const Flow = () => {
                                     state.nodes$ = [...sampleNodes];
                                     state.edges$ = sampleEdges;
                                     setFirstTable(null);
+
                                 }}>Load sample</button>
                             </span>
                             <section>
@@ -512,7 +537,7 @@ export const Flow = () => {
                                             id: colId,
                                             type: "column",
                                             position: { x: 0, y: 20 + (n * 20) },
-                                            data: { name: "new_column_" + n, type: "VARCHAR(30)", constraint: "none", notNull: false, index: false },
+                                            data: { name: "new_column_" + n, type: "VARCHAR(30)", unique: false, notNull: false, index: false },
                                             parentNode: tableId, extent: "parent",
                                             draggable: false,
                                             expandParent: true,
@@ -640,61 +665,67 @@ export const Flow = () => {
                                                                 draggable
                                                             >
                                                                 <div className="row">
-                                                                    <input
-                                                                        className="table-input"
-                                                                        type="text"
-                                                                        maxLength={30}
-                                                                        value={c.data.name}
-                                                                        onChange={(e) => {
-                                                                            c.data.name = e.target.value;
-                                                                            const cp = [...state.nodes$];
-                                                                            state.nodes$ = cp;
-                                                                        }}
-                                                                        style={{ width: "100px" }}
-                                                                    />
-                                                                    <Autocomplete
-                                                                        suggestions={postgresTypes}
-                                                                        value={c.data.type || ""}
-                                                                        onChange={(value) => {
-                                                                            c.data.type = value;
-                                                                            const cp = [...state.nodes$];
-                                                                            state.nodes$ = cp;
-                                                                        }}
-                                                                    />
-                                                                    <button
-                                                                        className={generateCssClass("icon-btn", { active: !getProperty(c).isNotNull })}
-                                                                        onClick={() => {
-                                                                            let nCopies = [...state.nodes$];
-                                                                            const curr = nCopies.findIndex(x => x.id === c.id);
-                                                                            nCopies[curr].data.notNull = !nCopies[curr].data.notNull;
-                                                                            state.nodes$ = nCopies;
-                                                                        }}
-                                                                        title="nullable value"
-                                                                    >
-                                                                        <Icon type="null" />
-                                                                    </button>
-
-                                                                    <div
-                                                                        className={generateCssClass("icon-btn")}
-                                                                        title="constraint"
-                                                                    >
-                                                                        <Select
-                                                                            type="single" options={[
-                                                                                { id: "primary_key", icon: "flag", name: "primary key" },
-                                                                                { id: "unique", icon: "star", name: "unique" },
-                                                                                { id: "none", icon: "circle", name: "none" },
-                                                                            ]}
-                                                                            selected={c.data.constraint}
-                                                                            onSelectionChange={(type) => toggleConstraint(c, type as "primary_key" | "unique" | "none")}
+                                                                    <span style={{ display: "flex" }}>
+                                                                        <input
+                                                                            className="table-input"
+                                                                            type="text"
+                                                                            maxLength={30}
+                                                                            value={c.data.name}
+                                                                            onChange={(e) => {
+                                                                                c.data.name = e.target.value;
+                                                                                const cp = [...state.nodes$];
+                                                                                state.nodes$ = cp;
+                                                                            }}
+                                                                            style={{ width: "100px" }}
                                                                         />
-                                                                    </div>
-                                                                    <button
-                                                                        className="icon-btn"
-                                                                        onClick={() => deleteNodes([c])}
-                                                                        title="delete column"
-                                                                    >
-                                                                        <Icon type="delete" />
-                                                                    </button>
+                                                                        <Autocomplete
+                                                                            suggestions={postgresTypes}
+                                                                            value={c.data.type || ""}
+                                                                            onChange={(value) => {
+                                                                                c.data.type = value;
+                                                                                const cp = [...state.nodes$];
+                                                                                state.nodes$ = cp;
+                                                                            }}
+                                                                        />
+                                                                    </span>
+                                                                    <span style={{ display: "flex", alignItems: "center" }}>
+                                                                        <button
+                                                                            className={generateCssClass("icon-btn", { active: !getProperty(c).isNotNull })}
+                                                                            onClick={() => {
+                                                                                let nCopies = [...state.nodes$];
+                                                                                const curr = nCopies.findIndex(x => x.id === c.id);
+                                                                                nCopies[curr].data.notNull = !nCopies[curr].data.notNull;
+                                                                                state.nodes$ = nCopies;
+                                                                            }}
+                                                                            title="nullable value"
+                                                                        >
+                                                                            <Icon type="null" />
+                                                                        </button>
+
+                                                                        <button
+                                                                            title="primary key"
+                                                                            className={generateCssClass("icon-btn", { active: primaryKey$.value[c.parentNode] && primaryKey$.value[c.parentNode].cols.includes(c.id) })}
+                                                                            onClick={() => toggleConstraint(c, "primary_key")}
+                                                                        >
+                                                                            <Icon type="flag" />
+                                                                        </button>
+
+                                                                        <button
+                                                                            className={generateCssClass("icon-btn", { active: c.data.unique })}
+                                                                            title="unique"
+                                                                            onClick={() => toggleConstraint(c, "unique")}
+                                                                            disabled={primaryKey$.value[c.parentNode]?.cols.includes(c.id)}
+                                                                        >
+                                                                            <Icon type="star" />
+                                                                        </button>
+                                                                        <button
+                                                                            className={generateCssClass("icon-btn")}
+                                                                            onClick={() => deleteNodes([c])}
+                                                                            title="delete column"
+                                                                        >
+                                                                            <Icon type="delete" />
+                                                                        </button>
+                                                                    </span>
                                                                 </div>
                                                             </li>
                                                         ))

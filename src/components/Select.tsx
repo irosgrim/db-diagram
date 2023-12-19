@@ -1,8 +1,7 @@
 import { useRef, useState } from "react";
 import { Icon } from "./Icon";
 import { useOnClickOutside } from "../hooks/onClickOutside";
-
-
+import "../style/select.scss";
 
 type SelectProps = {
     type: "single" | "multi";
@@ -43,7 +42,7 @@ export const Select = ({ type = "single", options, selected = "none", onSelectio
 
 
     return (
-        <div className="multi-select-dropdown" ref={dropdownRef}>
+        <div className="select-dropdown" ref={dropdownRef}>
             <div className="input" onClick={toggleDropdown}>
                 {type === "single" && selectedOption.length ? <Icon type={ICON_MAPPING[selected]} /> : <></>}
             </div>

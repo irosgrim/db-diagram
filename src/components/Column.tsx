@@ -1,20 +1,24 @@
 import { useCallback } from 'react';
 import { Handle, Position } from 'reactflow';
 import { Icon } from './Icon';
+import { primaryKey$ } from '../state/globalState';
 
 type ColumnProps = {
+    id: string;
     data: {
         name: string;
         type: string;
-        constraint: "primary_key" | "unique" | "none";
+        unique: boolean;
         notNull: boolean;
         index: boolean;
     },
 }
 
-function Column({ data }: ColumnProps) {
+function Column({ id, data }: ColumnProps) {
+    const tableId = id.split("/")[0];
+
     const onClick = useCallback(() => {
-        console.log(data);
+        console.log(id);
     }, []);
 
     return (
@@ -23,8 +27,8 @@ function Column({ data }: ColumnProps) {
 
             <div className="col" style={{ fontSize: "0.75rem" }}>
                 <div style={{ position: "relative" }}>
-                    {data.constraint === "primary_key" && <span style={{ position: "absolute", top: "1px" }}> <Icon type="flag" height="10" width="10" /> </span>}
-                    {data.constraint === "unique" && <span style={{ position: "absolute", top: "1px" }}> <Icon type="star" height="10" width="10" /> </span>}
+                    {primaryKey$.value[tableId]?.cols.includes(id) && <span style={{ position: "absolute", top: "1px" }}> <Icon type="flag" height="10" width="10" /> </span>}
+                    {data.unique === true && <span style={{ position: "absolute", top: "1px" }}> <Icon type="star" height="10" width="10" /> </span>}
                     <div style={{ marginLeft: "0.7rem", fontSize: "0.75rem" }}>{data.name}</div>
                 </div>
                 <div className="col-type" style={{ marginLeft: "1rem" }}>{data.type}{!data.notNull && "?"}</div>

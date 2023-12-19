@@ -118,6 +118,8 @@ button {
 
 .table-props li .row {
     display: flex;
+    justify-content: space-between;
+    padding-right: 0.5rem;
 }
 
 .border-bottom {
@@ -141,6 +143,9 @@ button {
     border: none;
     outline: none;
     background-color: transparent;
+    &:disabled {
+        opacity: 0.3;
+    }
     // &:hover {
     //     background-color: #eeeeee;
     // }

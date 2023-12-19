@@ -1,93 +1,141 @@
-import { state } from "../state/globalState";
+import { indexes$, primaryKey$, state } from "../state/globalState";
 
-export const generateSqlSchema = () => {
-    const tables: any = {};
-    const indexes: any = {};
 
-    // create initial structure
-    state.nodes$.forEach((node: any) => {
-        if (node.type === "group") {
-            tables[node.id] = {
-                tableName: node.data.name,
-                columns: [],
-                indexes: [],
-                foreignKeys: []
-            };
-        } else if (node.type === "column") {
-            const tableId = node.parentNode;
-            const columnData = {
-                name: node.data.name,
-                type: node.data.type,
-                constraint: node.data.constraint,
-                notNull: node.data.notNull
-            };
-            tables[tableId].columns.push(columnData);
-        } else if (node.type === "index") {
-            const tableId = node.parentNode;
-            indexes[tableId] = indexes[tableId] || [];
-            indexes[tableId].push(node.data);
+class Column{
+    public name: string;
+    public type: string;
+    public notNull: string;
+    public unique: string;
+    constructor(node: any) {
+        this.name = node.data.name;
+        this.type = node.data.type;
+        this.notNull = node.data.notNull ? "NOT NULL" : "";
+        this.unique = node.data.unique ? "UNIQUE" : "";
+    }
+
+    toSql(){
+       const parts = [this.name, this.type];
+        if (this.notNull) {
+            parts.push(this.notNull);
         }
-    });
-
-    // add indexes to each table
-    Object.keys(indexes).forEach(tableId => {
-        if (tables[tableId]) {
-            tables[tableId].indexes = indexes[tableId];
+        if (this.unique) {
+            parts.push(this.unique);
         }
-    });
 
-    // create foreign keys from edges
-    state.edges$.forEach((edge: any) => {
-        const sourceC = edge.source;
-        const targetC = edge.target;
+        return parts.join(" ");
+    }
+}
 
-        const sourceTable = state.nodes$.find((x: any) => x.id === sourceC.split("/")[0]);
-        const sourceColumn = state.nodes$.find((x: any) => x.id === sourceC);
-        const targetTable = state.nodes$.find((x: any) => x.id === targetC.split("/")[0]);
-        const targetColumn = state.nodes$.find((x: any) => x.id === targetC);
-
-        if (sourceTable && sourceColumn && targetTable && targetColumn) {
-            const fkData = {
-                sourceTable: sourceTable.data.name,
-                sourceColumn: sourceColumn.data.name,
-                targetTable: targetTable.data.name,
-                targetColumn: targetColumn.data.name
-            };
-
-            tables[sourceTable.id].foreignKeys.push(fkData);
-        }
-    });
-
-    // generate sql for each table
-    const sqlStatements = Object.values(tables).map((table: any) => {
-        const columnDefs = table.columns.map((column: any) => {
-            let constraint = "";
-            if (column.constraint === "primary_key") {
-                constraint = "PRIMARY KEY";
-            } else if (column.constraint === "unique") {
-                constraint = "UNIQUE";
+class Pk {
+    public cols: string[];
+    constructor(pk: string[]) {
+        this.cols = pk
+    }
+    toSql() {
+        const parts = [];
+        for (const col of this.cols) {
+            const colEl = state.nodes$.find(x => x.id === col);
+            if (colEl) {
+                parts.push(colEl.data.name);
             }
+        }
+        return parts.join(", ")
+    }
+}
 
-            const notNull = column.notNull ? "NOT NULL" : "";
-            return `\t${column.name} ${column.type} ${[constraint, notNull].filter(Boolean).join(" ")}`;
-        });
+class Index {
+    public indexes: any[][];
+    public tableId: string = "";
+    constructor (indexes: any[][]) {
+        this.indexes = indexes;
+    }
 
-        const tableStatement = `CREATE TABLE IF NOT EXISTS ${table.tableName} (\n${columnDefs.join(",\n")}\n);`;
+    toSql() {
+        const parts: any[] = [];
+        for (const idx of this.indexes) {
+            const cols = [];
+            for (let i=0; i < idx.length; i++) {
+                const colEl = state.nodes$.find(x => x.id === idx[i]);
+                if (colEl) {
+                    this.tableId = colEl.parentNode;
+                    cols.push(colEl.data.name);
+                    if(i === idx.length - 1) {
+                        parts.push({name: cols.join("_"), cols: cols});
+                    }
+                }
+            }
+        }
+        const str = [];
+        const tableName = state.nodes$.find(n => n.id === this.tableId)
+        for (const p of parts) {
+            str.push(
+                `CREATE INDEX ${p.name}_idx
+ON ${tableName.data.name} (${p.cols.join(", ")});`
+            )
+        }
 
-        const indexStatements = table.indexes.map((index: any) => {
-            const unique = index.unique ? "UNIQUE" : "";
-            return `CREATE ${unique} INDEX IF NOT EXISTS ON ${table.tableName} (${index.columns.map((x: any) => x.name).join(", ")});`;
-        });
+        return str.join("\n");
 
-        const foreignKeyStatements = table.foreignKeys.map((fk: any) => {
-            return `ALTER TABLE ${table.tableName} ADD FOREIGN KEY (${fk.sourceColumn}) REFERENCES ${fk.targetTable}(${fk.targetColumn});`;
-        });
+    }
+}
 
-        return [tableStatement].concat(indexStatements).concat(foreignKeyStatements).join("\n\n");
-    });
+class Table{
+    public name: string;
+    public cols: Column[];
+    public pk: Pk | null = null;
+    public uniques: string[];
+    public indexes: Index | null = null;
+    public fks: Set<string>[];
+    constructor (tableNode: any) {
+        this.name = tableNode.data.name;
+        this.cols = [];
+        this.uniques = [];
+        this.fks = [];
+    }
+    toSql(){
+        return `
+CREATE TABLE IF NOT EXISTS ${this.name} (
+    ${this.cols.map(c => c.toSql()).join(",\n    ")}${this.pk && this.pk.cols.length ? ",\n    PRIMARY KEY (" + this.pk.toSql() + ")" : ""}
+);
 
-    return sqlStatements.join("\n\n");
-};
+${this.indexes && this.indexes.toSql()}
+`;
+    }
+}
+export const generateSqlSchema = () => {
+
+    const tables: Record<string, any> = {};
+    const columns = {};
+    const indexes = {}
+
+    const t = state.nodes$.filter( n => n.type === "group");
+    for (const n of t) {
+        if(n.type === "group") {
+            tables[n.id] = new Table(n);
+        }
+    }
+
+    for (const col of state.nodes$) {
+        if (col.type === "column") {
+            tables[col.parentNode].cols.push(new Column(col))
+        }
+    }
+
+    for (const [key, value] of Object.entries(tables)) {
+        tables[key].pk = new Pk(primaryKey$.value[key] ? primaryKey$.value[key].cols : []);
+        tables[key].indexes = new Index(indexes$.value[key] ? indexes$.value[key].map(x => x.cols) : [])
+    } 
+
+
+    const str = [];
+
+    for (const t of Object.values(tables)) {
+        str.push(t.toSql());
+    }
+
+
+    return str.join("\n");
+}
 
 
 

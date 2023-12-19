@@ -1,4 +1,3 @@
-import { v4 } from "uuid";
 import { currentModal$, indexes$, primaryKey$, state, uniqueKeys$ } from "../state/globalState";
 import { useState } from "react";
 import "../style/tableOptions.scss";
@@ -9,13 +8,6 @@ type TableOptionsProps = {
     currentTable: any;
 }
 
-const MyComponent = () => {
-    return (
-        <div>
-            Hello world Componenet
-        </div>
-    )
-}
 
 const getEdgeName = (edge: any) => {
     const sourceC = edge.source;
@@ -73,16 +65,53 @@ export const TableOptions = ({ currentTable }: TableOptionsProps) => {
                     <div style={{ marginTop: "0.5rem" }}>
 
                         {
-                            indexes$.value[currentTable.data.name] && indexes$.value[currentTable.data.name].map((x, idx) => (
-                                <div key={x.name}>{x.name} - {x.cols} <button onClick={() => {
-                                    const indexesCopy = [...indexes$.value[currentTable.data.name]]
-                                    indexesCopy.splice(idx, 1);
-                                    //@ts-ignore
-                                    indexes$.value = { ...indexes$.value[currentTable.data.name], [currentTable.data.name]: indexesCopy }
-                                }}><Icon type="delete" /></button></div>
-                            ))
+                            indexes$.value[currentTable.id] && indexes$.value[currentTable.id].map((x, idx) => {
+                                const colNames = x.cols.map(c => {
+                                    const ss = state.nodes$.find(nn => nn.id === c);
+                                    return ss.data.name;
+                                }).join(", ");
+                                return (
+                                    <div
+                                        key={colNames}
+                                        style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingRight: "0.5rem" }}
+                                    >
+                                        <span>
+                                            {colNames}
+                                        </span>
+                                        <button onClick={() => {
+                                            const indexesCopy = [...indexes$.value[currentTable.id]]
+                                            indexesCopy.splice(idx, 1);
+                                            //@ts-ignore
+                                            indexes$.value = { ...indexes$.value[currentTable.id], [currentTable.id]: indexesCopy }
+                                        }}
+                                        >
+                                            <Icon type="delete" />
+                                        </button>
+                                    </div>
+                                )
+                            })
                         }
-                        <button onClick={() => currentModal$.value = { type: "add-index", props: { ...currentTable } }}>add index</button>
+                        <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                            <button
+                                onClick={() => currentModal$.value = { type: "add-index", props: { ...currentTable } }}
+                                style={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    backgroundColor: "rgb(159, 200, 185)",
+                                    border: "none",
+                                    padding: "0.5rem",
+                                    color: "rgb(9, 38, 53)",
+                                    borderRadius: "5px",
+                                    marginRight: "1rem",
+                                    fontWeight: "bold",
+                                }}
+                                title="add index"
+                            >
+                                add index
+                            </button>
+
+                        </div>
 
                     </div>
                 )
@@ -92,21 +121,66 @@ export const TableOptions = ({ currentTable }: TableOptionsProps) => {
                     <div style={{ marginTop: "0.5rem" }}>
                         <h5>Primary key</h5>
                         {
-                            primaryKey$.value[currentTable.data.name] && (
-                                <>
-                                    <span>{primaryKey$.value[currentTable.data.name].name} - {primaryKey$.value[currentTable.data.name].cols}</span>
-                                </>
+                            primaryKey$.value[currentTable.id] && primaryKey$.value[currentTable.id].cols && (
+                                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingRight: "0.5rem" }}>
+                                    <span>
+                                        {primaryKey$.value[currentTable.id].cols
+                                            .map(x => {
+                                                const ss = state.nodes$.find(nn => nn.id === x);
+                                                return ss.data.name;
+                                            })
+                                            .join(", ")}
+                                    </span>
+                                    <button onClick={() => {
+                                        const cp = { ...primaryKey$.value };
+                                        delete cp[currentTable.id];
+                                        primaryKey$.value = cp;
+                                    }}><Icon type="delete" /></button>
+                                </div>
+
                             )
                         }
                         <h5>Unique keys</h5>
                         {
-                            uniqueKeys$.value[currentTable.data.name] && uniqueKeys$.value[currentTable.data.name].map(x => (
-                                <div key={x.name}>
-                                    <span>{x.name} - {x.cols}</span>
-                                </div>
-                            ))
+                            uniqueKeys$.value[currentTable.id] && uniqueKeys$.value[currentTable.id].map((x, idx) => {
+                                const colNames = x.cols.map(cc => {
+                                    const ss = state.nodes$.find(nn => nn.id === cc);
+                                    return ss.data.name
+                                }).join(", ");
+                                return (
+                                    <div key={idx} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingRight: "0.5rem" }}>
+                                        <span>
+                                            {
+                                                colNames
+                                            }
+                                        </span>
+                                        <button onClick={() => {
+                                            const cp = [...uniqueKeys$.value[currentTable.id]];
+                                            cp.splice(idx, 1);
+                                            uniqueKeys$.value = { ...uniqueKeys$.value, [currentTable.id]: [...cp] }
+                                        }}><Icon type="delete" /></button>
+                                    </div>
+                                )
+                            })
                         }
-                        <button onClick={() => currentModal$.value = { type: "add-constraint", props: { ...currentTable } }}>add constraint</button>
+                        <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                            <button
+                                onClick={() => currentModal$.value = { type: "add-constraint", props: { ...currentTable } }}
+                                style={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    backgroundColor: "rgb(159, 200, 185)",
+                                    border: "none",
+                                    padding: "0.5rem",
+                                    color: "rgb(9, 38, 53)",
+                                    borderRadius: "5px",
+                                    marginRight: "1rem",
+                                    fontWeight: "bold",
+                                }}
+                                title="add constraint"
+                            >Add constraint</button>
+                        </div>
                     </div>
                 )
             }
@@ -123,9 +197,7 @@ export const TableOptions = ({ currentTable }: TableOptionsProps) => {
                                 </div>
                             ))
                         }
-                        <span style={{ display: "flex", justifyContent: "right" }}>
-                            <button style={{ marginRight: "1rem", borderRadius: "5px", backgroundColor: "#9fc8b9", border: "none", height: "32px", width: "32px", display: "flex", alignItems: "center", justifyContent: "center" }}> <Icon type="plus" height="12" /></button>
-                        </span>
+
                     </div>
                 )
             }

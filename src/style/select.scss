@@ -12,14 +12,16 @@
     }
 }
 
-.multi-select-dropdown .dropdown-menu {
+.dropdown-menu {
     list-style: none;
+    min-width: 120px;
+    right: 0;
     padding: 0;
     margin: 0;
     border: 1px solid #ccc;
     position: absolute;
     background-color: white;
-    z-index: 100;
+    z-index: 5;
     li {
         padding: 8px;
         cursor: pointer;
@@ -27,10 +29,9 @@
         justify-content: space-between;
         align-items: center;
         font-size: 0.85rem;
+        &.selected {
+            background-color: #efefef;
+        }
     }
 }
 
-
-.multi-select-dropdown .dropdown-menu li.selected {
-    background-color: #efefef;
-}

@@ -5,7 +5,6 @@ import { ColumnsSelector } from "./ColumnsSelector";
 export const AddConstraint = ({ onClose }: { onClose: () => void }) => {
     const [active, setActive] = useState<"pk" | "un">("pk");
     const currentModal = currentModal$.value;
-    const [name, setName] = useState(currentModal ? currentModal.props.data.name + "_" + active : "");
 
     if (!currentModal) {
         return <></>
@@ -13,38 +12,34 @@ export const AddConstraint = ({ onClose }: { onClose: () => void }) => {
 
     const toggle = (a: "pk" | "un") => {
         setActive(a);
-        setName(currentModal.props.data.name + "_" + a)
     }
 
     const onSave = (selectedColumns: string[]) => {
-        const tableName = currentModal.props.data.name;
+        const tableId = currentModal.props.id;
+
+        if (selectedColumns.length === 0) {
+            onClose();
+            return;
+        }
 
         if (active === "pk") {
-            primaryKey$.value = { ...primaryKey$.value, [tableName]: { name, cols: selectedColumns.join(",") } };
-            console.log(primaryKey$.value[tableName])
+            primaryKey$.value = { ...primaryKey$.value, [tableId]: { cols: selectedColumns } };
         }
 
         if (active === "un") {
-            const sortedNewCols = selectedColumns.sort().join(",");
             const newEntry = {
-                name: name,
-                cols: sortedNewCols,
+                cols: selectedColumns,
             };
-            const currentUniques = uniqueKeys$.value[tableName] || [];
-            const existingKeyIndex = currentUniques.findIndex(x => x.name === newEntry.name);
-            const colsAlreadyExist = currentUniques.some(x => x.cols === sortedNewCols);
+            const currentUniques = uniqueKeys$.value[tableId] || [];
+            const existingKeyIndex = currentUniques.findIndex(x => x.cols.sort().join(",") === selectedColumns.sort().join(","));
 
             if (existingKeyIndex !== -1) {
-                if (!colsAlreadyExist) {
-                    currentUniques[existingKeyIndex] = newEntry;
-                }
+                currentUniques[existingKeyIndex] = newEntry;
             } else {
-                if (!colsAlreadyExist) {
-                    currentUniques.push(newEntry);
-                }
+                currentUniques.push(newEntry);
             }
 
-            uniqueKeys$.value = { ...uniqueKeys$.value, [tableName]: currentUniques };
+            uniqueKeys$.value = { ...uniqueKeys$.value, [tableId]: currentUniques };
         }
         onClose();
     };
@@ -54,9 +49,6 @@ export const AddConstraint = ({ onClose }: { onClose: () => void }) => {
             <div style={{ marginBottom: "0.5rem" }}>
                 <div>
                     Table: {currentModal.props && currentModal.props.data.name}
-                </div>
-                <div>
-                    Constraint name: <input type="text" value={name} onChange={(e) => setName(e.target.value)} />
                 </div>
             </div>
             <div style={{ marginBottom: "-1px" }}>

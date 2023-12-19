@@ -39,7 +39,7 @@ export const sampleNodes = [
         "data": {
             "name": "id",
             "type": "SERIAL",
-            "constraint": "primary_key",
+            "unique": false,
             "notNull": true,
             "index": false
         },
@@ -60,7 +60,7 @@ export const sampleNodes = [
         "data": {
             "name": "username",
             "type": "VARCHAR(16)",
-            "constraint": "unique",
+            "unique": true,
             "notNull": true
         },
         "parentNode": "table_1",
@@ -80,7 +80,7 @@ export const sampleNodes = [
         "data": {
             "name": "name",
             "type": "VARCHAR(30)",
-            "constraint": "none",
+            "unique": false,
             "notNull": true
         },
         "parentNode": "table_1",
@@ -101,7 +101,7 @@ export const sampleNodes = [
         "data": {
             "name": "email",
             "type": "VARCHAR(50)",
-            "constraint": "unique",
+            "unique": true,
             "notNull": true
         },
         "parentNode": "table_1",
@@ -121,7 +121,7 @@ export const sampleNodes = [
         "data": {
             "name": "password",
             "type": "VARCHAR",
-            "constraint": "none",
+            "unique": false,
             "notNull": true
         },
         "parentNode": "table_1",
@@ -141,7 +141,7 @@ export const sampleNodes = [
         "data": {
             "name": "date_created",
             "type": "VARCHAR",
-            "constraint": "none",
+            "unique": false,
             "notNull": true
         },
         "parentNode": "table_1",
@@ -190,7 +190,7 @@ export const sampleNodes = [
         "data": {
             "name": "id",
             "type": "SERIAL",
-            "constraint": "primary_key",
+            "unique": false,
             "notNull": true,
             "index": false
         },
@@ -211,7 +211,7 @@ export const sampleNodes = [
         "data": {
             "name": "user_id",
             "type": "VARCHAR",
-            "constraint": "none",
+            "unique": false,
             "notNull": true
         },
         "parentNode": "table_2",
@@ -231,7 +231,7 @@ export const sampleNodes = [
         "data": {
             "name": "title",
             "type": "VARCHAR",
-            "constraint": "none",
+            "unique": false,
             "notNull": true
         },
         "parentNode": "table_2",
@@ -251,7 +251,7 @@ export const sampleNodes = [
         "data": {
             "name": "body",
             "type": "VARCHAR",
-            "constraint": "none",
+            "unique": false,
             "notNull": true
         },
         "parentNode": "table_2",
@@ -271,7 +271,7 @@ export const sampleNodes = [
         "data": {
             "name": "visible",
             "type": "BOOLEAN",
-            "constraint": "none",
+            "unique": false,
             "notNull": true
         },
         "parentNode": "table_2",
@@ -291,8 +291,8 @@ export const sampleNodes = [
         },
         "data": {
             "name": "category_id",
-            "type": "VARCHAR",
-            "constraint": "none",
+            "type": "INT",
+            "unique": false,
             "notNull": true
         },
         "parentNode": "table_2",
@@ -311,8 +311,8 @@ export const sampleNodes = [
         },
         "data": {
             "name": "date_created",
-            "type": "VARCHAR",
-            "constraint": "none",
+            "type": "DATE",
+            "unique": false,
             "notNull": true
         },
         "parentNode": "table_2",
@@ -331,8 +331,8 @@ export const sampleNodes = [
         },
         "data": {
             "name": "date_updated",
-            "type": "VARCHAR",
-            "constraint": "none",
+            "type": "DATE",
+            "unique": false,
             "notNull": true
         },
         "parentNode": "table_2",
@@ -381,7 +381,7 @@ export const sampleNodes = [
         "data": {
             "name": "id",
             "type": "SERIAL",
-            "constraint": "primary_key",
+            "unique": false,
             "notNull": true,
             "index": false
         },
@@ -402,7 +402,7 @@ export const sampleNodes = [
         "data": {
             "name": "name",
             "type": "VARCHAR(100)",
-            "constraint": "unique",
+            "unique": true,
             "notNull": true
         },
         "parentNode": "table_3",
@@ -422,7 +422,7 @@ export const sampleNodes = [
         "data": {
             "name": "user_id",
             "type": "INTEGER",
-            "constraint": "none",
+            "unique": false,
             "notNull": true
         },
         "parentNode": "table_3",
@@ -441,8 +441,8 @@ export const sampleNodes = [
         },
         "data": {
             "name": "date_created",
-            "type": "VARCHAR",
-            "constraint": "none",
+            "type": "DATE",
+            "unique": false,
             "notNull": true
         },
         "parentNode": "table_3",
@@ -461,8 +461,8 @@ export const sampleNodes = [
         },
         "data": {
             "name": "date_updated",
-            "type": "VARCHAR",
-            "constraint": "none",
+            "type": "DATE",
+            "unique": false,
             "notNull": true
         },
         "parentNode": "table_3",

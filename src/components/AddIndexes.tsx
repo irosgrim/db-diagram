@@ -11,32 +11,21 @@ export const AddIndexes = ({ onClose }: AddIndexesProps) => {
     if (!currentModal) {
         return <></>
     }
-    const tableName = currentModal.props.data.name;
+    const tableId = currentModal.props.id;
 
     const onSave = (selectedColumns: string[]) => {
-        const currentIndexes = indexes$.value[tableName] || [];
-        const indexName = selectedColumns.join("_") + "_idx";
-
-        const indexPos = currentIndexes.findIndex(idx => idx.name === indexName);
-        const newIndex = { name: indexName, cols: selectedColumns.join(","), unique: true };
-
-        const columns = selectedColumns.join(",");
-        if (currentIndexes.length === 0) {
-            currentIndexes.push(newIndex);
-        } else {
-
-            if (indexPos !== -1) {
-                currentIndexes[indexPos] = newIndex;
-            } else {
-                const similarIndexPos = currentIndexes.findIndex(idx => idx.cols === columns);
-                if (similarIndexPos === -1) {
-                    currentIndexes.push(newIndex);
-                } else {
-                    currentIndexes.splice(similarIndexPos, 1, newIndex);
-                }
-            }
+        if (selectedColumns.length === 0) {
+            return;
         }
-        indexes$.value = { ...indexes$.value, [tableName]: currentIndexes };
+        const currentIndexes = indexes$.value[tableId] || [];
+
+        const indexPos = currentIndexes.findIndex(idx => idx.cols.join(",") === selectedColumns.join(","));
+        const newIndex = { cols: selectedColumns, unique: true };
+
+        if (currentIndexes.length === 0 || indexPos === -1) {
+            currentIndexes.push(newIndex);
+        }
+        indexes$.value = { ...indexes$.value, [tableId]: currentIndexes };
         onClose()
     }
 

@@ -8,14 +8,12 @@ export const edgeOptions: any = signal({
 
 export const currentModal$: Signal<{type: "add-constraint" | "add-index"; props?: any } | null> = signal(null);
 
-// export const nodes: Signal<any[]> = signal([]);
-export const primaryKey$: Signal<Record<string, {name: string; cols: string;}>> = signal({});
-export const uniqueKeys$: Signal<Record<string, {name: string; cols: string;}[]>> = signal({});
-export const indexes$: Signal<Record<string, {name: string; cols: string; unique: boolean}[]>> = signal({});
-
+export const primaryKey$: Signal<Record<string, {cols: string[]}>> = signal({});
+export const uniqueKeys$: Signal<Record<string, {cols: string[]}[]>> = signal({});
+export const indexes$: Signal<Record<string, {cols: string[]; unique: boolean}[]>> = signal({});
 
 class State {
-    private nodes: Signal<any[]> = signal([]);
+    nodes: Signal<any[]> = signal([]);
     private edges: Signal<(Edge | any)[]> = signal([]);
 
     get nodes$() {
@@ -34,3 +32,4 @@ class State {
 }
 
 export const state = new State();
+
