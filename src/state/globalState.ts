@@ -1,10 +1,5 @@
 import { Signal, signal } from "@preact/signals-react";
-import { Edge } from "reactflow";
-
-export const edgeOptions: any = signal({
-    showEdgeOptions: null,
-    fkType: {}
-});
+import { Edge, Node } from "reactflow";
 
 export const currentModal$: Signal<{type: "add-constraint" | "add-index"; props?: any } | null> = signal(null);
 
@@ -12,9 +7,13 @@ export const primaryKey$: Signal<Record<string, {cols: string[]}>> = signal({});
 export const uniqueKeys$: Signal<Record<string, {cols: string[]}[]>> = signal({});
 export const indexes$: Signal<Record<string, {cols: string[]; unique: boolean}[]>> = signal({});
 
+
+export const edgeOptions$: Signal<Edge | null> = signal(null);
+
+
 class State {
-    nodes: Signal<any[]> = signal([]);
-    private edges: Signal<(Edge | any)[]> = signal([]);
+    nodes: Signal<Node[]> = signal([]);
+    private edges: Signal<Edge[]> = signal([]);
 
     get nodes$() {
         return this.nodes.value;
@@ -23,7 +22,7 @@ class State {
         this.nodes.value = value;
     }
 
-    get edges$() {
+    get edges$(): Edge[] {
         return this.edges.value;
     }
     set edges$(value: any[]) {

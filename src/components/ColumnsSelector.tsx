@@ -9,7 +9,7 @@ type ColumnsSelectorProps = {
 
 export const ColumnsSelector = ({ table, onClose, onSave }: ColumnsSelectorProps) => {
     const [selectedColumns, setSelectedColumns] = useState<string[]>([]);
-
+    console.log(table)
     const setConstraint = (colId: string) => {
         const index = selectedColumns.indexOf(colId);
         if (index < 0) {

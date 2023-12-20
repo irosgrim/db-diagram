@@ -3,35 +3,93 @@ import { useState } from "react";
 import "../style/tableOptions.scss";
 import { generateCssClass } from "../utils/styling";
 import { Icon } from "./Icon";
+import { Edge } from "reactflow";
 
 type TableOptionsProps = {
     currentTable: any;
 }
 
 
-const getEdgeName = (edge: any) => {
-    const sourceC = edge.source;
-    const targetC = edge.target;
+const getEdgeName = (currentTableId: string) => {
+    const edges = state.edges$.filter(x => {
+        const [sourceTable,] = x.source.split("/");
+        return x.data.compositeGroup === null && sourceTable === currentTableId;
+    })
 
-    const sourceTable = state.nodes$.find(x => x.id === sourceC.split("/")[0]);
-    const sourceColumn = state.nodes$.find(x => x.id === sourceC);
+    const fk = edges.map(edge => {
+        const sourceC = edge.source;
+        const targetC = edge.target;
 
-    const targetTable = state.nodes$.find(x => x.id === targetC.split("/")[0]);
-    const targetColumn = state.nodes$.find(x => x.id === targetC);
+        const sourceTable = state.nodes$.find(x => x.id === sourceC.split("/")[0]);
+        const sourceColumn = state.nodes$.find(x => x.id === sourceC);
 
-    const data = {
-        sourceTable: sourceTable.data.name,
-        sourceColumn: sourceColumn.data.name,
-        targetTable: targetTable.data.name,
-        targetColumn: targetColumn.data.name
+        const targetTable = state.nodes$.find(x => x.id === targetC.split("/")[0]);
+        const targetColumn = state.nodes$.find(x => x.id === targetC);
+
+        const data = {
+            sourceTable: sourceTable.data.name,
+            sourceColumn: sourceColumn.data.name,
+            targetTable: targetTable.data.name,
+            targetColumn: targetColumn.data.name
+        }
+
+        return `${data.sourceColumn} to ${data.targetTable}(${data.targetColumn})`;
+    });
+
+    return (
+        <div>
+            {
+                edges.length > 0 && <h5>Simple foreign keys</h5>
+            }
+            {
+                fk.map((x, i) => (
+                    <div key={i}>
+                        {x}
+                    </div>
+                ))
+            }
+        </div>
+    )
+};
+
+const getCompositeFks = (currentTableId: string) => {
+    const composite = state.edges$.reduce((acc: any, curr: Edge) => {
+        if (curr.data.compositeGroup !== null && curr.source.split("/")[0] === currentTableId) {
+            acc[curr.data.compositeGroup] = [...(acc[curr.data.compositeGroup] ? acc[curr.data.compositeGroup] : []), curr];
+        }
+        return acc;
+    }, {} as Record<string, Edge[]>);
+
+    const composites = [];
+    for (const fk of Object.values(composite)) {
+        const source = [];
+        const target = [];
+        let tableName = "";
+        // @ts-ignore
+        for (const group of fk) {
+            const sourceCol = state.nodes$.find(n => n.id === group.source);
+            const targetTable = state.nodes$.find(n => n.id === group.target.split("/")[0]);
+            const targetCol = state.nodes$.find(n => n.id === group.target);
+            tableName = targetTable.data.name;
+            source.push(sourceCol.data.name);
+            target.push(targetCol.data.name);
+        }
+        composites.push(`(${source.join(", ")}) to ${tableName}(${target.join(", ")})`)
     }
 
-    return <>
-        {data.sourceColumn} to {data.targetTable}({data.targetColumn})
-
-    </>
+    return <div>
+        {
+            composites.length > 0 && <h5>Composite foreign keys:</h5>
+        }
+        {
+            composites.map((x, i) => (
+                <div key={i}>
+                    {x}
+                </div>
+            ))
+        }
+    </div>
 }
-
 
 export const TableOptions = ({ currentTable }: TableOptionsProps) => {
     const [showSection, setShowSection] = useState<"indexes" | "constraints" | "foreign-keys" | null>(null);
@@ -188,16 +246,11 @@ export const TableOptions = ({ currentTable }: TableOptionsProps) => {
                 showSection === "foreign-keys" && (
                     <div>
                         {
-                            state.edges$.filter(x => {
-                                const [sourceTable,] = x.source.split("/");
-                                return sourceTable === currentTable.id;
-                            }).map(x => (
-                                <div key={x.id}>
-                                    {getEdgeName(x)}
-                                </div>
-                            ))
+                            getCompositeFks(currentTable.id)
                         }
-
+                        {
+                            getEdgeName(currentTable.id)
+                        }
                     </div>
                 )
             }

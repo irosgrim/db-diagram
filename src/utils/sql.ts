@@ -1,4 +1,5 @@
-import { indexes$, primaryKey$, state } from "../state/globalState";
+import { Edge } from "reactflow";
+import { indexes$, primaryKey$, state, uniqueKeys$ } from "../state/globalState";
 
 
 class Column{
@@ -43,6 +44,38 @@ class Pk {
     }
 }
 
+class Unique {
+    public uniques: any[][];
+    public tableId: string = "";
+
+    constructor(uniques: any[][]) {
+        this.uniques = uniques;
+    }
+
+    toSql() {
+        const parts: any[] = [];
+        for (const u of this.uniques) {
+            const cols = [];
+            for (let i=0; i < u.length; i++) {
+                const colEl = state.nodes$.find(x => x.id === u[i]);
+                if (colEl) {
+                    this.tableId = colEl.parentNode;
+                    cols.push(colEl.data.name);
+                    if(i === u.length - 1) {
+                        parts.push({name: cols.join("_"), cols: cols});
+                    }
+                }
+            }
+        }
+        const str = [];
+        for (const p of parts) {
+            str.push(`${p.cols.join(", ")})`);
+        }
+
+        return str;
+    }
+}
+
 class Index {
     public indexes: any[][];
     public tableId: string = "";
@@ -66,7 +99,7 @@ class Index {
             }
         }
         const str = [];
-        const tableName = state.nodes$.find(n => n.id === this.tableId)
+        const tableName = state.nodes$.find(n => n.id === this.tableId);
         for (const p of parts) {
             str.push(
                 `CREATE INDEX ${p.name}_idx
@@ -74,39 +107,93 @@ ON ${tableName.data.name} (${p.cols.join(", ")});`
             )
         }
 
-        return str.join("\n");
+        return str;
 
+    }
+}
+
+class ForeignKey {
+    public edges: Edge[] = [];
+    constructor(edges: Edge[]) {
+        this.edges = edges;
+    }
+//FOREIGN KEY (OrderID, CustomerID) REFERENCES Orders(OrderID, CustomerID)
+    toSql() {
+        // get composite fks
+        const composite = this.edges.reduce((acc: any, curr: Edge) => {
+            if (curr.data.compositeGroup !== null) {
+                acc[curr.data.compositeGroup] = [...(acc[curr.data.compositeGroup] ? acc[curr.data.compositeGroup] : []), curr];
+            }
+            return acc;
+        }, {} as Record<string, Edge[]>);
+
+        const composites = [];
+        for (const fk of Object.values(composite)) {
+            const source = [];
+            const target = [];
+            let tableName = "";
+            // @ts-ignore
+            for (const group of fk) {
+                console.log(group)
+                const sourceCol = state.nodes$.find(n => n.id === group.source);
+                const targetTable = state.nodes$.find(n => n.id === group.target.split("/")[0]);
+                const targetCol = state.nodes$.find(n => n.id === group.target);
+                tableName = targetTable.data.name;
+                source.push(sourceCol.data.name);
+                target.push(targetCol.data.name);
+            }
+            composites.push(`FOREIGN KEY (${source.join(", ")}) REFERENCES ${tableName}(${target.join(", ")})`)
+        }
+
+        // get simple fks
+        const keys = this.edges.filter(x => x.data.compositeGroup === null).map(x => {
+            const sourceCol = state.nodes$.find(n => n.id === x.source);
+            const targetTable = state.nodes$.find(n => n.id === x.target.split("/")[0]);
+            const targetCol = state.nodes$.find(n => n.id === x.target);
+            return (`FOREIGN KEY (${sourceCol.data.name}) REFERENCES ${targetTable.data.name}(${targetCol.data.name})`)
+        })
+        
+        return [...keys, ...composites];
     }
 }
 
 class Table{
     public name: string;
-    public cols: Column[];
+    public cols: Column[] = [];
     public pk: Pk | null = null;
-    public uniques: string[];
-    public indexes: Index | null = null;
-    public fks: Set<string>[];
+    public unique: Unique | null = null;
+    public index: Index | null = null;
+    public fk: ForeignKey | null = null;
     constructor (tableNode: any) {
         this.name = tableNode.data.name;
-        this.cols = [];
-        this.uniques = [];
-        this.fks = [];
     }
     toSql(){
-        return `
-CREATE TABLE IF NOT EXISTS ${this.name} (
-    ${this.cols.map(c => c.toSql()).join(",\n    ")}${this.pk && this.pk.cols.length ? ",\n    PRIMARY KEY (" + this.pk.toSql() + ")" : ""}
+        
+        const sql: string[] = [];
+        this.cols.forEach(c => sql.push(c.toSql()));
+        if (this.unique && this.unique.uniques.length) {
+            this.unique.toSql().forEach(x => sql.push("UNIQUE (" +x + ")"))
+        }
+
+        if (this.pk && this.pk.cols.length) {
+            sql.push("PRIMARY KEY (" + this.pk.toSql() + ")");
+        }
+
+        if (this.fk && this.fk.edges.length) {
+            this.fk.toSql().forEach(x => sql.push(x))
+        }
+
+        return `CREATE TABLE IF NOT EXISTS ${this.name} (
+    ${sql.join(",\n    ")}
 );
 
-${this.indexes && this.indexes.toSql()}
+${this.index && this.index.toSql().join("\n\n")}
 `;
     }
 }
 export const generateSqlSchema = () => {
 
     const tables: Record<string, any> = {};
-    const columns = {};
-    const indexes = {}
 
     const t = state.nodes$.filter( n => n.type === "group");
     for (const n of t) {
@@ -121,9 +208,11 @@ export const generateSqlSchema = () => {
         }
     }
 
-    for (const [key, value] of Object.entries(tables)) {
+    for (const [key,] of Object.entries(tables)) {
         tables[key].pk = new Pk(primaryKey$.value[key] ? primaryKey$.value[key].cols : []);
-        tables[key].indexes = new Index(indexes$.value[key] ? indexes$.value[key].map(x => x.cols) : [])
+        tables[key].index = new Index(indexes$.value[key] ? indexes$.value[key].map(x => x.cols) : [])
+        tables[key].unique = new Unique(uniqueKeys$.value[key] ? uniqueKeys$.value[key].map(x => x.cols) : []);
+        tables[key].fk = new ForeignKey(state.edges$.filter(x => x.source.split("/")[0] === key));
     } 
 
 

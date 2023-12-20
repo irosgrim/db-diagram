@@ -487,7 +487,8 @@ export const sampleEdges = [
         },
         "data": {
             "label": "relation",
-            "type": "foreign-key"
+            compositeGroup: null,
+            color: "",
         },
         "id": "reactflow__edge-table_2/col_5020c99c-e79d-40d0-a7ea-2e8c5641bb37left-table_1/col_1right"
     },
@@ -502,7 +503,8 @@ export const sampleEdges = [
         },
         "data": {
             "label": "relation",
-            "type": "foreign-key"
+            compositeGroup: null,
+            color: "",
         },
         "id": "reactflow__edge-table_2/col_9b0e1661-b78a-49f2-b492-ca7435631bbfleft-table_3/col_1left"
     }

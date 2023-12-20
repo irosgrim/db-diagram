@@ -1,6 +1,6 @@
 
 type IconProps = {
-    type: "plus" | "flag" | "delete" | "key" | "primary-key" | "dots" | "edit" | "null" | "color-palette" | "star" | "circle" | "check" | "dots-grid" | "multi-key";
+    type: "arrow-right" | "arrow-left" | "plus" | "flag" | "delete" | "key" | "primary-key" | "dots" | "edit" | "null" | "color-palette" | "star" | "circle" | "check" | "dots-grid" | "multi-key";
     color?: string;
     height?: string;
     width?: string;
@@ -145,6 +145,22 @@ export const Icon = ({ type, color = "black", height, width }: IconProps) => {
                     </svg>
                 )
 
+            }
+
+            {
+                type === "arrow-left" && (
+                    <svg width={width || "8"} height={height || "12"} viewBox="0 0 8 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0.193162 6.46634L5.53367 11.8068C5.79124 12.0644 6.20882 12.0644 6.46636 11.8068L7.08924 11.1839C7.34637 10.9268 7.34686 10.5101 7.09034 10.2524L2.85789 5.99999L7.09034 1.74765C7.34686 1.48991 7.34637 1.07318 7.08924 0.816057L6.46636 0.193175C6.20879 -0.0643917 5.79121 -0.0643917 5.53367 0.193175L0.19319 5.53366C-0.0643769 5.7912 -0.064377 6.20878 0.193162 6.46634Z" fill={color} />
+                    </svg>
+                )
+            }
+            {
+                type === "arrow-right" && (
+                    <svg width={width || "8"} height={height || "12"} viewBox="0 0 8 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M7.08925 6.46634L1.74874 11.8068C1.49117 12.0644 1.07359 12.0644 0.816051 11.8068L0.193169 11.1839C-0.0639585 10.9268 -0.0644531 10.5101 0.19207 10.2524L4.42452 5.99999L0.19207 1.74765C-0.0644531 1.48991 -0.0639585 1.07318 0.193169 0.816057L0.816051 0.193175C1.07362 -0.0643917 1.4912 -0.0643917 1.74874 0.193175L7.08922 5.53366C7.34679 5.7912 7.34679 6.20878 7.08925 6.46634Z" fill={color} />
+                    </svg>
+
+                )
             }
         </>
     )

@@ -3,7 +3,7 @@ import { useStore, getSmoothStepPath, EdgeLabelRenderer } from 'reactflow';
 
 import { getEdgeParams } from './utils';
 import { Icon } from './Icon';
-import { edgeOptions } from '../state/globalState';
+import { edgeOptions$ } from '../state/globalState';
 
 type EdgeProps = {
     id: string;
@@ -11,10 +11,11 @@ type EdgeProps = {
     target: any;
     markerEnd?: any;
     style?: any;
+    data: any;
 }
 
 
-const FloatingEdge = ({ id, source, target, markerEnd, style }: EdgeProps) => {
+const FloatingEdge = ({ id, data, source, target, markerEnd, style }: EdgeProps) => {
     const sourceNode = useStore(useCallback((store) => store.nodeInternals.get(source), [source]));
     const targetNode = useStore(useCallback((store) => store.nodeInternals.get(target), [target]));
     const [showOpts, setShowOpts] = useState(false);
@@ -36,7 +37,7 @@ const FloatingEdge = ({ id, source, target, markerEnd, style }: EdgeProps) => {
 
     const onEdgeClick = (evt: any, id: any) => {
         evt.stopPropagation();
-        edgeOptions.value = { ...edgeOptions.value, showEdgeOptions: id };
+        edgeOptions$.value = { ...edgeOptions$.value, id, data, source, target };
     };
 
 
@@ -45,7 +46,7 @@ const FloatingEdge = ({ id, source, target, markerEnd, style }: EdgeProps) => {
         <>
             <g onClick={() => setShowOpts(true)} onMouseLeave={() => setShowOpts(false)} >
                 <path style={style} className="react-flow__edge-path-selector" d={edgePath} fillRule="evenodd" />
-                <path style={style} className="react-flow__edge-path" d={edgePath} markerEnd={markerEnd} fillRule="evenodd" />
+                <path style={data.compositeGroup !== null ? { stroke: data.color } : style} className="react-flow__edge-path" d={edgePath} markerEnd={markerEnd} fillRule="evenodd" />
                 <EdgeLabelRenderer>
                     <div
                         style={{
@@ -57,7 +58,7 @@ const FloatingEdge = ({ id, source, target, markerEnd, style }: EdgeProps) => {
                         className="nodrag nopan"
                     >
                         {
-                            showOpts && (
+                            showOpts && data.compositeGroup === null && (
                                 <button className="edgebutton" onClick={(event) => onEdgeClick(event, id)}>
                                     {/* × */}
                                     <Icon type="key" />
@@ -65,7 +66,7 @@ const FloatingEdge = ({ id, source, target, markerEnd, style }: EdgeProps) => {
                             )
                         }
                         {
-                            edgeOptions.value.fkType[id] === "composite" && <button className="edgebutton" onClick={(event) => onEdgeClick(event, id)}>
+                            data.compositeGroup !== null && <button className="edgebutton" onClick={(event) => onEdgeClick(event, id)}>
                                 {/* × */}
                                 <Icon type="multi-key" />
                             </button>
