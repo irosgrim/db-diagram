@@ -14,7 +14,7 @@ export const EdgeOptions = () => {
         const currEdgeIdx = edgesCopy.findIndex(x => x.id === edge!.id);
         edgesCopy[currEdgeIdx].data.type = "simple-fk";
         state.edges$ = [...edgesCopy];
-        console.log(state.edges$);
+        console.log(type);
     }
 
     const onComposite = () => {

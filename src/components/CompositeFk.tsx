@@ -19,9 +19,6 @@ export const CompositeFk = ({ sourceTable, targetTable, edge }: CompositeFkProps
     const sourceColumns = state.nodes$.filter(x => x.parentNode === sourceTable.id);
     const targetColumns = state.nodes$.filter(x => x.parentNode === targetTable.id);
 
-    const sourceColumn = state.nodes$.find(x => x.id === edge!.source);
-    const targetColumn = state.nodes$.find(x => x.id === edge!.target);
-
     const currEdgeIdx = state.edges$.findIndex(x => x.id === edge!.id);
 
     useEffect(() => {
