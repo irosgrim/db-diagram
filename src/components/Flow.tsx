@@ -193,7 +193,13 @@ export const Flow = () => {
         if (schema) {
             setSchema(null);
         } else {
-            setSchema(generateSqlSchema())
+            setSchema(generateSqlSchema({
+                nodes: state.nodes$,
+                edges: state.edges$,
+                primaryKey: primaryKey$.value,
+                indexes: indexes$.value,
+                uniqueKeys: uniqueKeys$.value,
+            }))
         }
     }
 
