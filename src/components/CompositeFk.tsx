@@ -1,25 +1,20 @@
 import { useEffect, useState } from "react"
 import { state } from "../state/globalState";
 import { v4 } from "uuid";
-import { Edge, MarkerType } from "reactflow";
+import { Edge, MarkerType, Node } from "reactflow";
 import { randomColor } from "../utils/styling";
 
 type CompositeFkProps = {
-    sourceTable: {
-        id: string;
-    };
-    targetTable: {
-        id: string;
-    };
+    sourceTable: Node;
+    targetTable: Node;
     edge: Edge | null;
+    onClose: () => void;
 }
 
-export const CompositeFk = ({ sourceTable, targetTable, edge }: CompositeFkProps) => {
+export const CompositeFk = ({ sourceTable, targetTable, edge, onClose }: CompositeFkProps) => {
     const [newEdges, setNewEdges] = useState<Edge[]>([]);
     const sourceColumns = state.nodes$.filter(x => x.parentNode === sourceTable.id);
     const targetColumns = state.nodes$.filter(x => x.parentNode === targetTable.id);
-
-    const currEdgeIdx = state.edges$.findIndex(x => x.id === edge!.id);
 
     useEffect(() => {
         if (edge?.data.compositeGroup !== null) {
@@ -50,7 +45,6 @@ export const CompositeFk = ({ sourceTable, targetTable, edge }: CompositeFkProps
     }
 
 
-
     const handleChange = (value: string, target: "source" | "target", index: number) => {
         if (value) {
             const edgesCopy = [...newEdges];
@@ -67,35 +61,43 @@ export const CompositeFk = ({ sourceTable, targetTable, edge }: CompositeFkProps
     const saveCompositeFk = () => {
         // group the composite by a unique id
         if (newEdges.length > 0) {
+            const currEdgeIdx = state.edges$.findIndex(x => x.id === edge!.id);
+
             const compositeGroupId = v4();
-            const groupColor = randomColor();
+            const groupColor = randomColor(60);
             // destroy refs
             const edgesCopy = [...JSON.parse(JSON.stringify(state.edges$))];
             // first edge make to composite if not already
             edgesCopy[currEdgeIdx].data.compositeGroup = edge?.data.compositeGroup !== null ? edge?.data.compositeGroup : compositeGroupId;
-            edgesCopy[currEdgeIdx].data.color = edge?.data.compositeGroup !== null ? edge?.data.color : groupColor;
+            edgesCopy[currEdgeIdx].data.color = edge?.data.compositeGroup !== null ? (edge?.data.color !== "" && edge?.data.color || groupColor) : groupColor;
+            delete edgesCopy[currEdgeIdx].sourceHandle;
+            delete edgesCopy[currEdgeIdx].targetHandle;
 
-            console.log(edge?.data.compositeGroup);
-            for (const newEdge of newEdges) {
+            for (let newEdge of newEdges) {
 
                 const existingEdgeIndex = edgesCopy.findIndex(e => (newEdge.id === e.id) || (e.source === newEdge.source && e.target === newEdge.target) ||
                     (e.source === newEdge.target && e.target === newEdge.source));
+
                 if (existingEdgeIndex > -1) {
+                    newEdge = { ...JSON.parse(JSON.stringify(edgesCopy[existingEdgeIndex])) }
                     edgesCopy.splice(existingEdgeIndex, 1);
                 }
                 newEdge.data.compositeGroup = edge?.data.compositeGroup !== null ? edge?.data.compositeGroup : compositeGroupId;
-                newEdge.data.color = edge?.data.compositeGroup !== null ? edge?.data.color : groupColor;
-
+                newEdge.data.color = edge?.data.compositeGroup !== null ? (edge?.data.color !== "" && edge?.data.color || groupColor) : groupColor;
                 edgesCopy.push(newEdge);
             }
-
-            state.edges$ = [...edgesCopy];
+            state.edges$ = edgesCopy;
         }
+        onClose();
     }
 
     return (
         <div>
-            <ul>
+            <ul style={{ listStyleType: "none" }}>
+                <li style={{ display: "flex", width: "100%" }}>
+                    <h5 style={{ flex: "1" }}>From: {sourceTable.data.name}</h5>
+                    <h5 style={{ flex: "1" }}>To: {targetTable.data.name}</h5>
+                </li>
                 {
                     newEdges.map((ed, idx) => (
                         <li key={ed.id}>
@@ -140,9 +142,9 @@ export const CompositeFk = ({ sourceTable, targetTable, edge }: CompositeFkProps
                     ))
                 }
             </ul>
-            <button onClick={() => newEdge()}>add relation</button>
+            <button onClick={() => newEdge()}>add key</button>
             <div>
-                <button>cancel</button>
+                <button onClick={() => onClose()}>cancel</button>
                 <button onClick={() => saveCompositeFk()}>save</button>
             </div>
         </div>

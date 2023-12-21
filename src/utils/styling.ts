@@ -39,11 +39,10 @@ export const getGoodContrastColor = (cssColor: string) => {
 }
 
 
-export const randomColor = () => {
-    const minVal = 150; // light factor
-    const red = Math.floor(Math.random() * (256 - minVal) + minVal);
-    const green = Math.floor(Math.random() * (256 - minVal) + minVal);
-    const blue = Math.floor(Math.random() * (256 - minVal) + minVal);
+export const randomColor = (lightFactor = 150) => {
+    const red = Math.floor(Math.random() * (256 - lightFactor) + lightFactor);
+    const green = Math.floor(Math.random() * (256 - lightFactor) + lightFactor);
+    const blue = Math.floor(Math.random() * (256 - lightFactor) + lightFactor);
 
     return "#" + ((1 << 24) + (red << 16) + (green << 8) + blue).toString(16).slice(1);
 }

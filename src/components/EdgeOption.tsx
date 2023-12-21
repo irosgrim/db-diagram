@@ -23,7 +23,7 @@ export const EdgeOptions = () => {
 
     return (
         <>
-            <ul>
+            <ul style={{ display: "flex", listStyleType: "none" }}>
                 <li><button onClick={() => onSimple()}>simple fk</button></li>
                 <li><button onClick={() => onComposite()}>composite fk</button></li>
             </ul>
@@ -32,6 +32,7 @@ export const EdgeOptions = () => {
                 sourceTable={edgeOptions$.value && state.nodes$.find(x => x.id === edgeOptions$.value!.source.split("/")[0])}
                 targetTable={edgeOptions$.value && state.nodes$.find(x => x.id === edgeOptions$.value!.target.split("/")[0])}
                 edge={edgeOptions$.value}
+                onClose={() => edgeOptions$.value = null}
             />
         </>
     )
