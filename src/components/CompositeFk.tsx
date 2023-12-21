@@ -33,7 +33,7 @@ export const CompositeFk = ({ sourceTable, targetTable, edge, onClose }: Composi
     const [newEdges, setNewEdges] = useState<Edge[]>([]);
     const [deleted, setDeleted] = useState<string[]>([]);
 
-    const [selectedColumn, setSelectedColumn] = useState<any | null>(null);
+    const [, setSelectedColumn] = useState<any | null>(null);
     const sourceColumns = state.nodes$.filter(x => x.parentNode === sourceTable.id);
     const targetColumns = state.nodes$.filter(x => x.parentNode === targetTable.id);
 
