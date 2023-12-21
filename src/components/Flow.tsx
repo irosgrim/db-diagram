@@ -290,12 +290,14 @@ export const Flow = () => {
                         <div className="modal-body">
                             <span className="heading-wrapper">
                                 <h4 className="heading">Create table</h4>
-                                <button type="button" onClick={() => {
-                                    state.nodes$ = [...sampleNodes];
-                                    state.edges$ = sampleEdges;
-                                    setFirstTable(null);
+                                <button type="button"
+                                    className="normal-btn"
+                                    onClick={() => {
+                                        state.nodes$ = [...sampleNodes];
+                                        state.edges$ = sampleEdges;
+                                        setFirstTable(null);
 
-                                }}>Load sample</button>
+                                    }}>Load sample</button>
                             </span>
                             <section>
                                 <div className="new-table-props">
@@ -418,38 +420,48 @@ export const Flow = () => {
                                     </ul>
                                 </div>
                                 <div className="new-column-wrapper">
-                                    <button type="button" onClick={() => {
-                                        const tableId = firstTable[0].id;
-                                        const colId = `${tableId}/${v4()}`;
-                                        const n = firstTable.reduce((acc, curr) => {
-                                            if (curr.type === "column") {
-                                                acc += 1;
-                                            }
-                                            return acc;
-                                        }, 0);
-                                        const colTemplate = {
-                                            id: colId,
-                                            type: "column",
-                                            position: { x: 0, y: 20 + (n * 20) },
-                                            data: { name: "new_column_" + n, type: "VARCHAR(30)", unique: false, notNull: false, index: false },
-                                            parentNode: tableId, extent: "parent",
-                                            draggable: false,
-                                            expandParent: true,
-                                        };
-                                        setFirstTable([...firstTable, colTemplate])
-                                    }}>+ add column</button>
+                                    <button type="button"
+                                        className="normal-btn"
+                                        onClick={() => {
+                                            const tableId = firstTable[0].id;
+                                            const colId = `${tableId}/${v4()}`;
+                                            const n = firstTable.reduce((acc, curr) => {
+                                                if (curr.type === "column") {
+                                                    acc += 1;
+                                                }
+                                                return acc;
+                                            }, 0);
+                                            const colTemplate = {
+                                                id: colId,
+                                                type: "column",
+                                                position: { x: 0, y: 20 + (n * 20) },
+                                                data: { name: "new_column_" + n, type: "VARCHAR(30)", unique: false, notNull: false, index: false },
+                                                parentNode: tableId, extent: "parent",
+                                                draggable: false,
+                                                expandParent: true,
+                                            };
+                                            setFirstTable([...firstTable, colTemplate])
+                                        }}>+ Add column</button>
                                 </div>
                             </section>
                             <footer className="modal-footer">
-                                <span>
-                                    <button onClick={() => {
-                                        state.nodes$ = [...firstTable]
-                                        setFirstTable(null);
-                                    }}>
+                                <div style={{ display: "flex", justifyContent: "flex-end", width: "100%" }}>
+                                    <button
+                                        className="normal-btn"
+                                        type="button"
+                                        onClick={() => setFirstTable(null)}
+                                    >Cancel</button>
+                                    <button
+                                        className="normal-btn"
+                                        style={{ marginLeft: "0.5rem" }}
+                                        onClick={() => {
+                                            state.nodes$ = [...firstTable]
+                                            setFirstTable(null);
+                                        }}>
                                         OK
                                     </button>
-                                    <button type="button" onClick={() => setFirstTable(null)}>Cancel</button>
-                                </span>
+
+                                </div>
                             </footer>
                         </div>
                     </div>
@@ -468,7 +480,7 @@ export const Flow = () => {
             </header>
             <div className="flow">
                 <aside className={generateCssClass("aside", { hidden: sidebarHidden })}>
-                    <button className="hide-btn" onClick={() => setSidebarHidden(x => !x)}>{
+                    <button className="hide-btn normal-btn" onClick={() => setSidebarHidden(x => !x)}>{
                         sidebarHidden ? <Icon type="arrow-right" /> : <Icon type="arrow-left" />
                     } </button>
                     <div className="sidebar-content">

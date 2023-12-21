@@ -3,6 +3,8 @@ import { state } from "../state/globalState";
 import { v4 } from "uuid";
 import { Edge, MarkerType, Node } from "reactflow";
 import { randomColor } from "../utils/styling";
+import React from "react";
+import { Icon } from "./Icon";
 
 type CompositeFkProps = {
     sourceTable: Node;
@@ -29,6 +31,9 @@ const findMatchingEdgeIndex = (edges: Edge[], edgeToMatch: Edge) => {
 
 export const CompositeFk = ({ sourceTable, targetTable, edge, onClose }: CompositeFkProps) => {
     const [newEdges, setNewEdges] = useState<Edge[]>([]);
+    const [deleted, setDeleted] = useState<string[]>([]);
+
+    const [selectedColumn, setSelectedColumn] = useState<any | null>(null);
     const sourceColumns = state.nodes$.filter(x => x.parentNode === sourceTable.id);
     const targetColumns = state.nodes$.filter(x => x.parentNode === targetTable.id);
 
@@ -43,6 +48,7 @@ export const CompositeFk = ({ sourceTable, targetTable, edge, onClose }: Composi
     }, []);
 
     const newEdge = () => {
+        setSelectedColumn(null);
         const emptyEdge: Edge = {
             source: "",
             target: "",
@@ -63,6 +69,8 @@ export const CompositeFk = ({ sourceTable, targetTable, edge, onClose }: Composi
 
     const handleChange = (value: string, target: "source" | "target", index: number) => {
         if (value) {
+            const col = sourceColumns.find(c => c.id === value);
+            setSelectedColumn(col)
             const edgesCopy = [...newEdges];
             if (target === "source") {
                 edgesCopy[index].source = value;
@@ -70,13 +78,27 @@ export const CompositeFk = ({ sourceTable, targetTable, edge, onClose }: Composi
             if (target === "target") {
                 edgesCopy[index].target = value;
             }
-            console.log(edgesCopy[index])
             setNewEdges(edgesCopy);
         }
     }
 
     const saveCompositeFk = () => {
-        if (newEdges.length === 0) {
+        const newEdgesCp = [...newEdges];
+        const edgesCopy = [...state.edges$];
+
+        if (deleted.length) {
+            for (const d of deleted) {
+                const idx = edgesCopy.findIndex(x => x.id === d);
+                const idxNew = newEdgesCp.findIndex(x => x.id === d);
+                newEdgesCp.splice(idxNew, 1);
+                edgesCopy.splice(idx, 1);
+            }
+            setDeleted([]);
+            setNewEdges(newEdgesCp);
+            state.edges$ = edgesCopy;
+        }
+
+        if (newEdgesCp.length === 0) {
             onClose();
             return;
         }
@@ -87,9 +109,8 @@ export const CompositeFk = ({ sourceTable, targetTable, edge, onClose }: Composi
         const compositeGroupId = isExistingComposite ? edge!.data.compositeGroup : v4();
         const groupColor = isExistingComposite ? (edge!.data.color || color) : color;
 
-        const edgesCopy = [...state.edges$];
 
-        newEdges.forEach(newEdge => {
+        newEdgesCp.forEach(newEdge => {
             const existingEdgeIndex = findMatchingEdgeIndex(edgesCopy, newEdge);
             if (existingEdgeIndex > -1) {
                 // if the edge already exists, update its properties
@@ -109,61 +130,81 @@ export const CompositeFk = ({ sourceTable, targetTable, edge, onClose }: Composi
         onClose();
     };
 
+    const deleteFk = (edge: Edge) => {
+        setDeleted([...deleted, edge.id]);
+    }
+
     return (
         <div>
-            <ul style={{ listStyleType: "none" }}>
-                <li style={{ display: "flex", width: "100%" }}>
-                    <h5 style={{ flex: "1" }}>From: {sourceTable.data.name}</h5>
-                    <h5 style={{ flex: "1" }}>To: {targetTable.data.name}</h5>
-                </li>
-                {
-                    newEdges.map((ed, idx) => (
-                        <li key={ed.id}>
-                            <select
-                                onChange={(e) => handleChange(e.target.value, "source", idx)}
-                                defaultValue={ed.source}
-                            >
-                                <option
-                                    value=""
-                                >
-                                    select column
-                                </option>
-                                {
-                                    sourceColumns.map(c => (
-                                        <option
-                                            key={c.id}
-                                            value={c.id}
-                                        >{c.data.name} - {c.data.type} - {c.data.notNull ? "NOT NULL" : ""}</option>
-                                    ))
-                                }
-                            </select>
-                            &rarr;
-                            <select
-                                onChange={(e) => handleChange(e.target.value, "target", idx)}
-                                defaultValue={ed.target}
-                            >
-                                <option
-                                    value="-"
-                                >
-                                    select column
-                                </option>
-                                {
-                                    targetColumns.map(c => (
-                                        <option
-                                            key={c.id}
-                                            value={c.id}
-                                        >{c.data.name} - {c.data.type} - {c.data.notNull ? "NOT NULL" : ""}</option>
-                                    ))
-                                }
-                            </select>
+            {
+                (newEdges.length === 0 || newEdges.every(edge => deleted.includes(edge.id))) ?
+                    (<div style={{ display: "flex", justifyContent: "center" }}>No composite key!</div>) :
+                    <ul style={{ listStyleType: "none" }}>
+                        <li style={{ display: "flex", width: "100%" }}>
+                            <h5 style={{ flex: "1" }}>From: {sourceTable.data.name}</h5>
+                            <h5 style={{ flex: "1" }}>To: {targetTable.data.name}</h5>
                         </li>
-                    ))
-                }
-            </ul>
-            <button onClick={() => newEdge()}>add key</button>
-            <div>
-                <button onClick={() => onClose()}>cancel</button>
-                <button onClick={() => saveCompositeFk()}>save</button>
+                        {
+                            newEdges.map((ed, idx) => {
+                                const isDeleted = deleted.includes(ed.id);
+                                if (isDeleted) {
+                                    return <React.Fragment key={ed.id}></React.Fragment>
+                                }
+                                return (
+                                    <li key={ed.id}>
+                                        <select
+                                            onChange={(e) => handleChange(e.target.value, "source", idx)}
+                                            defaultValue={ed.source}
+                                        >
+                                            <option
+                                                value=""
+                                            >
+                                                select column
+                                            </option>
+                                            {
+                                                sourceColumns.map(c => (
+                                                    <option
+                                                        key={c.id}
+                                                        value={c.id}
+                                                        onClick={() => console.log("clicked ", c)}
+                                                    >{c.data.name} - {c.data.type} - {c.data.notNull ? "NOT NULL" : ""}</option>
+                                                ))
+                                            }
+                                        </select>
+                                        &rarr;
+                                        <select
+                                            onChange={(e) => handleChange(e.target.value, "target", idx)}
+                                            defaultValue={ed.target}
+                                        >
+                                            <option
+                                                value="-"
+                                            >
+                                                select column
+                                            </option>
+                                            {
+                                                targetColumns.map(c => (
+                                                    <option
+                                                        key={c.id}
+                                                        value={c.id}
+                                                    >{c.data.name} - {c.data.type} - {c.data.notNull ? "NOT NULL" : ""}</option>
+                                                ))
+                                            }
+                                        </select>
+                                        {
+                                            (ed.source || ed.target) && <button onClick={() => deleteFk(ed)} className="icon-btn" title="delete key"><Icon type="delete" /></button>
+                                        }
+                                    </li>
+                                )
+                            })
+                        }
+                    </ul>
+            }
+            <div style={{ display: "flex", justifyContent: "center" }}>
+                <button onClick={() => newEdge()} className="add-btn"><Icon type="plus" /> <span style={{ marginLeft: "0.5rem" }}>Add key</span></button>
+            </div>
+            <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                <button onClick={() => onClose()} className="normal-btn">Cancel</button>
+                <button onClick={() => saveCompositeFk()} className="normal-btn" style={{ marginLeft: "0.5rem" }}>Save</button>
             </div>
         </div>
     )

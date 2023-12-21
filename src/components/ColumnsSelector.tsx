@@ -9,7 +9,6 @@ type ColumnsSelectorProps = {
 
 export const ColumnsSelector = ({ table, onClose, onSave }: ColumnsSelectorProps) => {
     const [selectedColumns, setSelectedColumns] = useState<string[]>([]);
-    console.log(table)
     const setConstraint = (colId: string) => {
         const index = selectedColumns.indexOf(colId);
         if (index < 0) {
@@ -41,9 +40,9 @@ export const ColumnsSelector = ({ table, onClose, onSave }: ColumnsSelectorProps
                     }
                 </tbody>
             </table>
-            <div>
-                <button onClick={onClose}>Cancel</button>
-                <button onClick={() => onSave(selectedColumns)}>Ok</button>
+            <div style={{ display: "flex", justifyContent: "flex-end", marginTop: "0.5rem" }}>
+                <button onClick={onClose} className="normal-btn">Cancel</button>
+                <button onClick={() => onSave(selectedColumns)} className="normal-btn" style={{ marginLeft: "0.5rem" }}>Ok</button>
             </div>
         </>
     )

@@ -136,12 +136,14 @@ export const TableOptions = ({ currentTable }: TableOptionsProps) => {
                                         <span>
                                             {colNames}
                                         </span>
-                                        <button onClick={() => {
-                                            const indexesCopy = [...indexes$.value[currentTable.id]]
-                                            indexesCopy.splice(idx, 1);
-                                            //@ts-ignore
-                                            indexes$.value = { ...indexes$.value[currentTable.id], [currentTable.id]: indexesCopy }
-                                        }}
+                                        <button
+                                            className="icon-btn"
+                                            onClick={() => {
+                                                const indexesCopy = [...indexes$.value[currentTable.id]]
+                                                indexesCopy.splice(idx, 1);
+                                                //@ts-ignore
+                                                indexes$.value = { ...indexes$.value[currentTable.id], [currentTable.id]: indexesCopy }
+                                            }}
                                         >
                                             <Icon type="delete" />
                                         </button>
@@ -189,11 +191,13 @@ export const TableOptions = ({ currentTable }: TableOptionsProps) => {
                                             })
                                             .join(", ")}
                                     </span>
-                                    <button onClick={() => {
-                                        const cp = { ...primaryKey$.value };
-                                        delete cp[currentTable.id];
-                                        primaryKey$.value = cp;
-                                    }}><Icon type="delete" /></button>
+                                    <button
+                                        className="icon-btn"
+                                        onClick={() => {
+                                            const cp = { ...primaryKey$.value };
+                                            delete cp[currentTable.id];
+                                            primaryKey$.value = cp;
+                                        }}><Icon type="delete" /></button>
                                 </div>
 
                             )
@@ -212,11 +216,13 @@ export const TableOptions = ({ currentTable }: TableOptionsProps) => {
                                                 colNames
                                             }
                                         </span>
-                                        <button onClick={() => {
-                                            const cp = [...uniqueKeys$.value[currentTable.id]];
-                                            cp.splice(idx, 1);
-                                            uniqueKeys$.value = { ...uniqueKeys$.value, [currentTable.id]: [...cp] }
-                                        }}><Icon type="delete" /></button>
+                                        <button
+                                            className="icon-btn"
+                                            onClick={() => {
+                                                const cp = [...uniqueKeys$.value[currentTable.id]];
+                                                cp.splice(idx, 1);
+                                                uniqueKeys$.value = { ...uniqueKeys$.value, [currentTable.id]: [...cp] }
+                                            }}><Icon type="delete" /></button>
                                     </div>
                                 )
                             })
