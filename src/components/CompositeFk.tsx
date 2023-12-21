@@ -70,6 +70,7 @@ export const CompositeFk = ({ sourceTable, targetTable, edge, onClose }: Composi
             if (target === "target") {
                 edgesCopy[index].target = value;
             }
+            console.log(edgesCopy[index])
             setNewEdges(edgesCopy);
         }
     }
@@ -80,20 +81,24 @@ export const CompositeFk = ({ sourceTable, targetTable, edge, onClose }: Composi
             return;
         }
         const color = randomColor(60);
-        const currEdgeIdx = state.edges$.findIndex(x => x.id === edge!.id);
+        // const currEdgeIdx = state.edges$.findIndex(x => x.id === edge!.id);
+
         const isExistingComposite = edge!.data.compositeGroup !== null;
         const compositeGroupId = isExistingComposite ? edge!.data.compositeGroup : v4();
         const groupColor = isExistingComposite ? (edge!.data.color || color) : color;
 
         const edgesCopy = [...state.edges$];
 
-        setCompositeGroupAndColor(edgesCopy[currEdgeIdx], compositeGroupId, groupColor);
-
         newEdges.forEach(newEdge => {
             const existingEdgeIndex = findMatchingEdgeIndex(edgesCopy, newEdge);
             if (existingEdgeIndex > -1) {
                 // if the edge already exists, update its properties
-                setCompositeGroupAndColor(edgesCopy[existingEdgeIndex], compositeGroupId, groupColor);
+                let edd = { ...edgesCopy[existingEdgeIndex] };
+                edgesCopy.splice(existingEdgeIndex, 1);
+                setCompositeGroupAndColor(newEdge, compositeGroupId, groupColor);
+                edd = { ...edd, ...newEdge }
+                edgesCopy.push(edd);
+
             } else {
                 setCompositeGroupAndColor(newEdge, compositeGroupId, groupColor);
                 edgesCopy.push(newEdge);
