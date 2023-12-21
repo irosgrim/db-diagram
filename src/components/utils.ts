@@ -1,4 +1,4 @@
-import { Position, internalsSymbol } from 'reactflow';
+import { Edge, Position, internalsSymbol } from 'reactflow';
 
 const getParams = (nodeA: any, nodeB: any) => {
   const centerA = getNodeCenter(nodeA);
@@ -66,4 +66,39 @@ export const getEdgeParams = (source: any, target: any) => {
     sourcePos,
     targetPos,
   };
+}
+
+type LocalStorageState = {
+  nodes: Node[]; 
+  edges: Edge[]; 
+  primaryKey: Record<string, {cols: string[]}>;
+  uniqueKeys: Record<string, {cols: string[]}[]>;
+  indexes: Record<string, {cols: string[]; unique: boolean}[]>;
+} 
+
+export const getLocalStorageState = (): LocalStorageState| undefined => {
+  const appName = "db-diagram";
+  try {
+    const data = localStorage.getItem(appName);
+    if (data) {
+      return JSON.parse(data);
+    }
+  } catch (error) {
+    console.error('Failed to load from local storage:', error);
+  }
+}
+
+
+export const debounce = (func: (...args: any) => void, wait: number) =>{
+    let timeout: number;
+
+    return function executedFunction(...args: any[]) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
 }

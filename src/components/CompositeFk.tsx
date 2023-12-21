@@ -151,7 +151,7 @@ export const CompositeFk = ({ sourceTable, targetTable, edge, onClose }: Composi
                                     return <React.Fragment key={ed.id}></React.Fragment>
                                 }
                                 return (
-                                    <li key={ed.id}>
+                                    <li key={ed.id} className="col-select-wrapper">
                                         <select
                                             onChange={(e) => handleChange(e.target.value, "source", idx)}
                                             defaultValue={ed.source}

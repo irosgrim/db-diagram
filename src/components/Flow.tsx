@@ -206,11 +206,13 @@ export const Flow = () => {
     const [firstTable, setFirstTable] = useState<any[] | null>([
         {
             id: "table_1",
-            data: { name: "table_1", backgroundColor: "#f78ae0" },
+            data: { name: "table_1", backgroundColor: "#f78ae0", height: null },
             position: { x: 10, y: 200 },
             className: "light",
-            style: { backgroundColor: "#ffffff", minWidth: "200px", padding: 0 },
+            style: { backgroundColor: "#ffffff", minWidth: "200px", padding: 0, width: 200, height: 40 },
             resizing: true,
+            width: 200,
+            height: 40,
             type: "group",
         },
         {
@@ -221,9 +223,10 @@ export const Flow = () => {
             parentNode: "table_1", extent: "parent",
             draggable: false,
             expandParent: true,
+            width: 200,
+            height: 20,
         },
     ]);
-
 
     const firstDragStart = (e: any, node: any) => {
         const nodeIndex = firstTable!.findIndex(x => x.id === node.id);
@@ -285,7 +288,7 @@ export const Flow = () => {
                 </Modal>
             }
             {
-                firstTable && (
+                state.nodes$.length === 0 && firstTable && (
                     <div className="modal">
                         <div className="modal-body">
                             <span className="heading-wrapper">
@@ -293,10 +296,12 @@ export const Flow = () => {
                                 <button type="button"
                                     className="normal-btn"
                                     onClick={() => {
+                                        primaryKey$.value = {};
+                                        uniqueKeys$.value = {};
+                                        indexes$.value = {}
                                         state.nodes$ = [...sampleNodes];
-                                        state.edges$ = sampleEdges;
+                                        state.edges$ = [...sampleEdges];
                                         setFirstTable(null);
-
                                     }}>Load sample</button>
                             </span>
                             <section>
@@ -456,6 +461,10 @@ export const Flow = () => {
                                         style={{ marginLeft: "0.5rem" }}
                                         onClick={() => {
                                             state.nodes$ = [...firstTable]
+                                            primaryKey$.value = {};
+                                            uniqueKeys$.value = {};
+                                            indexes$.value = {}
+                                            state.edges$ = [];
                                             setFirstTable(null);
                                         }}>
                                         OK

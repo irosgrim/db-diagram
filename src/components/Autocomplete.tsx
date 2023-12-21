@@ -26,7 +26,7 @@ const Autocomplete = ({ suggestions, value, onChange }: AutocompleteProps) => {
     }, [dropdownRef]);
 
     const onEdit = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const userInput = e.target.value;
+        const userInput = e.target.value.toUpperCase();
         setInput(userInput);
         onChange(userInput);
 
