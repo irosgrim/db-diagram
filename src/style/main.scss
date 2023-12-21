@@ -175,3 +175,24 @@ button {
         background-color: transparent;
     }
 }
+
+.circle-btn-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    user-select: none;
+}
+.circle-btn {
+    border-radius: 50%;
+    background-color: #ffffff;
+    border: 4px solid #e7e7e7;
+    height: 3rem;
+    width: 3rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    &:hover, &.active {
+        background-color: #ebf3f8;
+    }
+}
