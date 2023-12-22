@@ -5,7 +5,7 @@ import { useState } from "react";
 import { generateCssClass, getGoodContrastColor } from "../utils/styling";
 import { Icon } from "./Icon";
 import Autocomplete from "./Autocomplete";
-import { postgresTypes } from "../utils/sql";
+import { POSTGRES_TYPES } from "../utils/sql";
 import { deleteNodes } from "./Flow";
 
 type TableSectionProps = {
@@ -229,7 +229,7 @@ export const TableSection = ({ table, isActive, onOpen, onClose }: TableSectionP
                                             style={{ width: "100px" }}
                                         />
                                         <Autocomplete
-                                            suggestions={postgresTypes}
+                                            suggestions={POSTGRES_TYPES}
                                             value={c.data.type || ""}
                                             onChange={(value) => {
                                                 c.data.type = value;

@@ -1,14 +1,16 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { state } from "../state/globalState"
 
 type ColumnsSelectorProps = {
     table: any;
+    showUniqueCheck?: boolean;
     onClose: () => void;
-    onSave: (cols: string[]) => void;
+    onSave: (cols: string[], isUnique?: boolean) => void;
 }
 
-export const ColumnsSelector = ({ table, onClose, onSave }: ColumnsSelectorProps) => {
+export const ColumnsSelector = ({ table, showUniqueCheck = false, onClose, onSave }: ColumnsSelectorProps) => {
     const [selectedColumns, setSelectedColumns] = useState<string[]>([]);
+    const [isUnique, setIsUnique] = useState(false);
     const setConstraint = (colId: string) => {
         const index = selectedColumns.indexOf(colId);
         if (index < 0) {
@@ -22,6 +24,14 @@ export const ColumnsSelector = ({ table, onClose, onSave }: ColumnsSelectorProps
 
     const highlight = (colName: string) => {
         return selectedColumns.findIndex(x => x === colName) > -1;
+    }
+
+    const save = () => {
+        if (showUniqueCheck) {
+            onSave(selectedColumns, isUnique);
+        } else {
+            onSave(selectedColumns);
+        }
     }
 
     return (
@@ -40,10 +50,22 @@ export const ColumnsSelector = ({ table, onClose, onSave }: ColumnsSelectorProps
                     }
                 </tbody>
             </table>
-            <div style={{ display: "flex", justifyContent: "flex-end", marginTop: "0.5rem" }}>
-                <button onClick={onClose} className="normal-btn">Cancel</button>
-                <button onClick={() => onSave(selectedColumns)} className="normal-btn" style={{ marginLeft: "0.5rem" }}>Ok</button>
-            </div>
+            <div style={{ display: "flex", justifyContent: "space-between", marginTop: "0.5rem" }}>
+                <span style={{ display: "flex", alignItems: "center" }}>
+                    {
+                        showUniqueCheck && (
+                            <>
+                                <input type="checkbox" id="is-unique-index" onClick={() => setIsUnique(!isUnique)} />
+                                <label htmlFor="is-unique-index" style={{ marginLeft: "0.5rem" }}>Unique index</label>
+                            </>
+                        )
+                    }
+                </span>
+                <span style={{ display: "flex", alignItems: "center" }}>
+                    <button onClick={onClose} className="normal-btn">Cancel</button>
+                    <button onClick={() => save()} className="normal-btn" style={{ marginLeft: "0.5rem" }}>Ok</button>
+                </span>
+            </div >
         </>
     )
 }

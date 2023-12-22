@@ -12,7 +12,7 @@ import { Table } from "./Table";
 import Autocomplete from "./Autocomplete";
 import { Icon } from "./Icon";
 import { generateCssClass, randomColor } from "../utils/styling";
-import { generateSqlSchema, postgresTypes } from "../utils/sql";
+import { generateSqlSchema, POSTGRES_TYPES } from "../utils/sql";
 import { Select } from "./Select";
 import { sampleEdges, sampleNodes } from "./sample";
 import { currentModal$, edgeOptions$, indexes$, primaryKey$, state, uniqueKeys$ } from "../state/globalState";
@@ -364,7 +364,7 @@ export const Flow = () => {
                                                             />
                                                         </div>
                                                         <Autocomplete
-                                                            suggestions={postgresTypes}
+                                                            suggestions={POSTGRES_TYPES}
                                                             value={col.data.type}
                                                             onChange={(val) => {
                                                                 const firstTableCopy = [...firstTable];

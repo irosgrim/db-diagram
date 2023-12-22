@@ -234,7 +234,7 @@ export const generateSqlSchema = (deps: SqlDeps) => {
 
 
 
-export const postgresTypes = [
+export const POSTGRES_TYPES = [
     "BIGINT",
     "SERIAL",
     "BIT",
@@ -260,3 +260,19 @@ export const postgresTypes = [
     "UUID",
     "XML"
 ];
+
+
+export const REFERENTIAL_ACTIONS = {
+    onDelete: [
+    "ON DELETE CASCADE",
+    "ON DELETE SET NULL",
+    "ON DELETE SET DEFAULT",
+    "ON DELETE RESTRICT",
+    ],
+    onUpdate: [
+        "ON UPDATE CASCADE",
+        "ON UPDATE SET NULL",
+        "ON UPDATE SET DEFAULT",
+        "ON UPDATE RESTRICT",
+    ],
+};

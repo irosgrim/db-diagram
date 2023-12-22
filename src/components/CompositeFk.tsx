@@ -5,6 +5,7 @@ import { Edge, MarkerType, Node } from "reactflow";
 import { randomColor } from "../utils/styling";
 import React from "react";
 import { Icon } from "./Icon";
+import { REFERENTIAL_ACTIONS } from "../utils/sql";
 
 type CompositeFkProps = {
     sourceTable: Node;
@@ -139,10 +140,12 @@ export const CompositeFk = ({ sourceTable, targetTable, edge, onClose }: Composi
             {
                 (newEdges.length === 0 || newEdges.every(edge => deleted.includes(edge.id))) ?
                     (<div style={{ display: "flex", justifyContent: "center" }}>No composite key!</div>) :
-                    <ul style={{ listStyleType: "none" }}>
-                        <li style={{ display: "flex", width: "100%" }}>
+                    <ul style={{ listStyleType: "none", padding: 0 }}>
+                        <li className="col-select-wrapper">
                             <h5 style={{ flex: "1" }}>From: {sourceTable.data.name}</h5>
+                            <div></div>
                             <h5 style={{ flex: "1" }}>To: {targetTable.data.name}</h5>
+                            <div style={{ width: "2rem" }}></div>
                         </li>
                         {
                             newEdges.map((ed, idx) => {
@@ -190,16 +193,34 @@ export const CompositeFk = ({ sourceTable, targetTable, edge, onClose }: Composi
                                                 ))
                                             }
                                         </select>
-                                        {
-                                            (ed.source || ed.target) && <button onClick={() => deleteFk(ed)} className="icon-btn" title="delete key"><Icon type="delete" /></button>
-                                        }
+                                        <button onClick={() => deleteFk(ed)} className="icon-btn" title="delete key"><Icon type="delete" style={{ visibility: (ed.source || ed.target) ? "visible" : "hidden" }} /></button>
                                     </li>
                                 )
                             })
                         }
                     </ul>
             }
-            <div style={{ display: "flex", justifyContent: "center" }}>
+            <div className="fk-ref-actions-wrapper">
+                <span className="fk-ref-actions">
+
+                    <select id="on-delete">
+                        <option value="-">NO ACTION</option>
+                        {
+                            REFERENTIAL_ACTIONS.onDelete.map(action => (
+                                <option value={action}>{action}</option>
+                            ))
+                        }
+                    </select>
+
+                    <select id="on-update">
+                        <option value="-">NO ACTION</option>
+                        {
+                            REFERENTIAL_ACTIONS.onUpdate.map(action => (
+                                <option value={action}>{action}</option>
+                            ))
+                        }
+                    </select>
+                </span>
                 <button onClick={() => newEdge()} className="add-btn"><Icon type="plus" /> <span style={{ marginLeft: "0.5rem" }}>Add key</span></button>
             </div>
             <div style={{ display: "flex", justifyContent: "flex-end" }}>

@@ -43,8 +43,16 @@ const getEdgeName = (currentTableId: string) => {
             }
             {
                 fk.map((x, i) => (
-                    <div key={i}>
-                        {x}
+                    <div key={i} style={{ display: "flex", justifyContent: "space-between" }}>
+                        <span>
+                            <Icon type="exclamation" width="12" height="11" color="red" />
+                            <span>
+                                {x}
+                            </span>
+                        </span>
+                        <button className="icon-btn" style={{ marginRight: "0.5rem" }}>
+                            <Icon type="horizontal-dots" width="12" height="3" />
+                        </button>
                     </div>
                 ))
             }
@@ -133,7 +141,8 @@ export const TableOptions = ({ currentTable }: TableOptionsProps) => {
                                         key={colNames}
                                         style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingRight: "0.5rem" }}
                                     >
-                                        <span>
+                                        <span style={{ display: "flex", alignItems: "center" }} title={x.unique ? "Unique" : "Not unique"}>
+                                            {x.unique && <Icon type="star" style={{ marginRight: "0.5rem" }} />}
                                             {colNames}
                                         </span>
                                         <button

@@ -61,10 +61,34 @@
 }
 
 .col-select-wrapper {
+  display: flex; 
+  width: 100%;
+  justify-content: space-between;
+  margin-bottom: 3px;
   select {
     width: 125px;
     @media (min-width: 400px) {
       width: initial;
+    }
+  }
+}
+
+.fk-ref-actions-wrapper {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+  .fk-ref-actions {
+    select {
+      width: 100px;
+      @media(min-width: 400px) {
+        width: 150px;
+      }
+      &:last-child{
+         margin-left: 3px;
+         @media(min-width: 400px) {
+          margin-left: 0;
+        }
+      }
     }
   }
 }

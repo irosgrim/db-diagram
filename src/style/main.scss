@@ -149,9 +149,9 @@ button {
     &:disabled {
         opacity: 0.3;
     }
-    // &:hover {
-    //     background-color: #eeeeee;
-    // }
+    &:hover {
+        background-color: #eaf0f1;
+    }
 }
 
 .active {
