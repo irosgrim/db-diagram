@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { state } from "../state/globalState"
 
 type ColumnsSelectorProps = {

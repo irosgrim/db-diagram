@@ -173,7 +173,7 @@ export const TableSection = ({ table, isActive, onOpen, onClose }: TableSectionP
                         editing && (
                             <>
                                 <button
-                                    style={{ backgroundColor: "#ffffff", border: "1px solid #000000", height: "22px", width: "22px" }}
+                                    className="icon-btn"
                                     onClick={() => setEditing(false)}
                                 >
                                     <Icon type="check" />

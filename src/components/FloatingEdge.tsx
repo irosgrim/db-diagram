@@ -60,14 +60,12 @@ const FloatingEdge = ({ id, data, source, target, markerEnd, style }: EdgeProps)
                         {
                             showOpts && data.compositeGroup === null && (
                                 <button className="edge-btn" onClick={(event) => onEdgeClick(event, id)}>
-                                    {/* × */}
                                     <Icon type="key" />
                                 </button>
                             )
                         }
                         {
                             data.compositeGroup !== null && <button className="edge-btn" onClick={(event) => onEdgeClick(event, id)}>
-                                {/* × */}
                                 <Icon type="multi-key" />
                             </button>
                         }
