@@ -96,16 +96,13 @@ const getCompositeFks = (currentTableId: string) => {
         {
             composites.map((x, i) => (
                 <div key={i} style={{ display: "flex", justifyContent: "space-between" }}>
-                    {
-                        (x.edge.data.onDelete !== null || x.edge.data.onUpdate !== null) && (
-                            <span>
-                                <Icon type="exclamation" width="12" height="11" color="red" />
-                                <span>
-                                    {x.text}
-                                </span>
-                            </span>
-                        )
-                    }
+                    <span>
+                        {(x.edge[0].data.onDelete !== null || x.edge[0].data.onUpdate !== null) && <Icon type="exclamation" width="12" height="11" color="red" />}
+                        <span>
+                            {x.text}
+                        </span>
+                    </span>
+
                     <button
                         className="icon-btn"
                         style={{ marginRight: "0.5rem" }}

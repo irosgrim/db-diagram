@@ -17,13 +17,11 @@ export const AddReferentialActions = ({ onClose }: AddReferentialActionsProps) =
         const edgesId = (currentModal$.value!.props.edges as Edge[]).map(x => x.id);
         const copyOfEdges: Node[] = JSON.parse(JSON.stringify(state.edges$));
 
-        console.log(edgesId)
         for (const edge of edgesId) {
             const currNodeIndex = copyOfEdges.findIndex(x => x.id === edge);
             copyOfEdges[currNodeIndex].data.onDelete = onDeleteAction;
             copyOfEdges[currNodeIndex].data.onUpdate = onUpdateAction;
         }
-        console.log(copyOfEdges)
         state.edges$ = [...copyOfEdges];
         onClose();
     }
