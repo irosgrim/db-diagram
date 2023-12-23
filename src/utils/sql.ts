@@ -129,6 +129,8 @@ class ForeignKey {
             const source = [];
             const target = [];
             let tableName = "";
+            let onDelete = "";
+            let onUpdate = "";
             // @ts-ignore
             for (const group of fk) {
                 console.log(group)
@@ -136,10 +138,19 @@ class ForeignKey {
                 const targetTable = this.nodes.find(n => n.id === group.target.split("/")[0]);
                 const targetCol = this.nodes.find(n => n.id === group.target);
                 tableName = targetTable!.data.name;
+                onDelete = group.data.onDelete;
+                onUpdate = group.data.onUpdate;
                 source.push(sourceCol!.data.name);
                 target.push(targetCol!.data.name);
             }
-            composites.push(`FOREIGN KEY (${source.join(", ")}) REFERENCES ${tableName}(${target.join(", ")})`)
+            const ref = [];
+            if (onDelete) {
+                ref.push(`        ${onDelete}`);
+            }
+            if (onUpdate) {
+                ref.push(`        ${onUpdate}`);
+            }
+            composites.push(`FOREIGN KEY (${source.join(", ")}) REFERENCES ${tableName}(${target.join(", ")}) ${ref.length && "\n" + ref.join("\n")}`)
         }
 
         // get simple fks
@@ -147,7 +158,18 @@ class ForeignKey {
             const sourceCol = this.nodes.find(n => n.id === x.source);
             const targetTable = this.nodes.find(n => n.id === x.target.split("/")[0]);
             const targetCol = this.nodes.find(n => n.id === x.target);
-            return (`FOREIGN KEY (${sourceCol!.data.name}) REFERENCES ${targetTable!.data.name}(${targetCol!.data.name})`)
+            const onDelete = x.data.onDelete;
+            const onUpdate = x.data.onUpdate;
+            const ref = [];
+            if (onDelete) {
+                ref.push(`        ${onDelete}`);
+            }
+            if(onUpdate) {
+                 ref.push(`        ${onUpdate}`);
+            };
+            
+            const txt = `FOREIGN KEY (${sourceCol!.data.name}) REFERENCES ${targetTable!.data.name}(${targetCol!.data.name}) ${ref.length && "\n" + ref.join("\n")}`
+            return txt;
         })
         
         return [...keys, ...composites];
