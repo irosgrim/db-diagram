@@ -6,6 +6,7 @@ import { generateCssClass } from "../utils/styling";
 import { ReferentialActions } from "./ReferentialActions";
 import { Edge } from "reactflow";
 import { ON_DELETE, ON_UPDATE } from "../utils/sql";
+import { AddReferentialActions } from "./AddReferentialActions";
 
 
 export const EdgeOptions = () => {
@@ -66,30 +67,14 @@ export const EdgeOptions = () => {
                     </div>
                 </div>
             </nav>
-            {
-                type === "simple-fk" && <ReferentialActions
-                    onChangeDelete={setOnDeleteAction}
-                    onChangeUpdate={setOnUpdateAction}
-                    defaultOnDelete={edge.data.onDelete}
-                    defaultOnUpdate={edge.data.onUpdate}
-                />
-            }
-            {
-                type === "composite-fk" && (
-                    <CompositeFk
-                        sourceTable={edgeOptions$.value && state.nodes$.find(x => x.id === edgeOptions$.value!.source.split("/")[0])}
-                        targetTable={edgeOptions$.value && state.nodes$.find(x => x.id === edgeOptions$.value!.target.split("/")[0])}
-                        edge={edgeOptions$.value}
-                        onClose={() => edgeOptions$.value = null}
-                    />
-                )
-            }
-            {
-                type === "simple-fk" && <div style={{ display: "flex", justifyContent: "flex-end", marginTop: "0.5rem" }}>
-                    <button onClick={() => edgeOptions$.value = null} className="normal-btn">Cancel</button>
-                    <button onClick={() => saveSimple()} className="normal-btn" style={{ marginLeft: "0.5rem" }}>Save</button>
-                </div>
-            }
+            <CompositeFk
+                type={type}
+                sourceTable={edgeOptions$.value && state.nodes$.find(x => x.id === edgeOptions$.value!.source.split("/")[0])}
+                targetTable={edgeOptions$.value && state.nodes$.find(x => x.id === edgeOptions$.value!.target.split("/")[0])}
+                edge={edgeOptions$.value}
+                onClose={() => edgeOptions$.value = null}
+            />
+
         </>
     )
 }

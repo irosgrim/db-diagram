@@ -12,6 +12,7 @@ type CompositeFkProps = {
     sourceTable: Node;
     targetTable: Node;
     edge: Edge | null;
+    type: "simple-fk" | "composite-fk";
     onClose: () => void;
 }
 
@@ -33,7 +34,7 @@ const findMatchingEdgeIndex = (edges: Edge[], edgeToMatch: Edge) => {
     );
 }
 
-export const CompositeFk = ({ sourceTable, targetTable, edge, onClose }: CompositeFkProps) => {
+export const CompositeFk = ({ type, sourceTable, targetTable, edge, onClose }: CompositeFkProps) => {
     const [newEdges, setNewEdges] = useState<Edge[]>([]);
     const [deleted, setDeleted] = useState<string[]>([]);
     const [onDelete, setOnDelete] = useState<ON_DELETE | null>(edge?.data.onDelete);
@@ -92,7 +93,7 @@ export const CompositeFk = ({ sourceTable, targetTable, edge, onClose }: Composi
     }
 
     const saveCompositeFk = () => {
-        const newEdgesCp = [...newEdges];
+        const newEdgesCp = type === "simple-fk" ? [newEdges.find(x => x.id === edge!.id)!] : [...newEdges];
         const edgesCopy = [...state.edges$];
 
         if (deleted.length) {
@@ -115,9 +116,12 @@ export const CompositeFk = ({ sourceTable, targetTable, edge, onClose }: Composi
         // const currEdgeIdx = state.edges$.findIndex(x => x.id === edge!.id);
 
         const isExistingComposite = edge!.data.compositeGroup !== null;
-        const compositeGroupId = isExistingComposite ? edge!.data.compositeGroup : v4();
-        const groupColor = isExistingComposite ? (edge!.data.color || color) : color;
-
+        let compositeGroupId = isExistingComposite ? edge!.data.compositeGroup : v4();
+        let groupColor = isExistingComposite ? (edge!.data.color || color) : color;
+        if (type === "simple-fk") {
+            compositeGroupId = null;
+            groupColor = "";
+        }
 
         newEdgesCp.forEach(newEdge => {
             const existingEdgeIndex = findMatchingEdgeIndex(edgesCopy, newEdge);
@@ -146,7 +150,7 @@ export const CompositeFk = ({ sourceTable, targetTable, edge, onClose }: Composi
         <div>
             {
                 (newEdges.length === 0 || newEdges.every(edge => deleted.includes(edge.id))) ?
-                    (<div style={{ display: "flex", justifyContent: "center" }}>No composite key!</div>) :
+                    (<div style={{ display: "flex", justifyContent: "center" }}>Delete it?</div>) :
                     <ul style={{ listStyleType: "none", padding: 0 }}>
                         <li className="col-select-wrapper">
                             <h5 style={{ flex: "1" }}>From: {sourceTable.data.name}</h5>
@@ -155,7 +159,7 @@ export const CompositeFk = ({ sourceTable, targetTable, edge, onClose }: Composi
                             <div style={{ width: "2rem" }}></div>
                         </li>
                         {
-                            newEdges.map((ed, idx) => {
+                            (type === "simple-fk" ? [newEdges.find(x => x.id === edge!.id)!] : newEdges).map((ed, idx) => {
                                 const isDeleted = deleted.includes(ed.id);
                                 if (isDeleted) {
                                     return <React.Fragment key={ed.id}></React.Fragment>
@@ -207,23 +211,22 @@ export const CompositeFk = ({ sourceTable, targetTable, edge, onClose }: Composi
                         }
                     </ul>
             }
-            <div className="fk-ref-actions-wrapper">
+            {(newEdges.length > 0 && !newEdges.every(edge => deleted.includes(edge.id))) && <div className="fk-ref-actions-wrapper">
                 <ReferentialActions
                     onChangeDelete={setOnDelete}
                     onChangeUpdate={setOnUpdate}
                     defaultOnDelete={edge?.data.onDelete}
                     defaultOnUpdate={edge?.data.onUpdate}
                 />
-                <button
+                {type === "composite-fk" && <button
                     onClick={() => newEdge()}
                     className="add-btn">
                     <Icon type="plus" />
                     <span style={{ marginLeft: "0.5rem" }}>
-                        Add key
+                        Add fkey
                     </span>
-                </button>
-            </div>
-            <button onClick={() => newEdge()} className="add-btn"><Icon type="plus" /> <span style={{ marginLeft: "0.5rem" }}>Add key</span></button>
+                </button>}
+            </div>}
 
             <div style={{ display: "flex", justifyContent: "flex-end" }}>
                 <button onClick={() => onClose()} className="normal-btn">Cancel</button>
