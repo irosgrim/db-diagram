@@ -23,7 +23,6 @@ import { AddIndexes } from "./AddIndexes";
 import { TableSection } from "./TableSection";
 import { EdgeOptions } from "./EdgeOption";
 import { ContextMenu } from "./Contextmenu";
-import { ReferentialActions } from "./ReferentialActions";
 import { AddReferentialActions } from "./AddReferentialActions";
 
 const fitViewOptions = { padding: 4 };

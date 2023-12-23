@@ -3,39 +3,9 @@ import { edgeOptions$, state } from "../state/globalState"
 import { CompositeFk } from "./CompositeFk"
 import { Icon } from "./Icon";
 import { generateCssClass } from "../utils/styling";
-import { ReferentialActions } from "./ReferentialActions";
-import { Edge } from "reactflow";
-import { ON_DELETE, ON_UPDATE } from "../utils/sql";
-import { AddReferentialActions } from "./AddReferentialActions";
-
 
 export const EdgeOptions = () => {
     const [type, setType] = useState<"simple-fk" | "composite-fk">(edgeOptions$.value?.data.compositeGroup !== null ? "composite-fk" : "simple-fk");
-    const [onDeleteAction, setOnDeleteAction] = useState<ON_DELETE | null>(null);
-    const [onUpdateaction, setOnUpdateAction] = useState<ON_UPDATE | null>(null);
-    const edgesCopy: Edge[] = JSON.parse(JSON.stringify(state.edges$));
-    const getEdge = () => {
-        const currentEdge = edgeOptions$.value;
-        const currEdgeIdx = edgesCopy.findIndex(x => x.id === currentEdge!.id);
-        return edgesCopy[currEdgeIdx];
-    }
-    const edge = getEdge();
-    const onSimple = () => {
-        setType("simple-fk");
-    }
-
-
-    const saveSimple = () => {
-        if (edgeOptions$.value?.data.compositeGroup !== null) {
-            edge.data.compositeGroup = null;
-            edge.data.color = "";
-        }
-        edge.data.onDelete = onDeleteAction;
-        edge.data.onUpdate = onUpdateaction;
-
-        state.edges$ = edgesCopy;
-        edgeOptions$.value = null;
-    }
 
     const onComposite = () => {
         setType("composite-fk")

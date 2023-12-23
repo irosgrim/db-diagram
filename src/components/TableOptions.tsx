@@ -45,7 +45,7 @@ const getSimpleFks = (currentTableId: string) => {
                 fk.map((x, i) => (
                     <div key={i} style={{ display: "flex", justifyContent: "space-between" }}>
                         <span>
-                            <Icon type="exclamation" width="12" height="11" color="red" />
+                            {(x.edge.data.onDelete !== null || x.edge.data.onUpdate !== null) && <Icon type="exclamation" width="12" height="11" color="red" />}
                             <span>
                                 {x.text}
                             </span>
@@ -72,7 +72,7 @@ const getCompositeFks = (currentTableId: string) => {
         return acc;
     }, {} as Record<string, Edge[]>);
 
-    const composites = [];
+    const composites: any[] = [];
     for (const fk of Object.values(composite)) {
         const source = [];
         const target = [];
@@ -95,16 +95,17 @@ const getCompositeFks = (currentTableId: string) => {
         }
         {
             composites.map((x, i) => (
-                // <div key={i}>
-                //     {x.text}
-                // </div>
                 <div key={i} style={{ display: "flex", justifyContent: "space-between" }}>
-                    <span>
-                        <Icon type="exclamation" width="12" height="11" color="red" />
-                        <span>
-                            {x.text}
-                        </span>
-                    </span>
+                    {
+                        (x.edge.data.onDelete !== null || x.edge.data.onUpdate !== null) && (
+                            <span>
+                                <Icon type="exclamation" width="12" height="11" color="red" />
+                                <span>
+                                    {x.text}
+                                </span>
+                            </span>
+                        )
+                    }
                     <button
                         className="icon-btn"
                         style={{ marginRight: "0.5rem" }}
