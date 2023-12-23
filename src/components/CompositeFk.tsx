@@ -5,7 +5,8 @@ import { Edge, MarkerType, Node } from "reactflow";
 import { randomColor } from "../utils/styling";
 import React from "react";
 import { Icon } from "./Icon";
-import { REFERENTIAL_ACTIONS } from "../utils/sql";
+import { ON_DELETE, ON_UPDATE } from "../utils/sql";
+import { ReferentialActions } from "./ReferentialActions";
 
 type CompositeFkProps = {
     sourceTable: Node;
@@ -15,9 +16,11 @@ type CompositeFkProps = {
 }
 
 
-const setCompositeGroupAndColor = (edge: Edge, groupId: string, color: string) => {
+const setCompositeGroupAndColor = (edge: Edge, groupId: string, color: string, onDelete: ON_DELETE, onUpdate: ON_UPDATE) => {
     edge.data.compositeGroup = groupId;
     edge.data.color = color;
+    edge.data.onDelete = onDelete;
+    edge.data.onUpdate = onUpdate;
     delete edge.sourceHandle;
     delete edge.targetHandle;
 }
@@ -33,6 +36,9 @@ const findMatchingEdgeIndex = (edges: Edge[], edgeToMatch: Edge) => {
 export const CompositeFk = ({ sourceTable, targetTable, edge, onClose }: CompositeFkProps) => {
     const [newEdges, setNewEdges] = useState<Edge[]>([]);
     const [deleted, setDeleted] = useState<string[]>([]);
+    const [onDelete, setOnDelete] = useState<ON_DELETE | null>(edge?.data.onDelete);
+    const [onUpdate, setOnUpdate] = useState<ON_UPDATE | null>(edge?.data.onUpdate);
+
 
     const [, setSelectedColumn] = useState<any | null>(null);
     const sourceColumns = state.nodes$.filter(x => x.parentNode === sourceTable.id);
@@ -60,7 +66,9 @@ export const CompositeFk = ({ sourceTable, targetTable, edge, onClose }: Composi
             data: {
                 label: "relation",
                 compositeGroup: null,
-                color: ""
+                color: "",
+                onDelete: null,
+                onUpdate: null,
             },
             id: v4()
         }
@@ -117,16 +125,15 @@ export const CompositeFk = ({ sourceTable, targetTable, edge, onClose }: Composi
                 // if the edge already exists, update its properties
                 let edd = { ...edgesCopy[existingEdgeIndex] };
                 edgesCopy.splice(existingEdgeIndex, 1);
-                setCompositeGroupAndColor(newEdge, compositeGroupId, groupColor);
+                setCompositeGroupAndColor(newEdge, compositeGroupId, groupColor, onDelete, onUpdate);
                 edd = { ...edd, ...newEdge }
                 edgesCopy.push(edd);
 
             } else {
-                setCompositeGroupAndColor(newEdge, compositeGroupId, groupColor);
+                setCompositeGroupAndColor(newEdge, compositeGroupId, groupColor, onDelete, onUpdate);
                 edgesCopy.push(newEdge);
             }
         });
-
         state.edges$ = edgesCopy;
         onClose();
     };
@@ -201,28 +208,23 @@ export const CompositeFk = ({ sourceTable, targetTable, edge, onClose }: Composi
                     </ul>
             }
             <div className="fk-ref-actions-wrapper">
-                <span className="fk-ref-actions">
-
-                    <select id="on-delete">
-                        <option value="-">NO ACTION</option>
-                        {
-                            REFERENTIAL_ACTIONS.onDelete.map(action => (
-                                <option value={action}>{action}</option>
-                            ))
-                        }
-                    </select>
-
-                    <select id="on-update">
-                        <option value="-">NO ACTION</option>
-                        {
-                            REFERENTIAL_ACTIONS.onUpdate.map(action => (
-                                <option value={action}>{action}</option>
-                            ))
-                        }
-                    </select>
-                </span>
-                <button onClick={() => newEdge()} className="add-btn"><Icon type="plus" /> <span style={{ marginLeft: "0.5rem" }}>Add key</span></button>
+                <ReferentialActions
+                    onChangeDelete={setOnDelete}
+                    onChangeUpdate={setOnUpdate}
+                    defaultOnDelete={edge?.data.onDelete}
+                    defaultOnUpdate={edge?.data.onUpdate}
+                />
+                <button
+                    onClick={() => newEdge()}
+                    className="add-btn">
+                    <Icon type="plus" />
+                    <span style={{ marginLeft: "0.5rem" }}>
+                        Add key
+                    </span>
+                </button>
             </div>
+            <button onClick={() => newEdge()} className="add-btn"><Icon type="plus" /> <span style={{ marginLeft: "0.5rem" }}>Add key</span></button>
+
             <div style={{ display: "flex", justifyContent: "flex-end" }}>
                 <button onClick={() => onClose()} className="normal-btn">Cancel</button>
                 <button onClick={() => saveCompositeFk()} className="normal-btn" style={{ marginLeft: "0.5rem" }}>Save</button>

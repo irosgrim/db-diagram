@@ -10,7 +10,7 @@ type TableOptionsProps = {
 }
 
 
-const getEdgeName = (currentTableId: string) => {
+const getSimpleFks = (currentTableId: string) => {
     const edges = state.edges$.filter(x => {
         const [sourceTable,] = x.source.split("/");
         return x.data.compositeGroup === null && sourceTable === currentTableId;
@@ -33,7 +33,7 @@ const getEdgeName = (currentTableId: string) => {
             targetColumn: targetColumn.data.name
         }
 
-        return `${data.sourceColumn} to ${data.targetTable}(${data.targetColumn})`;
+        return { text: `${data.sourceColumn} to ${data.targetTable}(${data.targetColumn})`, edge: edge };
     });
 
     return (
@@ -47,10 +47,14 @@ const getEdgeName = (currentTableId: string) => {
                         <span>
                             <Icon type="exclamation" width="12" height="11" color="red" />
                             <span>
-                                {x}
+                                {x.text}
                             </span>
                         </span>
-                        <button className="icon-btn" style={{ marginRight: "0.5rem" }}>
+                        <button
+                            className="icon-btn"
+                            style={{ marginRight: "0.5rem" }}
+                            onClick={() => currentModal$.value = { type: "add-referential-actions", props: { edges: [x.edge], text: x.text } }}
+                        >
                             <Icon type="horizontal-dots" width="12" height="3" />
                         </button>
                     </div>
@@ -82,7 +86,7 @@ const getCompositeFks = (currentTableId: string) => {
             source.push(sourceCol.data.name);
             target.push(targetCol.data.name);
         }
-        composites.push(`(${source.join(", ")}) to ${tableName}(${target.join(", ")})`)
+        composites.push({ text: `(${source.join(", ")}) to ${tableName}(${target.join(", ")})`, edge: fk })
     }
 
     return <div>
@@ -91,8 +95,23 @@ const getCompositeFks = (currentTableId: string) => {
         }
         {
             composites.map((x, i) => (
-                <div key={i}>
-                    {x}
+                // <div key={i}>
+                //     {x.text}
+                // </div>
+                <div key={i} style={{ display: "flex", justifyContent: "space-between" }}>
+                    <span>
+                        <Icon type="exclamation" width="12" height="11" color="red" />
+                        <span>
+                            {x.text}
+                        </span>
+                    </span>
+                    <button
+                        className="icon-btn"
+                        style={{ marginRight: "0.5rem" }}
+                        onClick={() => currentModal$.value = { type: "add-referential-actions", props: { edges: x.edge, text: x.text } }}
+                    >
+                        <Icon type="horizontal-dots" width="12" height="3" />
+                    </button>
                 </div>
             ))
         }
@@ -264,7 +283,7 @@ export const TableOptions = ({ currentTable }: TableOptionsProps) => {
                             getCompositeFks(currentTable.id)
                         }
                         {
-                            getEdgeName(currentTable.id)
+                            getSimpleFks(currentTable.id)
                         }
                     </div>
                 )

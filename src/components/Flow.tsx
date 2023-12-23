@@ -22,6 +22,9 @@ import { AddConstraint } from "./AddConstraint";
 import { AddIndexes } from "./AddIndexes";
 import { TableSection } from "./TableSection";
 import { EdgeOptions } from "./EdgeOption";
+import { ContextMenu } from "./Contextmenu";
+import { ReferentialActions } from "./ReferentialActions";
+import { AddReferentialActions } from "./AddReferentialActions";
 
 const fitViewOptions = { padding: 4 };
 
@@ -110,7 +113,10 @@ export const Flow = () => {
     const [, setSelectedColumn] = useState<string | null>(null);
     const [schema, setSchema] = useState<string | null>(null);
     const [sidebarHidden, setSidebarHidden] = useState(false);
+    const [menu, setMenu] = useState<{ node: Node, x: number, y: number } | null>(null);
     const fkOpts = useRef(null);
+
+    const ref = useRef(null);
 
     useOnClickOutside(fkOpts, () => edgeOptions$.value = null)
 
@@ -121,6 +127,20 @@ export const Flow = () => {
         },
         [state.nodes$]
     );
+
+    const onNodeContextMenu = useCallback(
+        (event: any, node: any) => {
+            event.preventDefault();
+            setMenu({
+                node: node,
+                x: event.clientX,
+                y: event.clientY
+            });
+        },
+        [setMenu],
+    );
+
+    const onPaneClick = useCallback(() => setMenu(null), [setMenu]);
 
     const onConnect = useCallback(
         (params: any) => {
@@ -133,7 +153,7 @@ export const Flow = () => {
 
             if (!edgeExists) {
                 state.edges$ = addEdge(
-                    { ...params, type: "floating", markerEnd: { type: MarkerType.Arrow }, data: { label: "relation", compositeGroup: null, color: "" } },
+                    { ...params, type: "floating", markerEnd: { type: MarkerType.Arrow }, data: { label: "relation", compositeGroup: null, color: "", onDelete: null, onUpdate: null } },
                     state.edges$
                 );
             } else {
@@ -277,6 +297,10 @@ export const Flow = () => {
                                 <AddIndexes onClose={() => currentModal$.value = null} />
                             </>
                         )}
+                        {currentModal$.value.type === "add-referential-actions" && (
+                            <AddReferentialActions onClose={() => currentModal$.value = null} />
+                        )}
+
                     </>
                 </Modal>
             }
@@ -511,6 +535,7 @@ export const Flow = () => {
                     </div>
                 </aside>
                 <ReactFlow
+                    ref={ref}
                     nodes={state.nodes$}
                     edges={state.edges$}
                     onNodesChange={onNodesChange}
@@ -549,9 +574,16 @@ export const Flow = () => {
                     fitView
                     fitViewOptions={fitViewOptions}
                     connectionMode={ConnectionMode.Loose}
+                    onPaneClick={onPaneClick}
+                    onContextMenu={(e) => {
+                        e.preventDefault();
+                        console.log("context")
+                    }}
+                    onNodeContextMenu={onNodeContextMenu}
                     style={{ backgroundColor: "rgb(242 242 242)", width: "calc(100% - 300px)!important" }}
                 >
                     <Controls position="bottom-right" />
+                    {menu && <ContextMenu onClick={onPaneClick} {...menu} />}
                 </ReactFlow>
             </div>
         </>

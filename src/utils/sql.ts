@@ -268,11 +268,15 @@ export const REFERENTIAL_ACTIONS = {
     "ON DELETE SET NULL",
     "ON DELETE SET DEFAULT",
     "ON DELETE RESTRICT",
-    ],
+    ] as const,
     onUpdate: [
         "ON UPDATE CASCADE",
         "ON UPDATE SET NULL",
         "ON UPDATE SET DEFAULT",
         "ON UPDATE RESTRICT",
-    ],
+    ] as const,
 };
+
+
+export type ON_DELETE = typeof REFERENTIAL_ACTIONS.onDelete | null;
+export type ON_UPDATE = typeof REFERENTIAL_ACTIONS.onUpdate | null;

@@ -1,9 +1,10 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useStore, getSmoothStepPath, EdgeLabelRenderer } from 'reactflow';
 
 import { getEdgeParams } from './utils';
 import { Icon } from './Icon';
-import { edgeOptions$ } from '../state/globalState';
+import { edgeOptions$, state } from '../state/globalState';
+import { computed } from '@preact/signals-react';
 
 type EdgeProps = {
     id: string;
@@ -14,11 +15,11 @@ type EdgeProps = {
     data: any;
 }
 
-
 const FloatingEdge = ({ id, data, source, target, markerEnd, style }: EdgeProps) => {
     const sourceNode = useStore(useCallback((store) => store.nodeInternals.get(source), [source]));
     const targetNode = useStore(useCallback((store) => store.nodeInternals.get(target), [target]));
     const [showOpts, setShowOpts] = useState(false);
+
     if (!sourceNode || !targetNode) {
         return null;
     }
