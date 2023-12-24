@@ -13,7 +13,6 @@ export const AddReferentialActions = ({ onClose }: AddReferentialActionsProps) =
     const [onUpdateAction, setOnUpdateAction] = useState<ON_UPDATE | null>(currentModal$.value!.props.edges[0].data.onUpdate);
 
     const saveChanges = () => {
-        console.log({ onDeleteAction, onUpdateAction })
         const edgesId = (currentModal$.value!.props.edges as Edge[]).map(x => x.id);
         const copyOfEdges: Node[] = JSON.parse(JSON.stringify(state.edges$));
 
@@ -33,7 +32,7 @@ export const AddReferentialActions = ({ onClose }: AddReferentialActionsProps) =
             }
             < div >
                 <ReferentialActions
-                    onChangeDelete={(val) => { console.log(val); setOnDeleteAction(val) }}
+                    onChangeDelete={(val) => setOnDeleteAction(val)}
                     onChangeUpdate={(val) => setOnUpdateAction(val)}
                     defaultOnDelete={currSelection.onDelete}
                     defaultOnUpdate={currSelection.onUpdate}
