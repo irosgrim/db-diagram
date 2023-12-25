@@ -150,7 +150,7 @@ class ForeignKey {
             if (onUpdate) {
                 ref.push(`        ${onUpdate}`);
             }
-            composites.push(`FOREIGN KEY (${source.join(", ")}) REFERENCES ${tableName}(${target.join(", ")}) ${ref.length && "\n" + ref.join("\n")}`)
+            composites.push(`FOREIGN KEY (${source.join(", ")}) REFERENCES ${tableName}(${target.join(", ")}) ${ref.length > 0 && "\n" + ref.join("\n")}`)
         }
 
         // get simple fks
@@ -168,7 +168,7 @@ class ForeignKey {
                  ref.push(`        ${onUpdate}`);
             };
             
-            const txt = `FOREIGN KEY (${sourceCol!.data.name}) REFERENCES ${targetTable!.data.name}(${targetCol!.data.name}) ${ref.length && "\n" + ref.join("\n")}`
+            const txt = `FOREIGN KEY (${sourceCol!.data.name}) REFERENCES ${targetTable!.data.name}(${targetCol!.data.name}) ${ref.length > 0 && "\n" + ref.join("\n")}`
             return txt;
         })
         
