@@ -4,6 +4,8 @@ A quick and effective way to understand the structure of a database is by examin
 
 When designing a database, being able to visualize its structure makes the process a lot easier.
 
+[See it in action](https://irosgrim.github.io/db-diagram)
+
 ## Screenshot of DB Diagram UI
 
 ![db-diagram app](screenshot.png)
