@@ -1,17 +1,14 @@
 import { v4 } from "uuid";
-import { primaryKey$, state } from "../state/globalState";
+import { primaryKey$, selectedTable$, state } from "../state/globalState";
 import { TableOptions } from "./TableOptions";
 import { useState } from "react";
 import { generateCssClass, getGoodContrastColor } from "../utils/styling";
 import { Icon } from "./Icon";
 import Autocomplete from "./Autocomplete";
 import { POSTGRES_TYPES } from "../utils/sql";
-import { deleteNodes } from "./Flow";
+import { deleteNodes } from "../App";
 
 type TableSectionProps = {
-    isActive: boolean;
-    onOpen: (tableId: string) => void;
-    onClose: () => void;
     table: {
         id: string;
         data: {
@@ -28,7 +25,6 @@ const getProperty = (node: any) => {
         unique: node.data.unique,
     }
 }
-
 
 const toggleConstraint = (column: any, type: "primary_key" | "unique" | "none") => {
     const nodesCopy = [...state.nodes$];
@@ -51,7 +47,7 @@ const toggleConstraint = (column: any, type: "primary_key" | "unique" | "none") 
 }
 
 
-export const TableSection = ({ table, isActive, onOpen, onClose }: TableSectionProps) => {
+export const TableSection = ({ table }: TableSectionProps) => {
     const [editing, setEditing] = useState(false);
 
     const handleDragStart = (e: any, node: any) => {
@@ -133,6 +129,7 @@ export const TableSection = ({ table, isActive, onOpen, onClose }: TableSectionP
         // setNodes(nodesCopy)
         state.nodes$ = [...nodesCopy];
     }
+    const isActive = selectedTable$.value === table.id;
     return (
         <li>
             <details
@@ -140,9 +137,9 @@ export const TableSection = ({ table, isActive, onOpen, onClose }: TableSectionP
                 style={{ borderLeft: `6px solid ${table.data.backgroundColor}` }}
                 onToggle={(e: any) => {
                     if (e.target.open) {
-                        onOpen(table.id);
+                        selectedTable$.value = table.id;
                     } else if (!e.target.open) {
-                        onClose();
+                        selectedTable$.value = null;
                     }
                 }}
                 className="table-props-container"
@@ -152,6 +149,7 @@ export const TableSection = ({ table, isActive, onOpen, onClose }: TableSectionP
                     className="table-props"
                 >
                     <input
+                        id={`input_${table.id}`}
                         style={{ color: editing ? getGoodContrastColor(table.data.backgroundColor) : "initial" }}
                         className="table-name-input"
                         type="text"
@@ -217,6 +215,7 @@ export const TableSection = ({ table, isActive, onOpen, onClose }: TableSectionP
                                 <div className="row">
                                     <span style={{ display: "flex" }}>
                                         <input
+                                            id={`input_${c.id}`}
                                             className="table-input"
                                             type="text"
                                             maxLength={30}

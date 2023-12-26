@@ -11,6 +11,8 @@ export const indexes$: Signal<Record<string, {cols: string[]; unique: boolean}[]
 
 export const edgeOptions$: Signal<Edge | null> = signal(null);
 
+export const selectedTable$: Signal<string | null> = signal(null);
+
 class State {
     nodes: Signal<Node[]> = signal([]);
     edges: Signal<Edge[]> = signal([]);
