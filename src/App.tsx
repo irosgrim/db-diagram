@@ -5,7 +5,7 @@ import "./style/tables.scss"
 import "./style/table.scss";
 import "./style/modal.scss";
 import { useCallback, useEffect, useRef, useState } from "react";
-import Flow, { addEdge, applyNodeChanges, ConnectionMode, Controls, Edge, MarkerType, useEdgesState } from "reactflow";
+import Flow, { addEdge, applyNodeChanges, Connection, ConnectionMode, Controls, Edge, MarkerType, useEdgesState } from "reactflow";
 import { currentModal$, edgeOptions$, indexes$, primaryKey$, selectedTable$, state, uniqueKeys$, writeToLocalStorage } from './state/globalState';
 import Column from './components/Column';
 import { Table } from './components/Table';
@@ -20,6 +20,7 @@ import { ContextMenu } from './components/Contextmenu';
 import { FirstTable } from './components/FirstTable/FirstTable';
 import { AppHeader } from './components/AppHeader';
 import { AppSidebar } from './components/AppSidebar';
+import { RelationEdgeData } from "./types/types";
 
 const fitViewOptions = { padding: 4 };
 
@@ -100,7 +101,7 @@ export const deleteNodes = (nodesToDelete: any[]) => {
 
 export const App = () => {
 
-  const [, , onEdgesChange] = useEdgesState<any[]>(initialEdges);
+  const [, , onEdgesChange] = useEdgesState<Edge<RelationEdgeData>[]>(initialEdges);
   const [, setSelectedColumn] = useState<string | null>(null);
   const [sidebarHidden, setSidebarHidden] = useState(false);
   const [menu, setMenu] = useState<{ node: Node | null, x: number, y: number } | null>(null);
@@ -137,7 +138,7 @@ export const App = () => {
   const onPaneClick = useCallback(() => setMenu(null), [setMenu]);
 
   const onConnect = useCallback(
-    (params: any) => {
+    (params: Connection) => {
       const edgeExists = state.edges$.some(edge =>
         edge.source === params.source &&
         edge.target === params.target &&
@@ -157,7 +158,7 @@ export const App = () => {
     [state.edges$]
   );
 
-  const onEdgesDelete = (edges: Edge[]) => {
+  const onEdgesDelete = (edges: Edge<RelationEdgeData>[]) => {
     for (const edge of edges) {
       const edgeIndex = state.edges$.findIndex(ed => ed.id === edge.id);
       const edgesCopy = [...state.edges$];

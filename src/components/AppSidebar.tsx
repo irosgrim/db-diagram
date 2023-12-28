@@ -1,4 +1,4 @@
-import { selectedTable$, state } from "../state/globalState";
+import { state } from "../state/globalState";
 import { generateCssClass, randomColor } from "../utils/styling"
 import { Icon } from "./Icon";
 import { TableSection } from "./TableSection";

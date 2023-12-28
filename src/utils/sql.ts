@@ -283,6 +283,8 @@ export const POSTGRES_TYPES = [
     "XML"
 ];
 
+export type PostgresType = typeof POSTGRES_TYPES[number];
+
 
 export const REFERENTIAL_ACTIONS = {
     onDelete: [

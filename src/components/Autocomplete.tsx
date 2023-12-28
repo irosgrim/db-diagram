@@ -1,15 +1,16 @@
 import React, { useEffect, useRef, useState } from 'react';
 import "../style/autocomplete.scss";
+import { PostgresType } from '../utils/sql';
 
 type AutocompleteProps = {
-    suggestions: string[];
+    suggestions: PostgresType[];
     value: string;
     onChange: (value: string) => void;
 }
 
 const Autocomplete = ({ suggestions, value, onChange }: AutocompleteProps) => {
     const [input, setInput] = useState(!value ? suggestions.length ? suggestions[0] : "" : value);
-    const [filteredSuggestions, setFilteredSuggestions] = useState<string[]>([]);
+    const [filteredSuggestions, setFilteredSuggestions] = useState<PostgresType[]>([]);
     const [timer, setTimer] = useState<number | null>(null);
     const dropdownRef = useRef<HTMLUListElement>(null);
 

@@ -1,21 +1,17 @@
 import { v4 } from "uuid";
 import { primaryKey$, selectedTable$, state } from "../state/globalState";
 import { TableOptions } from "./TableOptions";
-import { useState } from "react";
+import { DragEvent, useState } from "react";
 import { generateCssClass, getGoodContrastColor } from "../utils/styling";
 import { Icon } from "./Icon";
 import Autocomplete from "./Autocomplete";
 import { POSTGRES_TYPES } from "../utils/sql";
 import { deleteNodes } from "../App";
+import { Node } from "reactflow";
+import { ColumnData, TableData } from "../types/types";
 
 type TableSectionProps = {
-    table: {
-        id: string;
-        data: {
-            name: string;
-            backgroundColor: string;
-        }
-    };
+    table: Node<TableData>
 }
 
 const getProperty = (node: any) => {
@@ -55,13 +51,13 @@ export const TableSection = ({ table }: TableSectionProps) => {
         e.dataTransfer.setData("text/plain", nodeIndex);
     };
 
-    const handleDrop = (e: any, node: any) => {
+    const handleDrop = (e: DragEvent, node: Node<ColumnData>) => {
         e.preventDefault();
 
         const nodeIndex = state.nodes$.findIndex(x => x.id === node.id);
         const parentIndex = state.nodes$.findIndex(x => x.id === node.parentNode);
-        const draggedPosition = parseInt(e.dataTransfer.getData("text/plain"), 10);
-        e.dataTransfer.clearData();
+        const draggedPosition = parseInt(e.dataTransfer!.getData("text/plain"), 10);
+        e.dataTransfer!.clearData();
 
         const parentTableId = node.parentNode;
 
@@ -82,11 +78,11 @@ export const TableSection = ({ table }: TableSectionProps) => {
         state.nodes$ = [...reorderedNodes];
     };
 
-    const handleDragOver = (e: any) => {
+    const handleDragOver = (e: DragEvent) => {
         e.preventDefault();
     };
 
-    const addColumn = (currentTable: any) => {
+    const addColumn = (currentTable: Node<TableData>) => {
         const nodesCopy = [...state.nodes$];
         const { id } = currentTable;
         let lastColumnIndex = 0;
