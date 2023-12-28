@@ -1,13 +1,12 @@
-import { state } from "../state/globalState";
-import { generateCssClass, randomColor } from "../utils/styling"
-import { Icon } from "./Icon";
+import { state } from "../../state/globalState";
+import { generateCssClass, randomColor } from "../../utils/styling"
+import { Icon } from "../Icon";
 import { TableSection } from "./TableSection";
 
 type AppSidebarProps = {
     hidden: boolean;
     onShowHide: () => void;
 }
-
 
 const newTable = () => {
     const allTables = state.nodes$.filter(x => x.type === "group");

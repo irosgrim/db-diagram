@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { state } from "../state/globalState"
+import { state } from "../../state/globalState"
 
 type ColumnsSelectorProps = {
     table: any;

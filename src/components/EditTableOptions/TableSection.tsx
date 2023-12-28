@@ -1,14 +1,14 @@
 import { v4 } from "uuid";
-import { primaryKey$, selectedTable$, state } from "../state/globalState";
+import { primaryKey$, selectedTable$, state } from "../../state/globalState";
 import { TableOptions } from "./TableOptions";
 import { DragEvent, useState } from "react";
-import { generateCssClass, getGoodContrastColor } from "../utils/styling";
-import { Icon } from "./Icon";
-import Autocomplete from "./Autocomplete";
-import { POSTGRES_TYPES } from "../utils/sql";
-import { deleteNodes } from "../App";
+import { generateCssClass, getGoodContrastColor } from "../../utils/styling";
+import { Icon } from "../Icon";
+import Autocomplete from "../Autocomplete";
+import { POSTGRES_TYPES } from "../../utils/sql";
+import { deleteNodes } from "../../App";
 import { Node } from "reactflow";
-import { ColumnData, TableData } from "../types/types";
+import { ColumnData, TableData } from "../../types/types";
 
 type TableSectionProps = {
     table: Node<TableData>

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { currentModal$, primaryKey$, uniqueKeys$ } from "../state/globalState";
+import { currentModal$, primaryKey$, uniqueKeys$ } from "../../state/globalState";
 import { ColumnsSelector } from "./ColumnsSelector";
 
 export const AddConstraint = ({ onClose }: { onClose: () => void }) => {

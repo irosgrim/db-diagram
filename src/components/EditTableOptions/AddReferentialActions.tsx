@@ -1,7 +1,7 @@
 import { useState } from "react"
-import { currentModal$, state } from "../state/globalState"
+import { currentModal$, state } from "../../state/globalState"
 import { ReferentialActions } from "./ReferentialActions"
-import { ON_DELETE, ON_UPDATE } from "../utils/sql";
+import { ON_DELETE, ON_UPDATE } from "../../utils/sql";
 import { Edge, Node } from "reactflow";
 
 type AddReferentialActionsProps = {

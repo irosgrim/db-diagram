@@ -1,4 +1,4 @@
-import { ON_DELETE, ON_UPDATE, REFERENTIAL_ACTIONS } from "../utils/sql"
+import { ON_DELETE, ON_UPDATE, REFERENTIAL_ACTIONS } from "../../utils/sql"
 
 type ReferentialActionsProps = {
     defaultOnDelete: ON_DELETE;

@@ -1,5 +1,6 @@
 import { ReactElement, useRef } from "react"
-import { useOnClickOutside } from "../hooks/onClickOutside";
+import { useOnClickOutside } from "../../hooks/onClickOutside";
+import "./style/modal.scss";
 
 type ModalProps = {
     children: ReactElement | ReactElement[];

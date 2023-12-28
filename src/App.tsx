@@ -1,25 +1,22 @@
 import "reactflow/dist/style.css";
 import "./style/main.scss";
-import "./style/edge.scss"
-import "./style/tables.scss"
-import "./style/table.scss";
-import "./style/modal.scss";
+import "./components/Nodes/style/nodes.scss";
 import { useCallback, useEffect, useRef, useState } from "react";
 import Flow, { addEdge, applyNodeChanges, Connection, ConnectionMode, Controls, Edge, MarkerType, useEdgesState } from "reactflow";
 import { currentModal$, edgeOptions$, indexes$, primaryKey$, selectedTable$, state, uniqueKeys$, writeToLocalStorage } from './state/globalState';
-import Column from './components/Column';
-import { Table } from './components/Table';
-import FloatingEdge from './components/FloatingEdge';
+import Column from './components/Nodes/Column/Column';
+import { Table } from './components/Nodes/Table/Table';
+import FloatingEdge from './components/Nodes/Edge/FloatingEdge';
 import { useOnClickOutside } from './hooks/onClickOutside';
-import { Modal } from './components/Modal';
-import { AddConstraint } from './components/AddConstraint';
-import { AddIndexes } from './components/AddIndexes';
-import { AddReferentialActions } from './components/AddReferentialActions';
-import { EdgeOptions } from './components/EdgeOption';
-import { ContextMenu } from './components/Contextmenu';
+import { Modal } from './components/Modal/Modal';
+import { AddConstraint } from './components/EditTableOptions/AddConstraint';
+import { AddIndexes } from './components/EditTableOptions/AddIndexes';
+import { AddReferentialActions } from './components/EditTableOptions/AddReferentialActions';
+import { EdgeOptions } from './components/EditTableOptions/EdgeOption';
+import { ContextMenu } from './components/ContextMenu/Contextmenu';
 import { FirstTable } from './components/FirstTable/FirstTable';
-import { AppHeader } from './components/AppHeader';
-import { AppSidebar } from './components/AppSidebar';
+import { AppHeader } from './components/AppHeader/AppHeader';
+import { AppSidebar } from './components/EditTableOptions/AppSidebar';
 import { RelationEdgeData } from "./types/types";
 
 const fitViewOptions = { padding: 4 };

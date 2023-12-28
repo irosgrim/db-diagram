@@ -1,5 +1,5 @@
-import { deleteNodes } from "../App";
-import "../style/contex-menu.scss";
+import { deleteNodes } from "../../App";
+import "./style/context-menu.scss";
 
 export const ContextMenu = ({
     node,

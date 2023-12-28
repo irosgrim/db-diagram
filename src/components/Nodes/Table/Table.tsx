@@ -1,4 +1,4 @@
-import { getGoodContrastColor } from "../utils/styling";
+import { getGoodContrastColor } from "../../../utils/styling";
 
 export const Table = ({ id, data }: any) => {
     return (

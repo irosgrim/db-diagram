@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { edgeOptions$, state } from "../state/globalState"
+import { edgeOptions$, state } from "../../state/globalState"
 import { CompositeFk } from "./CompositeFk"
-import { Icon } from "./Icon";
-import { generateCssClass } from "../utils/styling";
+import { Icon } from "../Icon";
+import { generateCssClass } from "../../utils/styling";
 
 export const EdgeOptions = () => {
     const [type, setType] = useState<"simple-fk" | "composite-fk">(edgeOptions$.value?.data.compositeGroup !== null ? "composite-fk" : "simple-fk");

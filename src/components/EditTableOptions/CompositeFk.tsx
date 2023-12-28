@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react"
-import { state } from "../state/globalState";
+import { state } from "../../state/globalState";
 import { v4 } from "uuid";
 import { Edge, MarkerType, Node } from "reactflow";
-import { randomColor } from "../utils/styling";
+import { randomColor } from "../../utils/styling";
 import React from "react";
-import { Icon } from "./Icon";
-import { ON_DELETE, ON_UPDATE } from "../utils/sql";
+import { Icon } from "../Icon";
+import { ON_DELETE, ON_UPDATE } from "../../utils/sql";
 import { ReferentialActions } from "./ReferentialActions";
 
 type CompositeFkProps = {

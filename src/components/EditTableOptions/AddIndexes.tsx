@@ -1,4 +1,4 @@
-import { currentModal$, indexes$ } from "../state/globalState";
+import { currentModal$, indexes$ } from "../../state/globalState";
 import { ColumnsSelector } from "./ColumnsSelector"
 
 type AddIndexesProps = {

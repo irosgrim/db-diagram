@@ -1,6 +1,6 @@
 import { useState } from "react"
-import { generateSqlSchema } from "../utils/sql";
-import { indexes$, primaryKey$, state, uniqueKeys$ } from "../state/globalState";
+import { generateSqlSchema } from "../../utils/sql";
+import { indexes$, primaryKey$, state, uniqueKeys$ } from "../../state/globalState";
 
 export const AppHeader = () => {
     const [schema, setSchema] = useState<string | null>(null);

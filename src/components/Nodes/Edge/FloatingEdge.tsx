@@ -1,9 +1,9 @@
 import { useCallback, useState } from 'react';
 import { useStore, getSmoothStepPath, EdgeLabelRenderer } from 'reactflow';
 
-import { getEdgeParams } from './utils';
-import { Icon } from './Icon';
-import { edgeOptions$, state } from '../state/globalState';
+import { getEdgeParams } from '../../utils';
+import { Icon } from '../../Icon';
+import { edgeOptions$, state } from '../../../state/globalState';
 
 type EdgeProps = {
     id: string;
@@ -34,13 +34,10 @@ const FloatingEdge = ({ id, data, source, target, markerEnd, style }: EdgeProps)
         targetY: ty,
     });
 
-
     const onEdgeClick = (evt: any, id: any) => {
         evt.stopPropagation();
         edgeOptions$.value = { ...edgeOptions$.value, id, data, source, target };
     };
-
-
 
     return (
         <>

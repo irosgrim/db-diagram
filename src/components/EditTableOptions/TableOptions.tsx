@@ -1,8 +1,8 @@
-import { currentModal$, indexes$, primaryKey$, state, uniqueKeys$ } from "../state/globalState";
+import { currentModal$, indexes$, primaryKey$, state, uniqueKeys$ } from "../../state/globalState";
 import { useState } from "react";
-import "../style/tableOptions.scss";
-import { generateCssClass } from "../utils/styling";
-import { Icon } from "./Icon";
+import "./style/tableOptions.scss";
+import { generateCssClass } from "../../utils/styling";
+import { Icon } from "../Icon";
 import { Edge } from "reactflow";
 
 type TableOptionsProps = {

@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { Handle, Position } from 'reactflow';
-import { Icon } from './Icon';
-import { primaryKey$ } from '../state/globalState';
+import { Icon } from '../../Icon';
+import { primaryKey$ } from '../../../state/globalState';
 
 type ColumnProps = {
     id: string;
