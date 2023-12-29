@@ -1,0 +1,41 @@
+@import "../../../style/vars";
+
+.header {
+    position: relative;
+    height: $header-height;
+    background-color: #1b4243;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    h3 {
+        margin: 0;
+        color: #9fc8b9;
+    }
+}
+
+.show-schema-btn {
+    background-color: transparent;
+    border-radius: 5px; 
+    border: 1px solid #9fc8b9; 
+    color: #9fc8b9;
+}
+
+.schema-preview {
+    position: absolute;
+    top: 30px;
+    height: auto;
+    width: 100%;
+    right: 0;
+    z-index: 12;
+    background: #ffffff;
+    padding: 1rem;
+    border: 1px solid #ababab;
+    max-height: 600px;
+    overflow: auto;
+    @media (min-width: 400px) {
+        width: auto;
+        max-height: 600px;
+    }
+}
+

@@ -1,6 +1,5 @@
 import { Edge, Node } from "reactflow";
 
-
 class Column{
     public name: string;
     public type: string;
@@ -27,14 +26,14 @@ class Column{
 }
 
 class Pk {
-    public cols: string[];
+    public colId: string[];
     constructor(pk: string[], private nodes: Node[]) {
-        this.cols = pk
+        this.colId = pk
     }
     toSql() {
         const parts = [];
-        for (const col of this.cols) {
-            const colEl = this.nodes.find(x => x.id === col);
+        for (const id of this.colId) {
+            const colEl = this.nodes.find(x => x.id === id);
             if (colEl) {
                 parts.push(colEl.data.name);
             }
@@ -44,17 +43,17 @@ class Pk {
 }
 
 class Unique {
-    public uniques: any[][];
+    public uniques: string[][];
     public tableId: string = "";
 
-    constructor(uniques: any[][], private nodes: Node[]) {
+    constructor(uniques: string[][], private nodes: Node[]) {
         this.uniques = uniques;
     }
 
     toSql() {
-        const parts: any[] = [];
+        const parts: {name: string, cols: string[]}[] = [];
         for (const u of this.uniques) {
-            const cols = [];
+            const cols: string[] = [];
             for (let i=0; i < u.length; i++) {
                 const colEl = this.nodes.find(x => x.id === u[i]);
                 if (colEl) {
@@ -66,7 +65,7 @@ class Unique {
                 }
             }
         }
-        const str = [];
+        const str: string[] = [];
         for (const p of parts) {
             str.push(`${p.cols.join(", ")})`);
         }
@@ -77,12 +76,12 @@ class Unique {
 
 class Index {
     public tableId: string = "";
-    constructor (private indexes: any[][], private nodes: Node[]) {
+    constructor (private indexes: string[][], private nodes: Node[]) {
         this.indexes = indexes;
     }
 
     toSql() {
-        const parts: any[] = [];
+        const parts: {name: string; cols: string[]}[] = [];
         for (const idx of this.indexes) {
             const cols = [];
             for (let i=0; i < idx.length; i++) {
@@ -96,7 +95,7 @@ class Index {
                 }
             }
         }
-        const str = [];
+        const str: string[] = [];
         const tableName = this.nodes.find(n => n.id === this.tableId);
         for (const p of parts) {
             str.push(
@@ -117,21 +116,20 @@ class ForeignKey {
     }
     toSql() {
         // get composite fks
-        const composite = this.edges.reduce((acc: any, curr: Edge) => {
+        const composite: Record<string, Edge[]> = this.edges.reduce((acc: any, curr: Edge) => {
             if (curr.data.compositeGroup !== null) {
                 acc[curr.data.compositeGroup] = [...(acc[curr.data.compositeGroup] ? acc[curr.data.compositeGroup] : []), curr];
             }
             return acc;
         }, {} as Record<string, Edge[]>);
 
-        const composites = [];
+        const composites: string[] = [];
         for (const fk of Object.values(composite)) {
             const source = [];
             const target = [];
             let tableName = "";
             let onDelete = "";
             let onUpdate = "";
-            // @ts-ignore
             for (const group of fk) {
                 console.log(group)
                 const sourceCol = this.nodes.find(n => n.id === group.source);
@@ -194,7 +192,7 @@ class Table{
             this.unique.toSql().forEach(x => sql.push("UNIQUE (" +x + ")"))
         }
 
-        if (this.pk && this.pk.cols.length) {
+        if (this.pk && this.pk.colId.length) {
             sql.push("PRIMARY KEY (" + this.pk.toSql() + ")");
         }
 
@@ -254,8 +252,6 @@ export const generateSqlSchema = (deps: SqlDeps) => {
     return str.join("\n");
 }
 
-
-
 export const POSTGRES_TYPES = [
     "BIGINT",
     "SERIAL",
@@ -285,7 +281,6 @@ export const POSTGRES_TYPES = [
 
 export type PostgresType = typeof POSTGRES_TYPES[number];
 
-
 export const REFERENTIAL_ACTIONS = {
     onDelete: [
     "ON DELETE CASCADE",
@@ -300,7 +295,6 @@ export const REFERENTIAL_ACTIONS = {
         "ON UPDATE RESTRICT",
     ] as const,
 };
-
 
 export type ON_DELETE = typeof REFERENTIAL_ACTIONS.onDelete | null;
 export type ON_UPDATE = typeof REFERENTIAL_ACTIONS.onUpdate | null;

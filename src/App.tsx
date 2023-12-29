@@ -2,7 +2,7 @@ import "reactflow/dist/style.css";
 import "./style/main.scss";
 import "./components/Nodes/style/nodes.scss";
 import { useCallback, useEffect, useRef, useState } from "react";
-import Flow, { addEdge, applyNodeChanges, Connection, ConnectionMode, Controls, Edge, MarkerType, useEdgesState } from "reactflow";
+import Flow, { addEdge, applyNodeChanges, Connection, ConnectionMode, Controls, Node, Edge, MarkerType, useEdgesState, NodeChange } from "reactflow";
 import { currentModal$, edgeOptions$, indexes$, primaryKey$, selectedTable$, state, uniqueKeys$, writeToLocalStorage } from './state/globalState';
 import Column from './components/Nodes/Column/Column';
 import { Table } from './components/Nodes/Table/Table';
@@ -23,13 +23,13 @@ const fitViewOptions = { padding: 4 };
 
 const nodeTypes = { column: Column, group: Table };
 
-const edgeTypes: any = {
+const edgeTypes: Record<string, (args: any) => JSX.Element | null> = {
   floating: FloatingEdge,
 };
 
 const initialEdges: Edge<any>[] = [];
 
-export const deleteNodes = (nodesToDelete: any[]) => {
+export const deleteNodes = (nodesToDelete: Node[]) => {
   let nodesCopy = [...state.nodes$];
   let edgesCopy = [...state.edges$];
 
@@ -47,24 +47,24 @@ export const deleteNodes = (nodesToDelete: any[]) => {
       nodesCopy = nodesCopy.filter(node => node.id !== nodeToDelete.id);
 
       // delete indexes
-      const v = indexes$.value[parentTableId] ? indexes$.value[parentTableId].filter(idx => idx.cols.indexOf(nodeToDelete.id) === -1) : [];
+      const v = indexes$.value[parentTableId!] ? indexes$.value[parentTableId!].filter(idx => idx.cols.indexOf(nodeToDelete.id) === -1) : [];
       if (v.length) {
-        indexes$.value = { ...indexes$.value, [parentTableId]: v };
+        indexes$.value = { ...indexes$.value, [parentTableId!]: v };
       }
 
       // delete pk
-      if (primaryKey$.value[parentTableId]) {
-        const pkCopy = { ...primaryKey$.value[parentTableId] };
+      if (primaryKey$.value[parentTableId!]) {
+        const pkCopy = { ...primaryKey$.value[parentTableId!] };
         const idx = pkCopy.cols.findIndex(x => x === nodeToDelete.id);
         pkCopy.cols.splice(idx, 1);
-        primaryKey$.value = { ...primaryKey$.value, [parentTableId]: pkCopy }
+        primaryKey$.value = { ...primaryKey$.value, [parentTableId!]: pkCopy }
       }
 
       // delete unique constraint
-      if (uniqueKeys$.value[parentTableId]) {
-        const unCopy = [...uniqueKeys$.value[parentTableId]];
+      if (uniqueKeys$.value[parentTableId!]) {
+        const unCopy = [...uniqueKeys$.value[parentTableId!]];
         const existingUn = unCopy.filter(u => !u.cols.includes(nodeToDelete.id));
-        uniqueKeys$.value = { ...uniqueKeys$.value, [parentTableId]: existingUn };
+        uniqueKeys$.value = { ...uniqueKeys$.value, [parentTableId!]: existingUn };
       }
 
       // delete edges connected to this column
@@ -114,17 +114,17 @@ export const App = () => {
   }, [state.nodes$, state.edges$, primaryKey$, uniqueKeys$, indexes$])
 
   const onNodesChange = useCallback(
-    (changes: any) => {
+    (changes: NodeChange[]) => {
       return state.nodes$ = applyNodeChanges(changes, state.nodes$);
     },
     [state.nodes$]
   );
 
   const onNodeContextMenu = useCallback(
-    (event: any, node?: any) => {
+    (event: any, node?: Node) => {
       event.preventDefault();
       setMenu({
-        node: node,
+        node: node || null,
         x: event.clientX,
         y: event.clientY
       });

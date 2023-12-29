@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { generateSqlSchema } from "../../utils/sql";
 import { indexes$, primaryKey$, state, uniqueKeys$ } from "../../state/globalState";
+import "./style/app-header.scss";
 
 export const AppHeader = () => {
     const [schema, setSchema] = useState<string | null>(null);
@@ -24,7 +25,7 @@ export const AppHeader = () => {
         <header className="header">
             <h3>DB diagram</h3>
             <button
-                style={{ backgroundColor: "transparent", borderRadius: "5px", border: "1px solid #9fc8b9", color: "#9fc8b9" }}
+                className="show-schema-btn"
                 onClick={() => showDbSchema()}>Show DB schema</button>
             {
                 schema && <pre className="schema-preview">
