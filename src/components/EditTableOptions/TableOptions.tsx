@@ -50,7 +50,7 @@ const getSimpleFks = (currentTableId: string) => {
                                 {x.text}
                             </span>
                         </span>
-                        <button
+                        <button type="button"
                             className="icon-btn"
                             style={{ marginRight: "0.5rem" }}
                             onClick={() => currentModal$.value = { type: "add-referential-actions", props: { edges: [x.edge], text: x.text } }}
@@ -103,7 +103,7 @@ const getCompositeFks = (currentTableId: string) => {
                         </span>
                     </span>
 
-                    <button
+                    <button type="button"
                         className="icon-btn"
                         style={{ marginRight: "0.5rem" }}
                         onClick={() => currentModal$.value = { type: "add-referential-actions", props: { edges: x.edge, text: x.text } }}
@@ -132,13 +132,13 @@ export const TableOptions = ({ currentTable }: TableOptionsProps) => {
             <nav className="table-options-nav">
                 <ul>
                     <li className={generateCssClass({ active: showSection === "indexes" })}>
-                        <button onClick={() => toggleSection("indexes")}>Indexes</button>
+                        <button type="button" onClick={() => toggleSection("indexes")}>Indexes</button>
                     </li>
                     <li className={generateCssClass({ active: showSection === "constraints" })}>
-                        <button onClick={() => toggleSection("constraints")}>Constraints</button>
+                        <button type="button" onClick={() => toggleSection("constraints")}>Constraints</button>
                     </li>
                     <li className={generateCssClass({ active: showSection === "foreign-keys" })}>
-                        <button onClick={() => toggleSection("foreign-keys")}>Foreign keys</button>
+                        <button type="button" onClick={() => toggleSection("foreign-keys")}>Foreign keys</button>
                     </li>
                 </ul>
             </nav>
@@ -162,7 +162,7 @@ export const TableOptions = ({ currentTable }: TableOptionsProps) => {
                                             {x.unique && <Icon type="star" style={{ marginRight: "0.5rem" }} />}
                                             {colNames}
                                         </span>
-                                        <button
+                                        <button type="button"
                                             className="icon-btn"
                                             onClick={() => {
                                                 const indexesCopy = [...indexes$.value[currentTable.id]]
@@ -178,7 +178,7 @@ export const TableOptions = ({ currentTable }: TableOptionsProps) => {
                             })
                         }
                         <div style={{ display: "flex", justifyContent: "flex-end" }}>
-                            <button
+                            <button type="button"
                                 onClick={() => currentModal$.value = { type: "add-index", props: { ...currentTable } }}
                                 style={{
                                     display: "flex",
@@ -217,7 +217,7 @@ export const TableOptions = ({ currentTable }: TableOptionsProps) => {
                                             })
                                             .join(", ")}
                                     </span>
-                                    <button
+                                    <button type="button"
                                         className="icon-btn"
                                         onClick={() => {
                                             const cp = { ...primaryKey$.value };
@@ -242,7 +242,7 @@ export const TableOptions = ({ currentTable }: TableOptionsProps) => {
                                                 colNames
                                             }
                                         </span>
-                                        <button
+                                        <button type="button"
                                             className="icon-btn"
                                             onClick={() => {
                                                 const cp = [...uniqueKeys$.value[currentTable.id]];
@@ -254,7 +254,7 @@ export const TableOptions = ({ currentTable }: TableOptionsProps) => {
                             })
                         }
                         <div style={{ display: "flex", justifyContent: "flex-end" }}>
-                            <button
+                            <button type="button"
                                 onClick={() => currentModal$.value = { type: "add-constraint", props: { ...currentTable } }}
                                 style={{
                                     display: "flex",

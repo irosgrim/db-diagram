@@ -204,7 +204,7 @@ export const CompositeFk = ({ type, sourceTable, targetTable, edge, onClose }: C
                                                 ))
                                             }
                                         </select>
-                                        <button onClick={() => deleteFk(ed)} className="icon-btn" title="delete key"><Icon type="delete" style={{ visibility: (ed.source || ed.target) ? "visible" : "hidden" }} /></button>
+                                        <button type="button" onClick={() => deleteFk(ed)} className="icon-btn" title="delete key"><Icon type="delete" style={{ visibility: (ed.source || ed.target) ? "visible" : "hidden" }} /></button>
                                     </li>
                                 )
                             })
@@ -218,7 +218,7 @@ export const CompositeFk = ({ type, sourceTable, targetTable, edge, onClose }: C
                     defaultOnDelete={edge?.data.onDelete}
                     defaultOnUpdate={edge?.data.onUpdate}
                 />
-                {type === "composite-fk" && <button
+                {type === "composite-fk" && <button type="button"
                     onClick={() => newEdge()}
                     className="add-btn">
                     <Icon type="plus" />
@@ -229,8 +229,8 @@ export const CompositeFk = ({ type, sourceTable, targetTable, edge, onClose }: C
             </div>}
 
             <div style={{ display: "flex", justifyContent: "flex-end" }}>
-                <button onClick={() => onClose()} className="normal-btn">Cancel</button>
-                <button onClick={() => saveCompositeFk()} className="normal-btn" style={{ marginLeft: "0.5rem" }}>Save</button>
+                <button type="button" onClick={() => onClose()} className="normal-btn">Cancel</button>
+                <button type="button" onClick={() => saveCompositeFk()} className="normal-btn" style={{ marginLeft: "0.5rem" }}>Save</button>
             </div>
         </div>
     )

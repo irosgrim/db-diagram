@@ -9,17 +9,10 @@ import { POSTGRES_TYPES } from "../../utils/sql";
 import { deleteNodes } from "../../App";
 import { Node } from "reactflow";
 import { ColumnData, TableData } from "../../types/types";
+import { getProperty } from "../utils";
 
 type TableSectionProps = {
     table: Node<TableData>
-}
-
-const getProperty = (node: any) => {
-    return {
-        isNotNull: node.data.notNull,
-        isIndex: node.data.index,
-        unique: node.data.unique,
-    }
 }
 
 const toggleConstraint = (column: any, type: "primary_key" | "unique" | "none") => {
@@ -166,7 +159,7 @@ export const TableSection = ({ table }: TableSectionProps) => {
                     {
                         editing && (
                             <>
-                                <button
+                                <button type="button"
                                     className="icon-btn"
                                     onClick={() => setEditing(false)}
                                 >
@@ -189,7 +182,7 @@ export const TableSection = ({ table }: TableSectionProps) => {
                             </>
                         )
                     }
-                    <button
+                    <button type="button"
                         className={generateCssClass("icon-btn", { active: editing })}
                         style={{ width: "40px", height: "40px" }}
                         onClick={() => setEditing(!editing)}
@@ -234,7 +227,7 @@ export const TableSection = ({ table }: TableSectionProps) => {
                                         />
                                     </span>
                                     <span style={{ display: "flex", alignItems: "center" }}>
-                                        <button
+                                        <button type="button"
                                             className={generateCssClass("icon-btn", { active: !getProperty(c).isNotNull })}
                                             onClick={() => {
                                                 let nCopies = [...state.nodes$];
@@ -247,7 +240,7 @@ export const TableSection = ({ table }: TableSectionProps) => {
                                             <Icon type="null" />
                                         </button>
 
-                                        <button
+                                        <button type="button"
                                             title="primary key"
                                             className={generateCssClass("icon-btn", { active: primaryKey$.value[c.parentNode] && primaryKey$.value[c.parentNode].cols.includes(c.id) })}
                                             onClick={() => toggleConstraint(c, "primary_key")}
@@ -255,7 +248,7 @@ export const TableSection = ({ table }: TableSectionProps) => {
                                             <Icon type="flag" />
                                         </button>
 
-                                        <button
+                                        <button type="button"
                                             className={generateCssClass("icon-btn", { active: c.data.unique })}
                                             title="unique"
                                             onClick={() => toggleConstraint(c, "unique")}
@@ -263,7 +256,7 @@ export const TableSection = ({ table }: TableSectionProps) => {
                                         >
                                             <Icon type="star" />
                                         </button>
-                                        <button
+                                        <button type="button"
                                             className={generateCssClass("icon-btn")}
                                             onClick={() => deleteNodes([c])}
                                             title="delete column"
@@ -278,7 +271,7 @@ export const TableSection = ({ table }: TableSectionProps) => {
 
                 </ul>
                 <span style={{ width: "100%", display: "flex", justifyContent: "flex-end" }}>
-                    <button
+                    <button type="button"
                         onClick={() => addColumn(table)}
                         title="add column"
                         style={{

@@ -1,6 +1,6 @@
 
 type IconProps = {
-    type: "exclamation" | "chain" | "arrow-right" | "arrow-left" | "plus" | "flag" | "delete" | "key" | "primary-key" | "horizontal-dots" | "dots" | "edit" | "null" | "color-palette" | "star" | "circle" | "check" | "dots-grid" | "multi-key";
+    type: "exclamation" | "chain" | "arrow-down" | "arrow-right" | "arrow-left" | "plus" | "flag" | "delete" | "key" | "primary-key" | "horizontal-dots" | "dots" | "edit" | "null" | "color-palette" | "star" | "circle" | "check" | "dots-grid" | "multi-key";
     color?: string;
     height?: string;
     width?: string;
@@ -185,6 +185,14 @@ export const Icon = ({ type, color = "black", height, width, style }: IconProps)
                         <circle cx="10.6154" cy="1.38462" r="1.38462" transform="rotate(90 10.6154 1.38462)" fill={color} />
                         <circle cx="6.00003" cy="1.38462" r="1.38462" transform="rotate(90 6.00003 1.38462)" fill={color} />
                         <circle cx="1.38461" cy="1.38462" r="1.38462" transform="rotate(90 1.38461 1.38462)" fill={color} />
+                    </svg>
+
+                )
+            }
+            {
+                type === "arrow-down" && (
+                    <svg width={width || "12"} height={height || "8"} viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M6.46634 7.08925L11.8068 1.74874C12.0644 1.49117 12.0644 1.07359 11.8068 0.816051L11.1839 0.193169C10.9268 -0.063958 10.5101 -0.0644526 10.2524 0.19207L5.99999 4.42452L1.74765 0.19207C1.48991 -0.064453 1.07318 -0.0639585 0.816057 0.193169L0.193175 0.816051C-0.0643918 1.07362 -0.0643918 1.4912 0.193175 1.74874L5.53366 7.08922C5.7912 7.34679 6.20878 7.34679 6.46634 7.08925Z" fill={color} />
                     </svg>
 
                 )

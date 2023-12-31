@@ -486,7 +486,7 @@ export const sampleEdges = [
             "type": "arrow"
         },
         "data": {
-            "label": "relation",
+            label: "relation",
             compositeGroup: null,
             color: "",
             onDelete: null, 
@@ -507,6 +507,8 @@ export const sampleEdges = [
             "label": "relation",
             compositeGroup: null,
             color: "",
+            onDelete: null, 
+            onUpdate: null,
         },
         "id": "reactflow__edge-table_2/col_9b0e1661-b78a-49f2-b492-ca7435631bbfleft-table_3/col_1left"
     }

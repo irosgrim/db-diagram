@@ -8,10 +8,11 @@ export const primaryKey$: Signal<Record<string, {cols: string[]}>> = signal({});
 export const uniqueKeys$: Signal<Record<string, {cols: string[]}[]>> = signal({});
 export const indexes$: Signal<Record<string, {cols: string[]; unique: boolean}[]>> = signal({});
 
-
 export const edgeOptions$: Signal<Edge | null> = signal(null);
 
 export const selectedTable$: Signal<string | null> = signal(null);
+
+export const menuModal$: Signal<"delete" | null> = signal(null);
 
 class State {
     nodes: Signal<Node[]> = signal([]);
@@ -60,7 +61,6 @@ export const writeToLocalStorage = debounce(() =>{
     storageWriter({nodes, edges, primaryKey, uniqueKeys, indexes});
    
 }, 2000);
-
 
 const storageState = getLocalStorageState();
 

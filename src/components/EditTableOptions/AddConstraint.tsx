@@ -52,11 +52,11 @@ export const AddConstraint = ({ onClose }: { onClose: () => void }) => {
                 </div>
             </div>
             <div style={{ marginBottom: "-1px" }}>
-                <button
+                <button type="button"
                     style={{ borderRadius: "5px 0 0 0 ", padding: "0.3rem", backgroundColor: active === "pk" ? "#d3ebf8" : "transparent", border: "1px solid #adadad", fontWeight: "bold" }}
                     onClick={() => toggle("pk")}
                 >Primary Key</button>
-                <button
+                <button type="button"
                     style={{ borderRadius: "0 5px 0 0 ", padding: "0.3rem", backgroundColor: active === "un" ? "#d3ebf8" : "transparent", border: "1px solid #adadad", fontWeight: "bold", marginLeft: "-1px" }}
                     onClick={() => toggle("un")}
                 >

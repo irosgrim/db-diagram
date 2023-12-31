@@ -15,7 +15,7 @@ export const EdgeOptions = () => {
         <>
             <nav style={{ display: "flex", listStyleType: "none", justifyContent: "space-evenly" }}>
                 <div className="circle-btn-wrapper">
-                    <button
+                    <button type="button"
                         onClick={() => setType("simple-fk")} title="simple foreign key"
                         className={generateCssClass("circle-btn", { active: type === "simple-fk" })}
                     >
@@ -26,7 +26,7 @@ export const EdgeOptions = () => {
                     </div>
                 </div>
                 <div className="circle-btn-wrapper">
-                    <button
+                    <button type="button"
                         onClick={() => onComposite()}
                         className={generateCssClass("circle-btn", { active: type === "composite-fk" })}
                     >

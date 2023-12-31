@@ -62,8 +62,8 @@ export const ColumnsSelector = ({ table, showUniqueCheck = false, onClose, onSav
                     }
                 </span>
                 <span style={{ display: "flex", alignItems: "center" }}>
-                    <button onClick={onClose} className="normal-btn">Cancel</button>
-                    <button onClick={() => save()} className="normal-btn" style={{ marginLeft: "0.5rem" }}>Ok</button>
+                    <button type="button" onClick={onClose} className="normal-btn">Cancel</button>
+                    <button type="button" onClick={() => save()} className="normal-btn" style={{ marginLeft: "0.5rem" }}>Ok</button>
                 </span>
             </div >
         </>

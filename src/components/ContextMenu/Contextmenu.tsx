@@ -21,7 +21,7 @@ export const ContextMenu = ({
                     <p style={{ margin: '0.5em' }}>
                         <small>{node.type === "group" ? "Table" : "Column"}: {node.data.name}</small>
                     </p>
-                    <button onClick={() => deleteNodes([node])}>Delete</button>
+                    <button type="button" onClick={() => deleteNodes([node])}>Delete</button>
                 </>
             }
         </div>

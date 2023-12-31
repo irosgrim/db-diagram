@@ -1,5 +1,13 @@
 import { Edge, Position, internalsSymbol } from 'reactflow';
 
+export const getProperty = (node: any) => {
+    return {
+        isNotNull: node.data.notNull,
+        isIndex: node.data.index,
+        unique: node.data.unique,
+    }
+}
+
 const getParams = (nodeA: any, nodeB: any) => {
   const centerA = getNodeCenter(nodeA);
   const centerB = getNodeCenter(nodeB);

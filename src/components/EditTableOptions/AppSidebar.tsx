@@ -57,11 +57,11 @@ const newTable = () => {
 export const AppSidebar = ({ hidden, onShowHide }: AppSidebarProps) => {
     return (
         <aside className={generateCssClass("aside", { hidden: hidden })}>
-            <button className="hide-btn normal-btn" onClick={() => onShowHide()}>{
+            <button type="button" className="hide-btn normal-btn" onClick={() => onShowHide()}>{
                 hidden ? <Icon type="arrow-right" /> : <Icon type="arrow-left" />
             } </button>
             <div className="sidebar-content">
-                <button className="new-btn" onClick={newTable}><Icon type="plus" width="12" /> <span style={{ marginLeft: "1rem" }}>Add new table</span></button>
+                <button type="button" className="new-btn" onClick={newTable}><Icon type="plus" width="12" /> <span style={{ marginLeft: "1rem" }}>Add new table</span></button>
                 <nav>
                     <ul className="tables-nav">
                         {

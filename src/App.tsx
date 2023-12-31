@@ -3,7 +3,7 @@ import "./style/main.scss";
 import "./components/Nodes/style/nodes.scss";
 import { useCallback, useEffect, useRef, useState } from "react";
 import Flow, { addEdge, applyNodeChanges, Connection, ConnectionMode, Controls, Node, Edge, MarkerType, useEdgesState, NodeChange } from "reactflow";
-import { currentModal$, edgeOptions$, indexes$, primaryKey$, selectedTable$, state, uniqueKeys$, writeToLocalStorage } from './state/globalState';
+import { currentModal$, edgeOptions$, indexes$, menuModal$, primaryKey$, selectedTable$, state, uniqueKeys$, writeToLocalStorage } from './state/globalState';
 import Column from './components/Nodes/Column/Column';
 import { Table } from './components/Nodes/Table/Table';
 import FloatingEdge from './components/Nodes/Edge/FloatingEdge';
@@ -216,6 +216,28 @@ export const App = () => {
         edgeOptions$.value &&
         <Modal onClose={() => edgeOptions$.value = null}>
           <EdgeOptions />
+
+        </Modal>
+      }
+      {
+        menuModal$.value && <Modal onClose={() => menuModal$.value = null}>
+          <div>
+            {
+              menuModal$.value === "delete" && <>
+                <header>
+                  Delete diagram
+                </header>
+                <section>
+                  <p>You are about to delete current diagram</p>
+                  <p>Are you sure you want to do that?</p>
+                </section>
+                <footer>
+                  <button onClick={() => menuModal$.value = null}>Cancel</button>
+                  <button>Delete diagram</button>
+                </footer>
+              </>
+            }
+          </div>
 
         </Modal>
       }

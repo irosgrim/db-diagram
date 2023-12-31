@@ -39,8 +39,8 @@ export const AddReferentialActions = ({ onClose }: AddReferentialActionsProps) =
                 />
             </div >
             <div style={{ display: "flex", justifyContent: "flex-end", marginTop: "0.5rem" }}>
-                <button onClick={() => onClose()} className="normal-btn">Cancel</button>
-                <button onClick={() => saveChanges()} className="normal-btn" style={{ marginLeft: "0.5rem" }}>Save</button>
+                <button type="button" onClick={() => onClose()} className="normal-btn">Cancel</button>
+                <button type="button" onClick={() => saveChanges()} className="normal-btn" style={{ marginLeft: "0.5rem" }}>Save</button>
             </div>
         </div>
     )

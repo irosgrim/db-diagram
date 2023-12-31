@@ -7,11 +7,16 @@ import { Icon } from "../Icon";
 import { POSTGRES_TYPES } from "../../utils/sql";
 import Autocomplete from "../Autocomplete";
 import { generateCssClass } from "../../utils/styling";
-import { Select } from "../Select";
 import { v4 } from "uuid";
+import { ColumnData, TableData } from "../../types/types";
+import { getProperty } from "../utils";
+
+const isColumnNode = (node: Node<ColumnData | TableData>): node is Node<ColumnData> => {
+    return node.data && node.type === "column";
+}
 
 export const FirstTable = ({ onClose }: { onClose: () => void }) => {
-    const [firstTable, setFirstTable] = useState<Node[] | null>(tableTemplate);
+    const [firstTable, setFirstTable] = useState<Node<ColumnData | TableData>[] | null>(tableTemplate);
 
 
     const firstDragStart = (e: any, node: any) => {
@@ -87,10 +92,10 @@ export const FirstTable = ({ onClose }: { onClose: () => void }) => {
                             onBlur={() => true}
                             onChange={(e) => {
                                 const firstTableCopy = [...firstTable!];
-                                firstTableCopy[0].data.backgroundColor = e.target.value;
+                                (firstTableCopy[0].data as TableData).backgroundColor = e.target.value;
                                 setFirstTable(firstTableCopy);
                             }}
-                            value={firstTable![0].data.backgroundColor}
+                            value={(firstTable![0].data as TableData).backgroundColor}
                             title="change table color"
                         />
                     </div>
@@ -98,7 +103,7 @@ export const FirstTable = ({ onClose }: { onClose: () => void }) => {
                     <div className="new-columns-list-wrapper">
                         <ul className="new-columns">
                             {
-                                firstTable!.filter(x => x.type === "column").map(col => (
+                                firstTable!.filter(isColumnNode).map(col => (
                                     <li
                                         key={col.id}
                                         draggable
@@ -131,44 +136,43 @@ export const FirstTable = ({ onClose }: { onClose: () => void }) => {
                                                 onChange={(val) => {
                                                     const firstTableCopy = [...firstTable!];
                                                     const currentNodeIndex = firstTableCopy.findIndex(x => x.id === col.id);
-                                                    firstTableCopy[currentNodeIndex].data.type = val;
+                                                    const colNode = (firstTableCopy[currentNodeIndex] as Node<ColumnData>);
+                                                    colNode.data.type = val;
                                                     setFirstTable(firstTableCopy);
                                                 }}
                                             />
-                                            <button
-                                                className={generateCssClass("icon-btn", { active: !col.data.notNull })}
-                                                onClick={() => {
-                                                    const firstTableCopy = [...firstTable!];
-                                                    const currentNodeIndex = firstTableCopy.findIndex(x => x.id === col.id);
-                                                    firstTableCopy[currentNodeIndex].data.notNull = !firstTableCopy[currentNodeIndex].data.notNull;
-                                                    setFirstTable(firstTableCopy);
-                                                }}
-                                                title="nullable value"
-                                            >
-                                                <Icon type={"null"} />
-                                            </button>
 
-                                            <div
-                                                className={generateCssClass("icon-btn")}
-                                                title={col.data.constraint}
-                                            >
-                                                <Select
-                                                    type="single" options={[
-                                                        { id: "primary_key", icon: "flag", name: "primary key" },
-                                                        { id: "unique", icon: "star", name: "unique" },
-                                                        { id: "none", icon: "circle", name: "none" },
-                                                    ]}
-                                                    selected={col.data.constraint}
-                                                    onSelectionChange={(val) => {
-                                                        const firstTableCopy = [...firstTable!];
-                                                        const currentNodeIndex = firstTableCopy.findIndex(x => x.id === col.id);
-                                                        firstTableCopy[currentNodeIndex].data.constraint = val;
-                                                        setFirstTable(firstTableCopy);
+                                            <span style={{ display: "flex", alignItems: "center" }}>
+                                                <button type="button"
+                                                    className={generateCssClass("icon-btn", { active: !getProperty(col).isNotNull })}
+                                                    onClick={() => {
+                                                        let nCopies = [...firstTable!];
+                                                        const curr = nCopies.findIndex(x => x.id === col.id);
+                                                        const colNode = nCopies[curr] as Node<ColumnData>;
+                                                        colNode.data.notNull = !colNode.data.notNull;
+                                                        setFirstTable(nCopies)
                                                     }}
-                                                />
-                                            </div>
+                                                    title="nullable value"
+                                                >
+                                                    <Icon type="null" />
+                                                </button>
+
+                                                <button type="button"
+                                                    className={generateCssClass("icon-btn", { active: col.data.unique })}
+                                                    title="unique"
+                                                    onClick={() => {
+                                                        let nCopies = [...firstTable!];
+                                                        const curr = nCopies.findIndex(x => x.id === col.id);
+                                                        const colNode = nCopies[curr] as Node<ColumnData>;
+                                                        colNode.data.unique = !colNode.data.unique;
+                                                        setFirstTable(nCopies)
+                                                    }}
+                                                >
+                                                    <Icon type="star" />
+                                                </button>
+                                            </span>
                                         </div>
-                                        <button
+                                        <button type="button"
                                             className="icon-btn"
                                             title="delete column"
                                             onClick={() => {
@@ -198,31 +202,31 @@ export const FirstTable = ({ onClose }: { onClose: () => void }) => {
                                     }
                                     return acc;
                                 }, 0);
-                                const colTemplate = {
+                                const colTemplate: Node<ColumnData> = {
                                     id: colId,
                                     type: "column",
                                     position: { x: 0, y: 20 + (n * 20) },
-                                    data: { name: "new_column_" + n, type: "VARCHAR(30)", unique: false, notNull: false, index: false },
+                                    data: { name: "new_column_" + n, type: "VARCHAR(30)", unique: false, notNull: false, },
                                     parentNode: tableId, extent: "parent",
                                     draggable: false,
                                     expandParent: true,
                                 };
-                                //@ts-ignore
-                                setFirstTable([...firstTable, colTemplate])
+                                setFirstTable([...firstTable!, colTemplate])
                             }}>+ Add column</button>
                     </div>
                 </section>
                 <footer className="modal-footer">
                     <div style={{ display: "flex", justifyContent: "flex-end", width: "100%" }}>
-                        <button
+                        <button type="button"
                             className="normal-btn"
-                            type="button"
                             onClick={() => {
                                 setFirstTable(null);
                                 onClose();
                             }}
-                        >Cancel</button>
-                        <button
+                        >
+                            Cancel
+                        </button>
+                        <button type="button"
                             className="normal-btn"
                             style={{ marginLeft: "0.5rem" }}
                             onClick={() => {
