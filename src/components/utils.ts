@@ -76,27 +76,6 @@ export const getEdgeParams = (source: any, target: any) => {
   };
 }
 
-type LocalStorageState = {
-  nodes: Node[]; 
-  edges: Edge[]; 
-  primaryKey: Record<string, {cols: string[]}>;
-  uniqueKeys: Record<string, {cols: string[]}[]>;
-  indexes: Record<string, {cols: string[]; unique: boolean}[]>;
-} 
-
-export const getLocalStorageState = (): LocalStorageState| undefined => {
-  const appName = "db-diagram";
-  try {
-    const data = localStorage.getItem(appName);
-    if (data) {
-      return JSON.parse(data);
-    }
-  } catch (error) {
-    console.error('Failed to load from local storage:', error);
-  }
-}
-
-
 export const debounce = (func: (...args: any) => void, wait: number) =>{
     let timeout: number;
 

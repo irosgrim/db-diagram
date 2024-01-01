@@ -25,7 +25,14 @@
                 &:hover {
                     background-color: #e9f0f1;
                 }
+                &.active {
+                    background-color: #ebf3f8;
+                }
             }
         }
     }
+}
+
+.file-names {
+    border-bottom: 1px solid #333;
 }

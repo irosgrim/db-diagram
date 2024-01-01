@@ -3,7 +3,7 @@ import "./style/main.scss";
 import "./components/Nodes/style/nodes.scss";
 import { useCallback, useEffect, useRef, useState } from "react";
 import Flow, { addEdge, applyNodeChanges, Connection, ConnectionMode, Controls, Node, Edge, MarkerType, useEdgesState, NodeChange } from "reactflow";
-import { currentModal$, edgeOptions$, indexes$, menuModal$, primaryKey$, selectedTable$, state, uniqueKeys$, writeToLocalStorage } from './state/globalState';
+import { currentModal$, edgeOptions$, indexes$, localStorageCopy$, primaryKey$, selectedTable$, state, uniqueKeys$ } from './state/globalState';
 import Column from './components/Nodes/Column/Column';
 import { Table } from './components/Nodes/Table/Table';
 import FloatingEdge from './components/Nodes/Edge/FloatingEdge';
@@ -18,6 +18,7 @@ import { FirstTable } from './components/FirstTable/FirstTable';
 import { AppHeader } from './components/AppHeader/AppHeader';
 import { AppSidebar } from './components/EditTableOptions/AppSidebar';
 import { RelationEdgeData } from "./types/types";
+import { deleteDiagram, getLocalStorageState, writeToLocalStorage } from "./state/storage";
 
 const fitViewOptions = { padding: 4 };
 
@@ -110,7 +111,22 @@ export const App = () => {
   useOnClickOutside(fkOpts, () => edgeOptions$.value = null)
 
   useEffect(() => {
-    writeToLocalStorage();
+
+    getLocalStorageState().then(data => {
+      if (data && data.value.active) {
+        const { nodes, edges, primaryKey, uniqueKeys, indexes } = data.value.files[data.value.active].data;
+        state.nodes$ = nodes;
+        state.edges$ = edges;
+        primaryKey$.value = primaryKey;
+        uniqueKeys$.value = uniqueKeys;
+        indexes$.value = indexes;
+        console.log("Loaded state");
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    writeToLocalStorage(localStorageCopy$.value.active);
   }, [state.nodes$, state.edges$, primaryKey$, uniqueKeys$, indexes$])
 
   const onNodesChange = useCallback(
@@ -208,7 +224,25 @@ export const App = () => {
             {currentModal$.value.type === "add-referential-actions" && (
               <AddReferentialActions onClose={() => currentModal$.value = null} />
             )}
-
+            {
+              currentModal$.value.type === "delete-confirm" && (
+                <div>
+                  <header>
+                    Delete diagram
+                  </header>
+                  <section>
+                    <p>You are about to delete current diagram</p>
+                    <p>Are you sure you want to do that?</p>
+                  </section>
+                  <footer>
+                    <button onClick={() => currentModal$.value = null}>Cancel</button>
+                    <button onClick={() => {
+                      deleteDiagram(localStorageCopy$.value.active!)
+                    }}>Delete diagram</button>
+                  </footer>
+                </div>
+              )
+            }
           </>
         </Modal>
       }
@@ -216,28 +250,6 @@ export const App = () => {
         edgeOptions$.value &&
         <Modal onClose={() => edgeOptions$.value = null}>
           <EdgeOptions />
-
-        </Modal>
-      }
-      {
-        menuModal$.value && <Modal onClose={() => menuModal$.value = null}>
-          <div>
-            {
-              menuModal$.value === "delete" && <>
-                <header>
-                  Delete diagram
-                </header>
-                <section>
-                  <p>You are about to delete current diagram</p>
-                  <p>Are you sure you want to do that?</p>
-                </section>
-                <footer>
-                  <button onClick={() => menuModal$.value = null}>Cancel</button>
-                  <button>Delete diagram</button>
-                </footer>
-              </>
-            }
-          </div>
 
         </Modal>
       }
