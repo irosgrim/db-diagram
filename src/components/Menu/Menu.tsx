@@ -64,8 +64,8 @@ export const Menu = ({ onClose }: MenuProps) => {
                     await storageWriter(newId, n);
                     window.location.reload();
                 }}>New diagram</button></li>
-                <li><button type="button">Export...</button></li>
-                <li><button type="button">Duplicate</button></li>
+                {/* <li><button type="button" disabled title="not implemented">Export...</button></li>
+                <li><button type="button" disabled title="not implemented">Duplicate</button></li> */}
                 <li><button type="button" onClick={() => {
                     const currFileName = document.getElementById("current-file-name-input")
                     if (currFileName) {

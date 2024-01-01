@@ -3,6 +3,7 @@ import { indexes$, localStorageCopy$, primaryKey$, state, uniqueKeys$ } from "./
 import { debounce } from "../components/utils";
 import { v4 } from "uuid";
 import { Signal } from "@preact/signals-react";
+import { generateFilename } from "../utils/string";
 
 export interface Storage {
     getFiles<T>(defaultValue?: T): Promise<T | null>;
@@ -125,7 +126,7 @@ export const storageWriter = async (fileId: string, diagramData: DiagramData) =>
 
   // update or create new diagram
   storageData.files[fileId] = {
-    name: storageData.files[fileId]?.name || "Untitled diagram",
+    name: storageData.files[fileId]?.name || generateFilename(),
     lastEdited: new Date().toISOString(),
     data: diagramData,
   };

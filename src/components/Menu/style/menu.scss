@@ -22,7 +22,10 @@
                 text-align: left;
                 background-color: transparent;
                 border: none;
-                &:hover {
+                &:disabled {
+                    opacity: 0.5;
+                }
+                &:hover:not(:disabled) {
                     background-color: #e9f0f1;
                 }
                 &.active {
