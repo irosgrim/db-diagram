@@ -236,8 +236,8 @@ export const App = () => {
                   </section>
                   <footer>
                     <button onClick={() => currentModal$.value = null}>Cancel</button>
-                    <button onClick={() => {
-                      deleteDiagram(localStorageCopy$.value.active!)
+                    <button onClick={async () => {
+                      await deleteDiagram(localStorageCopy$.value.active!)
                     }}>Delete diagram</button>
                   </footer>
                 </div>

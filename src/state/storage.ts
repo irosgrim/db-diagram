@@ -90,8 +90,13 @@ export const renameDiagram = async (newName: string) => {
 
 export const deleteDiagram = async (fileId: string) => {
   const savedData = await storage.getFiles<AllDiagrams>();
-  if (savedData) {
+  if (savedData && Object.values(localStorageCopy$.value.files).length > 0) {
     delete savedData.files[fileId];
+    if (Object.values(savedData.files).length === 0) {
+      await storage.removeFiles();
+      window.location.reload();
+      return;
+    }
     // find the last edited diagram 
     const lastEdited = Object.values(localStorageCopy$.value.files).sort((a, b) => 
       new Date(b.lastEdited).getTime() - new Date(a.lastEdited).getTime()
@@ -102,10 +107,11 @@ export const deleteDiagram = async (fileId: string) => {
         ) || null;
         
         savedData.active = id;
-        console.log("here");
         await storage.setFiles(savedData);
         window.location.reload();
+
     }
+  } else {
   }
 }
 
