@@ -1,4 +1,4 @@
-import { Edge, Position, internalsSymbol } from 'reactflow';
+import { Position, internalsSymbol } from 'reactflow';
 
 export const getProperty = (node: any) => {
     return {

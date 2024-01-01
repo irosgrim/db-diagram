@@ -10,7 +10,6 @@ import { renameDiagram } from "../../state/storage";
 export const AppHeader = () => {
     const [schema, setSchema] = useState<string | null>(null);
     const [showMenu, setShowMenu] = useState(false);
-    const [files, setFiles] = useState<any>(null);
     const menuRef = useRef(null);
 
     useOnClickOutside(menuRef, () => setShowMenu(false));

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { currentModal$, edgeOptions$, indexes$, localStorageCopy$, primaryKey$, selectedTable$, state, uniqueKeys$ } from "../../state/globalState";
+import { currentModal$, localStorageCopy$ } from "../../state/globalState";
 import "./style/menu.scss";
 import { getLocalStorageState, setActiveDiagram, storageWriter } from "../../state/storage";
 import { v4 } from "uuid";
