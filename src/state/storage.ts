@@ -154,10 +154,9 @@ export const writeToLocalStorage = debounce((fileId: string) =>{
 
 
 export const getLocalStorageState = async (): Promise<Signal<AllDiagrams>> => {
+  const data = await storage.getFiles<AllDiagrams>();
   try {
-    const data = await storage.getFiles<AllDiagrams>();
-    if (data) {
-
+    if (data && data.hasOwnProperty("active") && data.hasOwnProperty("files")) {
       localStorageCopy$.value = data;
 
       if (data.active && data.files[data.active]) {
@@ -176,6 +175,9 @@ export const getLocalStorageState = async (): Promise<Signal<AllDiagrams>> => {
         return localStorageCopy$;
       }
     } else {
+      if (data && (!data.hasOwnProperty("active") || !data.hasOwnProperty("files"))) {
+        await storage.removeFiles()
+      }
         const nodes = state.nodes$;
         const edges = state.edges$;
         const primaryKey = primaryKey$.value;
