@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { currentModal$, localStorageCopy$ } from "../../state/globalState";
 import "./style/menu.scss";
-import { getLocalStorageState, setActiveDiagram, storageWriter } from "../../state/storage";
+import { getLocalStorageState, setActiveDiagram, storageWriter, storage } from "../../state/storage";
 import { v4 } from "uuid";
 import { generateCssClass } from "../../utils/styling";
 
@@ -24,13 +24,46 @@ const getFiles = async () => {
 export const Menu = ({ onClose }: MenuProps) => {
     const [files, setFiles] = useState<{ files: { id: string, name: string }[], active: string | null } | null>();
 
+    const fileInputRef = useRef<HTMLInputElement>(null);
+
     useEffect(() => {
         const f = async () => {
             const r = await getFiles();
             setFiles(r);
         };
         f();
-    }, [])
+    }, []);
+
+    const exportDiagram = () => {
+        currentModal$.value = { type: "export-diagram" };
+        onClose();
+    }
+
+    const fileInputClick = () => {
+        fileInputRef.current?.click();
+    }
+
+    const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (file) {
+            const reader = new FileReader()
+            reader.onload = (e) => {
+                const text = e.target?.result as string;
+                const p = JSON.parse(text);
+                for (const f in p) {
+                    p[f].name = "imported-" + p[f].name;
+                }
+                // TODO: some validation
+
+                let curr = { ...localStorageCopy$.value.files };
+                curr = { ...curr, ...p };
+                localStorageCopy$.value = { ...localStorageCopy$.value, files: curr };
+                storage.setFiles(localStorageCopy$.value);
+                window.location.reload();
+            };
+            reader.readAsText(file);
+        }
+    };
 
     return (
         <nav className="menu-wrapper">
@@ -52,20 +85,52 @@ export const Menu = ({ onClose }: MenuProps) => {
                 }
             </ul>
             <ul>
-                <li><button type="button" onClick={async () => {
-                    const newId = v4();
-                    const n = {
-                        nodes: [],
-                        edges: [],
-                        primaryKey: {},
-                        uniqueKeys: {},
-                        indexes: {},
-                    }
-                    await storageWriter(newId, n);
-                    window.location.reload();
-                }}>New diagram</button></li>
-                {/* <li><button type="button" disabled title="not implemented">Export...</button></li>
-                <li><button type="button" disabled title="not implemented">Duplicate</button></li> */}
+                <li>
+                    <button
+                        type="button"
+                        onClick={async () => {
+                            const newId = v4();
+                            const n = {
+                                nodes: [],
+                                edges: [],
+                                primaryKey: {},
+                                uniqueKeys: {},
+                                indexes: {},
+                            }
+                            await storageWriter(newId, n);
+                            window.location.reload();
+                        }}
+                        title="create new diagram"
+                    >
+                        New diagram
+                    </button>
+                </li>
+                <li>
+                    <button
+                        type="button"
+                        title="export diagram"
+                        onClick={() => exportDiagram()}
+                    >
+                        Export...
+                    </button>
+                </li>
+                <li>
+                    <input
+                        type="file"
+                        ref={fileInputRef}
+                        onChange={handleFileChange}
+                        style={{ display: 'none' }} // Hide the input element
+                        accept=".json" // Optional: restrict to .json files
+                    />
+                    <button
+                        type="button"
+                        title="import diagram"
+                        onClick={() => fileInputClick()}
+                    >
+                        Import...
+                    </button>
+                </li>
+                {/* <li><button type="button" disabled title="not implemented">Duplicate</button></li>  */}
                 <li><button type="button" onClick={() => {
                     const currFileName = document.getElementById("current-file-name-input")
                     if (currFileName) {

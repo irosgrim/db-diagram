@@ -2,7 +2,7 @@ import { Signal, signal } from "@preact/signals-react";
 import { Edge, Node } from "reactflow";
 import { AllDiagrams } from "./storage";
 
-export const currentModal$: Signal<{type: "add-constraint" | "add-index" | "add-referential-actions" | "delete-confirm"; props?: any } | null> = signal(null);
+export const currentModal$: Signal<{type: "add-constraint" | "add-index" | "add-referential-actions" | "delete-confirm" | "export-diagram" | "import-diagram"; props?: any } | null> = signal(null);
 
 export const primaryKey$: Signal<Record<string, {cols: string[]}>> = signal({});
 export const uniqueKeys$: Signal<Record<string, {cols: string[]}[]>> = signal({});

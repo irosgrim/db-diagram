@@ -11,7 +11,7 @@ export interface Storage {
     removeFiles(): Promise<void>;
 }
 
-export default class LocalStorage implements Storage {
+export class LocalStorage implements Storage {
     constructor(private key="") {}
 
     async getFiles<T>(): Promise<T | null>;
@@ -42,7 +42,7 @@ export default class LocalStorage implements Storage {
 
 export const storage = new LocalStorage("db-diagram");
 
-interface DiagramData {
+export interface DiagramData {
     nodes: Node[];
     edges: Edge[];
     primaryKey: Record<string, { cols: string[] }>;
@@ -51,7 +51,7 @@ interface DiagramData {
 }
 
 export interface AllDiagrams {
-    files: Record<string, {name: string, lastEdited: string, data: DiagramData}>
+    files: Record<string, {name: string, dateCreated: string, lastEdited: string, data: DiagramData}>
     active: string | null;
 }
 
@@ -127,6 +127,7 @@ export const storageWriter = async (fileId: string, diagramData: DiagramData) =>
   // update or create new diagram
   storageData.files[fileId] = {
     name: storageData.files[fileId]?.name || generateFilename(),
+    dateCreated: storageData.files[fileId]?.dateCreated || new Date().toISOString(),
     lastEdited: new Date().toISOString(),
     data: diagramData,
   };
