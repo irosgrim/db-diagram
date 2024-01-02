@@ -7,7 +7,9 @@
     right: -25px;
     color: #000000;
     background-color: #ffffff;
-    border: 1px solid #333;
+    border: 1px solid #c8c8c8;
+    border-radius: 3px;
+    overflow: hidden;
     ul {
         list-style-type: none;
         padding: 0;
@@ -29,7 +31,7 @@
                     background-color: #e9f0f1;
                 }
                 &.active {
-                    background-color: #ebf3f8;
+                    background-color: #bbdfdd;
                 }
             }
         }
@@ -37,5 +39,5 @@
 }
 
 .file-names {
-    border-bottom: 1px solid #333;
+    border-bottom: 1px solid #c8c8c8;
 }

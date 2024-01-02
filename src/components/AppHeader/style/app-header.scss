@@ -9,8 +9,25 @@
     align-items: center;
     padding: 1rem;
     h3 {
+        display: none;
         margin: 0;
         color: #9fc8b9;
+    }
+    @media(min-width: 400px) {
+        h3 {
+            display: block;
+            margin: 0;
+            color: #9fc8b9;
+        }
+    }
+}
+
+.filename-inpt {
+    background-color: transparent; 
+    border: none; 
+    color: #ffffff;
+    @media (min-width: 400px) {
+        margin-left: 1rem;
     }
 }
 

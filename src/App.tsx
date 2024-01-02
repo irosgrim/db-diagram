@@ -228,17 +228,16 @@ export const App = () => {
               currentModal$.value.type === "delete-confirm" && (
                 <div>
                   <header>
-                    Delete diagram
+                    <h5>Delete {localStorageCopy$.value.files[localStorageCopy$.value.active!].name}</h5>
                   </header>
                   <section>
-                    <p>You are about to delete current diagram</p>
                     <p>Are you sure you want to do that?</p>
                   </section>
-                  <footer>
-                    <button onClick={() => currentModal$.value = null}>Cancel</button>
+                  <footer style={{ display: "flex", justifyContent: "flex-end" }}>
+                    <button onClick={() => currentModal$.value = null} className="normal-btn">Cancel</button>
                     <button onClick={async () => {
                       await deleteDiagram(localStorageCopy$.value.active!)
-                    }}>Delete diagram</button>
+                    }} className="normal-btn" style={{ marginLeft: "0.5rem" }}>Delete diagram</button>
                   </footer>
                 </div>
               )

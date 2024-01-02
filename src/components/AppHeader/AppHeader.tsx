@@ -35,12 +35,12 @@ export const AppHeader = () => {
                 <div style={{ position: "relative" }}>
                     {localStorageCopy$.value.active && <input
                         id="current-file-name-input"
+                        className="filename-inpt"
                         type="text"
                         value={localStorageCopy$.value.files[localStorageCopy$.value.active!].name}
                         onChange={(e) => {
                             renameDiagram(e.target.value)
                         }}
-                        style={{ marginLeft: "1rem", backgroundColor: "transparent", border: "none", color: "#ffffff" }}
                     />}
                     <button
                         type="button"
