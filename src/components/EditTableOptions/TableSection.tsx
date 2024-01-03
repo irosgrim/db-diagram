@@ -139,7 +139,7 @@ export const TableSection = ({ table }: TableSectionProps) => {
                 >
                     <input
                         id={`input_${table.id}`}
-                        style={{ color: editing ? getGoodContrastColor(table.data.backgroundColor) : "initial" }}
+                        style={{ color: isActive || editing ? getGoodContrastColor(table.data.backgroundColor) : "initial" }}
                         className="table-name-input"
                         type="text"
                         maxLength={20}
