@@ -1,0 +1,17 @@
+[
+    {
+        "name": "blog",
+        "description": "a simple blog diagram",
+        "file": "blog.json"
+    },
+    {
+        "name": "chinook",
+        "description": "chinook diagram",
+        "file": "chinook.json"
+    },
+    {
+        "name": "twitter",
+        "description": "very basic twitter diagram",
+        "file": "twitter.json"
+    }
+]

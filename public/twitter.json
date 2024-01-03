@@ -1,0 +1,433 @@
+{
+    "nodes": [
+        {
+            "id": "table_1",
+            "data": {
+                "name": "users",
+                "backgroundColor": "#cfe147",
+                "height": 100
+            },
+            "position": {
+                "x": -176.25804486159845,
+                "y": -239.33052397006645
+            },
+            "className": "light",
+            "style": {
+                "backgroundColor": "#ffffff",
+                "minWidth": "200px",
+                "padding": 0,
+                "width": 200,
+                "height": 120
+            },
+            "resizing": true,
+            "type": "group",
+            "width": 200,
+            "height": 120,
+            "selected": false,
+            "positionAbsolute": {
+                "x": -176.25804486159845,
+                "y": -239.33052397006645
+            },
+            "dragging": false
+        },
+        {
+            "id": "table_1/col_1",
+            "type": "column",
+            "position": {
+                "x": 0,
+                "y": 20
+            },
+            "data": {
+                "name": "id",
+                "type": "UUID",
+                "unique": false,
+                "notNull": true,
+                "index": false
+            },
+            "parentNode": "table_1",
+            "extent": "parent",
+            "draggable": false,
+            "expandParent": true,
+            "width": 200,
+            "height": 20,
+            "selected": false
+        },
+        {
+            "id": "table_1/col_21346f50-9d06-460e-982e-c7a97c882f43",
+            "type": "column",
+            "position": {
+                "x": 0,
+                "y": 40
+            },
+            "data": {
+                "name": "name",
+                "type": "VARCHAR(50)",
+                "unique": false,
+                "notNull": true
+            },
+            "parentNode": "table_1",
+            "extent": "parent",
+            "draggable": false,
+            "expandParent": true,
+            "width": 200,
+            "height": 20
+        },
+        {
+            "id": "table_1/col_7745629c-6e56-4c81-9caf-3456b6202e56",
+            "type": "column",
+            "position": {
+                "x": 0,
+                "y": 60
+            },
+            "data": {
+                "name": "handle",
+                "type": "VARCHAR(50)",
+                "unique": true,
+                "notNull": true
+            },
+            "parentNode": "table_1",
+            "extent": "parent",
+            "draggable": false,
+            "expandParent": true,
+            "width": 200,
+            "height": 20,
+            "selected": false
+        },
+        {
+            "id": "table_1/col_addff3ee-8646-49e0-857e-6bf109a9db5a",
+            "type": "column",
+            "position": {
+                "x": 0,
+                "y": 80
+            },
+            "data": {
+                "name": "date_created",
+                "type": "TIMESTAMP",
+                "unique": false,
+                "notNull": true
+            },
+            "parentNode": "table_1",
+            "extent": "parent",
+            "draggable": false,
+            "expandParent": true,
+            "width": 200,
+            "height": 20
+        },
+        {
+            "id": "table_1/col_73ba868b-f449-4eb9-8b38-e7f78cce0f7d",
+            "type": "column",
+            "position": {
+                "x": 0,
+                "y": 100
+            },
+            "data": {
+                "name": "date_updated",
+                "type": "TIMESTAMP",
+                "unique": false,
+                "notNull": true
+            },
+            "parentNode": "table_1",
+            "extent": "parent",
+            "draggable": false,
+            "expandParent": true,
+            "width": 200,
+            "height": 20
+        },
+        {
+            "id": "table_2",
+            "data": {
+                "name": "locations",
+                "backgroundColor": "#aadfaf",
+                "height": 60
+            },
+            "position": {
+                "x": -172.14214862038,
+                "y": 3.635954516895694
+            },
+            "className": "light",
+            "style": {
+                "backgroundColor": "#ffffff",
+                "width": "200px",
+                "padding": 0,
+                "height": 80
+            },
+            "resizing": true,
+            "type": "group",
+            "width": 200,
+            "height": 80,
+            "selected": false,
+            "positionAbsolute": {
+                "x": -172.14214862038,
+                "y": 3.635954516895694
+            },
+            "dragging": false
+        },
+        {
+            "id": "table_2/col_1",
+            "type": "column",
+            "position": {
+                "x": 0,
+                "y": 20
+            },
+            "data": {
+                "name": "id",
+                "type": "UUID",
+                "unique": false,
+                "notNull": true,
+                "index": false
+            },
+            "parentNode": "table_2",
+            "extent": "parent",
+            "draggable": false,
+            "expandParent": true,
+            "width": 200,
+            "height": 20,
+            "selected": false
+        },
+        {
+            "id": "table_2/col_5020c99c-e79d-40d0-a7ea-2e8c5641bb37",
+            "type": "column",
+            "position": {
+                "x": 0,
+                "y": 40
+            },
+            "data": {
+                "name": "latitude",
+                "type": "FLOAT",
+                "unique": false,
+                "notNull": true
+            },
+            "parentNode": "table_2",
+            "extent": "parent",
+            "draggable": false,
+            "expandParent": true,
+            "width": 200,
+            "height": 20,
+            "selected": false
+        },
+        {
+            "id": "table_2/col_b23d5a03-1d10-4846-8009-f5da92a2a5ef",
+            "type": "column",
+            "position": {
+                "x": 0,
+                "y": 60
+            },
+            "data": {
+                "name": "longitude",
+                "type": "FLOAT",
+                "unique": false,
+                "notNull": true
+            },
+            "parentNode": "table_2",
+            "extent": "parent",
+            "draggable": false,
+            "expandParent": true,
+            "width": 200,
+            "height": 20,
+            "selected": false
+        },
+        {
+            "id": "table_3",
+            "data": {
+                "name": "tweets",
+                "backgroundColor": "#ff7605",
+                "height": 140
+            },
+            "position": {
+                "x": 114.45818328458031,
+                "y": -57.83884610306757
+            },
+            "className": "light",
+            "style": {
+                "backgroundColor": "#ffffff",
+                "width": "200px",
+                "padding": 0,
+                "height": 140
+            },
+            "resizing": true,
+            "type": "group",
+            "width": 200,
+            "height": 140,
+            "selected": false,
+            "positionAbsolute": {
+                "x": 114.45818328458031,
+                "y": -57.83884610306757
+            },
+            "dragging": false
+        },
+        {
+            "id": "table_3/col_1",
+            "type": "column",
+            "position": {
+                "x": 0,
+                "y": 20
+            },
+            "data": {
+                "name": "id",
+                "type": "UUID",
+                "unique": false,
+                "notNull": true,
+                "index": false
+            },
+            "parentNode": "table_3",
+            "extent": "parent",
+            "draggable": false,
+            "expandParent": true,
+            "width": 200,
+            "height": 20
+        },
+        {
+            "id": "table_3/col_6935a1da-1802-42cd-b15e-9d1e118df6bf",
+            "type": "column",
+            "position": {
+                "x": 0,
+                "y": 40
+            },
+            "data": {
+                "name": "text",
+                "type": "TEXT",
+                "unique": false,
+                "notNull": true
+            },
+            "parentNode": "table_3",
+            "extent": "parent",
+            "draggable": false,
+            "expandParent": true,
+            "width": 200,
+            "height": 20
+        },
+        {
+            "id": "table_3/col_12c99d46-6774-4d83-a6db-02e503ade7ab",
+            "type": "column",
+            "position": {
+                "x": 0,
+                "y": 60
+            },
+            "data": {
+                "name": "owner",
+                "type": "UUID",
+                "unique": false,
+                "notNull": true
+            },
+            "parentNode": "table_3",
+            "extent": "parent",
+            "draggable": false,
+            "expandParent": true,
+            "width": 200,
+            "height": 20
+        },
+        {
+            "id": "table_3/col_982adea4-dda5-42de-bfaf-629126a019c5",
+            "type": "column",
+            "position": {
+                "x": 0,
+                "y": 80
+            },
+            "data": {
+                "name": "location",
+                "type": "UUID",
+                "unique": false,
+                "notNull": false
+            },
+            "parentNode": "table_3",
+            "extent": "parent",
+            "draggable": false,
+            "expandParent": true,
+            "width": 200,
+            "height": 20
+        },
+        {
+            "id": "table_3/col_736b0443-2167-41e5-acc5-826510b3a16e",
+            "type": "column",
+            "position": {
+                "x": 0,
+                "y": 100
+            },
+            "data": {
+                "name": "date_created",
+                "type": "DATE",
+                "unique": false,
+                "notNull": true
+            },
+            "parentNode": "table_3",
+            "extent": "parent",
+            "draggable": false,
+            "expandParent": true,
+            "width": 200,
+            "height": 20
+        },
+        {
+            "id": "table_3/col_906d2cde-b127-47e4-b71b-e8c5834bd2f3",
+            "type": "column",
+            "position": {
+                "x": 0,
+                "y": 120
+            },
+            "data": {
+                "name": "date_updated",
+                "type": "DATE",
+                "unique": false,
+                "notNull": true
+            },
+            "parentNode": "table_3",
+            "extent": "parent",
+            "draggable": false,
+            "expandParent": true,
+            "width": 200,
+            "height": 20
+        }
+    ],
+    "edges": [
+        {
+            "source": "table_3/col_12c99d46-6774-4d83-a6db-02e503ade7ab",
+            "sourceHandle": "left",
+            "target": "table_1/col_1",
+            "targetHandle": "left",
+            "type": "floating",
+            "markerEnd": {
+                "type": "arrow"
+            },
+            "data": {
+                "label": "relation",
+                "compositeGroup": null,
+                "color": "",
+                "onDelete": "ON DELETE CASCADE",
+                "onUpdate": null
+            },
+            "id": "reactflow__edge-table_3/col_12c99d46-6774-4d83-a6db-02e503ade7ableft-table_1/col_1left"
+        },
+        {
+            "source": "table_3/col_982adea4-dda5-42de-bfaf-629126a019c5",
+            "sourceHandle": "left",
+            "target": "table_2/col_1",
+            "targetHandle": "left",
+            "type": "floating",
+            "markerEnd": {
+                "type": "arrow"
+            },
+            "data": {
+                "label": "relation",
+                "compositeGroup": null,
+                "color": "",
+                "onDelete": "ON DELETE CASCADE",
+                "onUpdate": null
+            },
+            "id": "reactflow__edge-table_3/col_982adea4-dda5-42de-bfaf-629126a019c5left-table_2/col_1left"
+        }
+    ],
+    "primaryKey": {
+        "table_1": {
+            "cols": []
+        },
+        "table_2": {
+            "cols": []
+        },
+        "table_3": {
+            "cols": [
+                "table_3/col_1"
+            ]
+        }
+    },
+    "uniqueKeys": {},
+    "indexes": {}
+}

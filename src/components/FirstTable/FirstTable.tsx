@@ -1,8 +1,7 @@
-import { useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { indexes$, primaryKey$, state, uniqueKeys$ } from "../../state/globalState";
-import { sampleEdges, sampleNodes } from "../sample";
 import { tableTemplate } from "./firstTableTemplate";
-import { Node } from "reactflow";
+import { Node, Edge } from "reactflow";
 import { Icon } from "../Icon";
 import { POSTGRES_TYPES } from "../../utils/sql";
 import Autocomplete from "../Autocomplete";
@@ -10,6 +9,7 @@ import { generateCssClass } from "../../utils/styling";
 import { v4 } from "uuid";
 import { ColumnData, TableData } from "../../types/types";
 import { getProperty } from "../utils";
+import { AllDiagrams, storage } from "../../state/storage";
 
 const isColumnNode = (node: Node<ColumnData | TableData>): node is Node<ColumnData> => {
     return node.data && node.type === "column";
@@ -17,7 +17,19 @@ const isColumnNode = (node: Node<ColumnData | TableData>): node is Node<ColumnDa
 
 export const FirstTable = ({ onClose }: { onClose: () => void }) => {
     const [firstTable, setFirstTable] = useState<Node<ColumnData | TableData>[] | null>(tableTemplate);
+    const [listOfSamples, setListOfSamples] = useState<{ name: string, description: string, file: string }[]>([]);
 
+    const getListOfSamples = async () => {
+        const req = await fetch("samples.json");
+        if (req.ok) {
+            const data = await req.json();
+            setListOfSamples(data);
+        }
+    }
+
+    useEffect(() => {
+        getListOfSamples();
+    }, [])
 
     const firstDragStart = (e: any, node: any) => {
         const nodeIndex = firstTable!.findIndex(x => x.id === node.id);
@@ -55,21 +67,44 @@ export const FirstTable = ({ onClose }: { onClose: () => void }) => {
         e.preventDefault();
     };
 
+    const loadSample = async (e: ChangeEvent<HTMLSelectElement>) => {
+        const f = JSON.parse(e.target.value) as { name: string, description: string, file: string };
+        if (f && f.file) {
+            const query = await fetch(f.file);
+            if (query.ok) {
+                const { nodes, edges, primaryKey, uniqueKeys, indexes } = await query.json() as { nodes: Node[]; edges: Edge[]; primaryKey: Record<string, { cols: string[] }>, uniqueKeys: Record<string, { cols: string[] }[]>, indexes: Record<string, { cols: string[]; unique: boolean }[]> };
+                primaryKey$.value = primaryKey;
+                uniqueKeys$.value = uniqueKeys;
+                indexes$.value = indexes;
+                state.nodes$ = nodes;
+                state.edges$ = edges;
+
+                let localStorageCopy = await storage.getFiles<AllDiagrams>();
+                //@ts-ignore
+                localStorageCopy = { ...localStorageCopy, files: { ...localStorageCopy!.files, [localStorageCopy!.active!]: { ...localStorageCopy!.files[localStorageCopy!.active!], name: "sample-" + f.name } } }
+                await storage.setFiles(localStorageCopy);
+                setFirstTable(null);
+            }
+        }
+    }
+
     return (
         <div className="modal">
             <div className="modal-body">
                 <span className="heading-wrapper">
                     <h4 className="heading">Create table</h4>
-                    <button type="button"
-                        className="normal-btn"
-                        onClick={() => {
-                            primaryKey$.value = {};
-                            uniqueKeys$.value = {};
-                            indexes$.value = {}
-                            state.nodes$ = [...sampleNodes];
-                            state.edges$ = [...sampleEdges];
-                            setFirstTable(null);
-                        }}>Load sample</button>
+                    {
+                        listOfSamples.length > 0 && (
+                            <select name="samples" onChange={loadSample}>
+                                <option value="">Load sample</option>
+                                {
+                                    listOfSamples.map((sample) => (
+                                        <option key={sample.name} value={JSON.stringify(sample)}>{sample.name}</option>
+                                    ))
+                                }
+                            </select>
+                        )
+                    }
                 </span>
                 <section>
                     <div className="new-table-props">
