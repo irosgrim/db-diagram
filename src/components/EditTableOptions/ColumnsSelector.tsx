@@ -36,20 +36,22 @@ export const ColumnsSelector = ({ table, showUniqueCheck = false, onClose, onSav
 
     return (
         <>
-            <table>
-                <tbody>
-                    {
-                        state.nodes$.filter(x => x.parentNode === table.id && x.type === "column").map(x => (
-                            <tr key={x.id} style={{ background: highlight(x.id) ? "#d3ebf8" : "transparent" }}>
-                                <td><input type="checkbox" onChange={() => setConstraint(x.id)} /></td>
-                                <td>{x.data.name}</td>
-                                <td>{x.data.type}</td>
-                            </tr>
+            <div style={{ maxHeight: "400px", overflowY: "auto" }}>
+                <table>
+                    <tbody>
+                        {
+                            state.nodes$.filter(x => x.parentNode === table.id && x.type === "column").map(x => (
+                                <tr key={x.id} style={{ background: highlight(x.id) ? "#d3ebf8" : "transparent" }}>
+                                    <td><input type="checkbox" onChange={() => setConstraint(x.id)} /></td>
+                                    <td>{x.data.name}</td>
+                                    <td>{x.data.type}</td>
+                                </tr>
 
-                        ))
-                    }
-                </tbody>
-            </table>
+                            ))
+                        }
+                    </tbody>
+                </table>
+            </div>
             <div style={{ display: "flex", justifyContent: "space-between", marginTop: "0.5rem" }}>
                 <span style={{ display: "flex", alignItems: "center" }}>
                     {

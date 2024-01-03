@@ -5,7 +5,7 @@ import { Node, Edge } from "reactflow";
 import { Icon } from "../Icon";
 import { POSTGRES_TYPES } from "../../utils/sql";
 import Autocomplete from "../Autocomplete";
-import { generateCssClass } from "../../utils/styling";
+import { generateCssClass, randomColor } from "../../utils/styling";
 import { v4 } from "uuid";
 import { ColumnData, TableData } from "../../types/types";
 import { getProperty } from "../utils";
@@ -130,7 +130,7 @@ export const FirstTable = ({ onClose }: { onClose: () => void }) => {
                                 (firstTableCopy[0].data as TableData).backgroundColor = e.target.value;
                                 setFirstTable(firstTableCopy);
                             }}
-                            value={(firstTable![0].data as TableData).backgroundColor}
+                            value={randomColor()}
                             title="change table color"
                         />
                     </div>
