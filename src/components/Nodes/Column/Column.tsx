@@ -25,11 +25,11 @@ const Column = ({ id, data }: ColumnProps) => {
         <div className="column-container nodrag" onClick={onClick}>
             <Handle type="source" position={Position.Right} id="right" />
 
-            <div className="col">
-                <div style={{ position: "relative" }}>
+            <div className="col" title={data.name}>
+                <div className="col-text">
                     {primaryKey$.value[tableId]?.cols.includes(id) && <span style={{ position: "absolute", top: "1px" }}> <Icon type="flag" height="10" width="10" /> </span>}
                     {data.unique === true && <span style={{ position: "absolute", top: "1px" }}> <Icon type="star" height="10" width="10" /> </span>}
-                    <div style={{ marginLeft: "0.7rem", fontSize: "0.75rem" }}>{data.name}</div>
+                    <div className="col-name">{data.name}</div>
                 </div>
                 <div className="col-type">{data.type}{!data.notNull && "?"}</div>
             </div>

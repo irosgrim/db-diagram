@@ -117,6 +117,9 @@ button {
     border: none;
     outline: none;
     background-color: transparent;
+    &:focus {
+        outline: 1px solid #333333;
+    }
     &:disabled {
         opacity: 0.3;
     }

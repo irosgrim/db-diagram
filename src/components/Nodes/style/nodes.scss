@@ -104,8 +104,7 @@
 .column-container {
   height: 20px;
   padding: 5px;
-  min-width: 200px;
-  width: 100%;
+  width: 200px;
   display: flex;
   &:hover {
     background-color: rgb(232, 233, 234);
@@ -124,6 +123,17 @@
   margin-bottom: 0.25rem;
   width: 100%;
   font-size: 0.75rem;
+  .col-text {
+    position: relative;
+    width: 60%;
+  }
+  .col-name {
+    margin-left: 0.7rem; 
+    font-size: 0.75rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 }
 
 
