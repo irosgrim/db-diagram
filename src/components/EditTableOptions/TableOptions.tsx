@@ -4,6 +4,32 @@ import "./style/tableOptions.scss";
 import { generateCssClass } from "../../utils/styling";
 import { Icon } from "../Icon";
 import { Edge } from "reactflow";
+import { RelationEdge } from "../../types/types";
+
+const DeleteFk = ({ edge }: { edge: RelationEdge | RelationEdge[] }) => {
+    return (
+        <button type="button"
+            className="icon-btn"
+            onClick={() => {
+                const edgesCopy = [...state.edges$];
+                const edges = edgesCopy.filter(x => {
+
+                    if (Array.isArray(edge)) {
+                        if (edge[0].data!.compositeGroup !== null) {
+                            return x.data?.compositeGroup !== edge[0].data?.compositeGroup
+                        }
+                    } else {
+                        return edge.id !== x.id;
+                    }
+                });
+                state.edges$ = edges;
+            }}
+        >
+            <Icon type="delete" />
+        </button>
+    )
+}
+
 
 type TableOptionsProps = {
     currentTable: any;
@@ -13,28 +39,8 @@ type TableOptionsProps = {
 const getSimpleFks = (currentTableId: string) => {
     const edges = state.edges$.filter(x => {
         const [sourceTable,] = x.source.split("/");
-        return x.data.compositeGroup === null && sourceTable === currentTableId;
+        return x.data!.compositeGroup === null && sourceTable === currentTableId;
     })
-
-    const fk = edges.map(edge => {
-        const sourceC = edge.source;
-        const targetC = edge.target;
-
-        const sourceTable = state.nodes$.find(x => x.id === sourceC.split("/")[0]);
-        const sourceColumn = state.nodes$.find(x => x.id === sourceC);
-
-        const targetTable = state.nodes$.find(x => x.id === targetC.split("/")[0]);
-        const targetColumn = state.nodes$.find(x => x.id === targetC);
-
-        const data = {
-            sourceTable: sourceTable.data.name,
-            sourceColumn: sourceColumn.data.name,
-            targetTable: targetTable.data.name,
-            targetColumn: targetColumn.data.name
-        }
-
-        return { text: `${data.sourceColumn} to ${data.targetTable}(${data.targetColumn})`, edge: edge };
-    });
 
     return (
         <div>
@@ -42,23 +48,39 @@ const getSimpleFks = (currentTableId: string) => {
                 edges.length > 0 && <h5>Simple foreign keys</h5>
             }
             {
-                fk.map((x, i) => (
-                    <div key={i} style={{ display: "flex", justifyContent: "space-between" }}>
-                        <span>
-                            {(x.edge.data.onDelete !== null || x.edge.data.onUpdate !== null) && <Icon type="exclamation" width="12" height="11" color="red" />}
+                edges.map((edge, i) => {
+                    const sourceC = edge.source;
+                    const targetC = edge.target;
+
+                    const sourceTable = state.nodes$.find(x => x.id === sourceC.split("/")[0]);
+                    const sourceColumn = state.nodes$.find(x => x.id === sourceC);
+
+                    const targetTable = state.nodes$.find(x => x.id === targetC.split("/")[0]);
+                    const targetColumn = state.nodes$.find(x => x.id === targetC);
+
+                    const text = `${sourceColumn.data.name} to ${sourceTable.id === targetTable.id ? "" : targetTable.data.name}(${targetColumn.data.name})`;
+
+                    return (
+                        <div key={i} style={{ display: "flex", justifyContent: "space-between" }}>
                             <span>
-                                {x.text}
+                                {(edge.data!.onDelete !== null || edge.data!.onUpdate !== null) && <Icon type="exclamation" width="12" height="11" color="red" />}
+                                <span>
+                                    {text}
+                                </span>
                             </span>
-                        </span>
-                        <button type="button"
-                            className="icon-btn"
-                            style={{ marginRight: "0.5rem" }}
-                            onClick={() => currentModal$.value = { type: "add-referential-actions", props: { edges: [x.edge], text: x.text } }}
-                        >
-                            <Icon type="horizontal-dots" width="12" height="3" />
-                        </button>
-                    </div>
-                ))
+                            <span style={{ display: "flex", alignItems: "center" }}>
+                                <button type="button"
+                                    className="icon-btn"
+                                    style={{ marginRight: "0.5rem" }}
+                                    onClick={() => currentModal$.value = { type: "add-referential-actions", props: { edges: [edge], text: text } }}
+                                >
+                                    <Icon type="horizontal-dots" width="12" height="3" />
+                                </button>
+                                <DeleteFk edge={edge} />
+                            </span>
+                        </div>
+                    )
+                })
             }
         </div>
     )
@@ -103,13 +125,16 @@ const getCompositeFks = (currentTableId: string) => {
                         </span>
                     </span>
 
-                    <button type="button"
-                        className="icon-btn"
-                        style={{ marginRight: "0.5rem" }}
-                        onClick={() => currentModal$.value = { type: "add-referential-actions", props: { edges: x.edge, text: x.text } }}
-                    >
-                        <Icon type="horizontal-dots" width="12" height="3" />
-                    </button>
+                    <span style={{ display: "flex", alignItems: "center" }}>
+                        <button type="button"
+                            className="icon-btn"
+                            style={{ marginRight: "0.5rem" }}
+                            onClick={() => currentModal$.value = { type: "add-referential-actions", props: { edges: x.edge, text: x.text } }}
+                        >
+                            <Icon type="horizontal-dots" width="12" height="3" />
+                        </button>
+                        <DeleteFk edge={x.edge} />
+                    </span>
                 </div>
             ))
         }

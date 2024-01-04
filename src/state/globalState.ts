@@ -1,6 +1,7 @@
 import { Signal, signal } from "@preact/signals-react";
 import { Edge, Node } from "reactflow";
 import { AllDiagrams } from "./storage";
+import { RelationEdge } from "../types/types";
 
 export const currentModal$: Signal<{type: "add-constraint" | "add-index" | "add-referential-actions" | "delete-confirm" | "export-diagram" | "import-diagram"; props?: any } | null> = signal(null);
 
@@ -19,7 +20,7 @@ export const localStorageCopy$: Signal<AllDiagrams> = signal({
 
 class State {
     nodes: Signal<Node[]> = signal([]);
-    edges: Signal<Edge[]> = signal([]);
+    edges: Signal<RelationEdge[]> = signal([]);
 
     get nodes$() {
         return this.nodes.value;
@@ -28,7 +29,7 @@ class State {
         this.nodes.value = value;
     }
 
-    get edges$(): Edge[] {
+    get edges$(): RelationEdge[] {
         return this.edges.value;
     }
     set edges$(value: any[]) {

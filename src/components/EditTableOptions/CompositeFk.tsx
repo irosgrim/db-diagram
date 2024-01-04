@@ -48,7 +48,7 @@ export const CompositeFk = ({ type, sourceTable, targetTable, edge, onClose }: C
     useEffect(() => {
         if (edge?.data.compositeGroup !== null) {
 
-            const wholeGroup = state.edges$.filter(x => x.data.compositeGroup === edge?.data.compositeGroup);
+            const wholeGroup = state.edges$.filter(x => x.data!.compositeGroup === edge?.data.compositeGroup);
             setNewEdges(wholeGroup);
         } else {
             setNewEdges([...newEdges, edge])

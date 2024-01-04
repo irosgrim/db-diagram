@@ -30,6 +30,10 @@ const getHandleCoordsByPosition = (node: any, handlePosition: any) => {
     (h: any) => h.position === handlePosition
   );
 
+  if (!handle) {
+    return [0, 0];
+  }
+
   let offsetX = handle.width / 2;
   let offsetY = handle.height / 2;
 

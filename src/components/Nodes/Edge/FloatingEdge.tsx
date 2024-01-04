@@ -64,7 +64,7 @@ const FloatingEdge = ({ id, data, source, target, markerEnd, style }: EdgeProps)
                         {
                             (() => {
                                 const edge = state.edges$.find(x => x.id === id);
-                                if (edge && edge.data.compositeGroup !== null) {
+                                if (edge && edge.data!.compositeGroup !== null) {
                                     return (
                                         <button type="button" className="edge-btn" onClick={(event) => onEdgeClick(event, id)}>
                                             <Icon type="multi-key" />
