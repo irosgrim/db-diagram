@@ -1,5 +1,5 @@
 import { useRef, useState } from "react"
-import { generateSqlSchema } from "../../utils/sql";
+import { exportSql, generateSqlSchema } from "../../utils/sql";
 import { indexes$, localStorageCopy$, primaryKey$, state, uniqueKeys$ } from "../../state/globalState";
 import "./style/app-header.scss";
 import { Menu } from "../Menu/Menu";
@@ -57,10 +57,22 @@ export const AppHeader = () => {
             </div>
             <button type="button"
                 className="show-schema-btn"
+                disabled={state.nodes$.length === 0}
                 onClick={() => showDbSchema()}>Show DB schema</button>
             {
                 schema && <pre className="schema-preview">
                     {schema}
+                    <button
+                        type="button"
+                        className="normal-btn"
+                        style={{ position: "absolute", top: 0, right: 0 }}
+                        onClick={() => {
+                            exportSql();
+                            setShowMenu(false);
+                        }}
+                    >
+                        Export as SQL
+                    </button>
                 </pre>
             }
         </header>

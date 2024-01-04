@@ -1,9 +1,10 @@
 import { ChangeEvent, useEffect, useRef, useState } from "react";
-import { currentModal$, localStorageCopy$ } from "../../state/globalState";
+import { currentModal$, localStorageCopy$, state } from "../../state/globalState";
 import "./style/menu.scss";
 import { getLocalStorageState, setActiveDiagram, storageWriter, storage } from "../../state/storage";
 import { v4 } from "uuid";
 import { generateCssClass } from "../../utils/styling";
+import { exportSql } from "../../utils/sql";
 
 type MenuProps = {
     onClose: () => void;
@@ -108,10 +109,23 @@ export const Menu = ({ onClose }: MenuProps) => {
                 <li>
                     <button
                         type="button"
+                        title="export diagram as sql file"
+                        onClick={() => {
+                            exportSql();
+                            onClose();
+                        }}
+                        disabled={state.nodes$.length > 0}
+                    >
+                        Export as SQL
+                    </button>
+                </li>
+                <li>
+                    <button
+                        type="button"
                         title="export diagram"
                         onClick={() => exportDiagram()}
                     >
-                        Export...
+                        Export diagram...
                     </button>
                 </li>
                 <li>
@@ -119,15 +133,15 @@ export const Menu = ({ onClose }: MenuProps) => {
                         type="file"
                         ref={fileInputRef}
                         onChange={handleFileChange}
-                        style={{ display: 'none' }} // Hide the input element
-                        accept=".json" // Optional: restrict to .json files
+                        style={{ display: 'none' }}
+                        accept=".json"
                     />
                     <button
                         type="button"
                         title="import diagram"
                         onClick={() => fileInputClick()}
                     >
-                        Import...
+                        Import diagram...
                     </button>
                 </li>
                 {/* <li><button type="button" disabled title="not implemented">Duplicate</button></li>  */}

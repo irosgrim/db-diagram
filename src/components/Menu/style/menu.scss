@@ -7,7 +7,6 @@
     right: -25px;
     color: #000000;
     background-color: #ffffff;
-    // border: 1px solid #c8c8c8;
     box-shadow: 1px 4px 7px 0px rgba(0, 0, 0, 0.25);
     border-radius: 3px;
     overflow: hidden;
@@ -26,7 +25,8 @@
                 background-color: transparent;
                 border: none;
                 &:disabled {
-                    opacity: 0.5;
+                    opacity: 0.3;
+                    cursor: auto;
                 }
                 &:hover:not(:disabled) {
                     background-color: #e9f0f1;

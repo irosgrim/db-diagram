@@ -1,4 +1,5 @@
 import { Edge, Node } from "reactflow";
+import { indexes$, localStorageCopy$, primaryKey$, state, uniqueKeys$ } from "../state/globalState";
 
 class Column{
     public name: string;
@@ -298,3 +299,24 @@ export const REFERENTIAL_ACTIONS = {
 
 export type ON_DELETE = typeof REFERENTIAL_ACTIONS.onDelete | null;
 export type ON_UPDATE = typeof REFERENTIAL_ACTIONS.onUpdate | null;
+
+
+export const exportSql = () => {
+    if (state.nodes$.length > 0) {
+        const schema = generateSqlSchema({
+            nodes: state.nodes$,
+            edges: state.edges$,
+            primaryKey: primaryKey$.value,
+            indexes: indexes$.value,
+            uniqueKeys: uniqueKeys$.value,
+        })
+        if (schema) {
+            const blob = new Blob([schema], { type: "text" });
+            const a = document.createElement("a");
+            a.href = URL.createObjectURL(blob);
+            a.download = `${localStorageCopy$.value.files[localStorageCopy$.value.active!].name}-${new Date().toISOString()}.sql`;
+            a.click();
+            URL.revokeObjectURL(a.href);
+        }
+    }
+}

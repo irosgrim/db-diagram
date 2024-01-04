@@ -137,9 +137,9 @@ export const TableOptions = ({ currentTable }: TableOptionsProps) => {
                     <li className={generateCssClass({ active: showSection === "constraints" })}>
                         <button type="button" onClick={() => toggleSection("constraints")}>Constraints</button>
                     </li>
-                    <li className={generateCssClass({ active: showSection === "foreign-keys" })}>
+                    {/* <li className={generateCssClass({ active: showSection === "foreign-keys" })}>
                         <button type="button" onClick={() => toggleSection("foreign-keys")}>Foreign keys</button>
-                    </li>
+                    </li> */}
                 </ul>
             </nav>
 
@@ -228,6 +228,12 @@ export const TableOptions = ({ currentTable }: TableOptionsProps) => {
 
                             )
                         }
+                        {
+                            getCompositeFks(currentTable.id)
+                        }
+                        {
+                            getSimpleFks(currentTable.id)
+                        }
                         <h5>Unique keys</h5>
                         {
                             uniqueKeys$.value[currentTable.id] && uniqueKeys$.value[currentTable.id].map((x, idx) => {
@@ -274,7 +280,7 @@ export const TableOptions = ({ currentTable }: TableOptionsProps) => {
                     </div>
                 )
             }
-            {
+            {/* {
                 showSection === "foreign-keys" && (
                     <div>
                         {
@@ -285,7 +291,7 @@ export const TableOptions = ({ currentTable }: TableOptionsProps) => {
                         }
                     </div>
                 )
-            }
+            } */}
 
         </div>
     )
