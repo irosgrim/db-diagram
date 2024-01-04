@@ -114,7 +114,7 @@ export const Menu = ({ onClose }: MenuProps) => {
                             exportSql();
                             onClose();
                         }}
-                        disabled={state.nodes$.length > 0}
+                        disabled={state.nodes$.length === 0}
                     >
                         Export as SQL
                     </button>
