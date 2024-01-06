@@ -13,5 +13,10 @@
         "name": "twitter",
         "description": "very basic twitter diagram",
         "file": "twitter.json"
+    },
+    {
+        "name": "user authentication",
+        "description": "basic user authentication",
+        "file": "user-auth.json"
     }
 ]
