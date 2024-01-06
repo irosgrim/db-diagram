@@ -31,7 +31,7 @@ const Column = ({ id, data }: ColumnProps) => {
                     {data.unique === true && <span style={{ position: "absolute", top: "1px" }}> <Icon type="star" height="10" width="10" /> </span>}
                     <div className="col-name">{data.name}</div>
                 </div>
-                <div className="col-type">{data.type}{!data.notNull && "?"}</div>
+                <div className="col-type" title={data.type + " " + (data.notNull ? " not null" : " nullable")}>{data.type}{!data.notNull && "?"}</div>
             </div>
 
             <Handle type="source" position={Position.Left} id="left" />
