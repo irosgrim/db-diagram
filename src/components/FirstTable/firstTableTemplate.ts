@@ -6,7 +6,7 @@ export const tableTemplate: Node[] = [
       data: { name: "table_1", backgroundColor: "#f78ae0", height: null },
       position: { x: 10, y: 200 },
       className: "light",
-      style: { backgroundColor: "#ffffff", minWidth: "200px", padding: 0, width: 200, height: 40 },
+      style: { backgroundColor: "#ffffff", minWidth: "250px", padding: 0, width: 250, height: 40 },
       resizing: true,
       width: 200,
       height: 40,
@@ -20,7 +20,7 @@ export const tableTemplate: Node[] = [
       parentNode: "table_1", extent: "parent",
       draggable: false,
       expandParent: true,
-      width: 200,
+      width: 300,
       height: 20,
     },
   ];

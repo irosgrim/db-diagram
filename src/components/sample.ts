@@ -13,14 +13,14 @@ export const sampleNodes = [
         "className": "light",
         "style": {
             "backgroundColor": "#ffffff",
-            "minWidth": "200px",
+            "minWidth": "250px",
             "padding": 0,
-            "width": 200,
+            "width": 250,
             "height": 140
         },
         "resizing": true,
         "type": "group",
-        "width": 200,
+        "width": 250,
         "height": 140,
         "selected": false,
         "positionAbsolute": {
@@ -47,7 +47,7 @@ export const sampleNodes = [
         "extent": "parent",
         "draggable": false,
         "expandParent": true,
-        "width": 200,
+        "width": 250,
         "height": 20
     },
     {
@@ -67,7 +67,7 @@ export const sampleNodes = [
         "extent": "parent",
         "draggable": false,
         "expandParent": true,
-        "width": 200,
+        "width": 250,
         "height": 20
     },
     {
@@ -87,7 +87,7 @@ export const sampleNodes = [
         "extent": "parent",
         "draggable": false,
         "expandParent": true,
-        "width": 200,
+        "width": 250,
         "height": 20,
         "selected": false
     },
@@ -108,7 +108,7 @@ export const sampleNodes = [
         "extent": "parent",
         "draggable": false,
         "expandParent": true,
-        "width": 200,
+        "width": 250,
         "height": 20
     },
     {
@@ -128,7 +128,7 @@ export const sampleNodes = [
         "extent": "parent",
         "draggable": false,
         "expandParent": true,
-        "width": 200,
+        "width": 250,
         "height": 20
     },
     {
@@ -148,7 +148,7 @@ export const sampleNodes = [
         "extent": "parent",
         "draggable": false,
         "expandParent": true,
-        "width": 200,
+        "width": 250,
         "height": 20
     },
     {
@@ -165,13 +165,13 @@ export const sampleNodes = [
         "className": "light",
         "style": {
             "backgroundColor": "#ffffff",
-            "width": "200px",
+            "width": "250px",
             "padding": 0,
             "height": 180
         },
         "resizing": true,
         "type": "group",
-        "width": 200,
+        "width": 250,
         "height": 220,
         "selected": false,
         "positionAbsolute": {
@@ -198,7 +198,7 @@ export const sampleNodes = [
         "extent": "parent",
         "draggable": false,
         "expandParent": true,
-        "width": 200,
+        "width": 250,
         "height": 20
     },
     {
@@ -218,7 +218,7 @@ export const sampleNodes = [
         "extent": "parent",
         "draggable": false,
         "expandParent": true,
-        "width": 200,
+        "width": 250,
         "height": 20
     },
     {
@@ -238,7 +238,7 @@ export const sampleNodes = [
         "extent": "parent",
         "draggable": false,
         "expandParent": true,
-        "width": 200,
+        "width": 250,
         "height": 20
     },
     {
@@ -258,7 +258,7 @@ export const sampleNodes = [
         "extent": "parent",
         "draggable": false,
         "expandParent": true,
-        "width": 200,
+        "width": 250,
         "height": 20
     },
     {
@@ -278,7 +278,7 @@ export const sampleNodes = [
         "extent": "parent",
         "draggable": false,
         "expandParent": true,
-        "width": 200,
+        "width": 250,
         "height": 20,
         "selected": false
     },
@@ -299,7 +299,7 @@ export const sampleNodes = [
         "extent": "parent",
         "draggable": false,
         "expandParent": true,
-        "width": 200,
+        "width": 250,
         "height": 20
     },
     {
@@ -319,7 +319,7 @@ export const sampleNodes = [
         "extent": "parent",
         "draggable": false,
         "expandParent": true,
-        "width": 200,
+        "width": 250,
         "height": 20
     },
     {
@@ -339,7 +339,7 @@ export const sampleNodes = [
         "extent": "parent",
         "draggable": false,
         "expandParent": true,
-        "width": 200,
+        "width": 250,
         "height": 20
     },
     {
@@ -356,13 +356,13 @@ export const sampleNodes = [
         "className": "light",
         "style": {
             "backgroundColor": "#ffffff",
-            "width": "200px",
+            "width": "250px",
             "padding": 0,
             "height": 120
         },
         "resizing": true,
         "type": "group",
-        "width": 200,
+        "width": 250,
         "height": 140,
         "selected": true,
         "positionAbsolute": {
@@ -389,7 +389,7 @@ export const sampleNodes = [
         "extent": "parent",
         "draggable": false,
         "expandParent": true,
-        "width": 200,
+        "width": 250,
         "height": 20
     },
     {
@@ -409,7 +409,7 @@ export const sampleNodes = [
         "extent": "parent",
         "draggable": false,
         "expandParent": true,
-        "width": 200,
+        "width": 250,
         "height": 20
     },
     {
@@ -429,7 +429,7 @@ export const sampleNodes = [
         "extent": "parent",
         "draggable": false,
         "expandParent": true,
-        "width": 200,
+        "width": 250,
         "height": 20
     },
     {
@@ -449,7 +449,7 @@ export const sampleNodes = [
         "extent": "parent",
         "draggable": false,
         "expandParent": true,
-        "width": 200,
+        "width": 250,
         "height": 20
     },
     {
@@ -469,7 +469,7 @@ export const sampleNodes = [
         "extent": "parent",
         "draggable": false,
         "expandParent": true,
-        "width": 200,
+        "width": 250,
         "height": 20
     },
     

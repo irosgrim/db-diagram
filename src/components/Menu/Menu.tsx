@@ -126,7 +126,7 @@ export const Menu = ({ onClose }: MenuProps) => {
                         title="export diagram"
                         onClick={() => exportDiagram()}
                     >
-                        Export diagram...
+                        Export diagram as JSON
                     </button>
                 </li>
                 <li>
@@ -151,7 +151,7 @@ export const Menu = ({ onClose }: MenuProps) => {
                         title="import diagram"
                         onClick={() => fileInputClick()}
                     >
-                        Import diagram...
+                        Import diagram from JSON
                     </button>
                 </li>
                 {/* <li><button type="button" disabled title="not implemented">Duplicate</button></li>  */}

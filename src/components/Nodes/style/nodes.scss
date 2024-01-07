@@ -104,7 +104,7 @@
 .column-container {
   height: 20px;
   padding: 5px;
-  width: 200px;
+  width: 250px;
   display: flex;
   &:hover {
     background-color: rgb(232, 233, 234);
@@ -150,7 +150,7 @@
 }
 
 .title {
-    width: 200px;
+    width: 250px;
     border-top: 5px solid red;
     background-color: #ababab;
     z-index: 1;

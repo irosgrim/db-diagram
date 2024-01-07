@@ -36,7 +36,7 @@ const newTable = () => {
             data: { name: newName, backgroundColor: randomColor() },
             position: { x: 10 + highestNum + 10, y: 200 + highestNum + 10 },
             className: "light",
-            style: { backgroundColor: "#ffffff", width: "200px", padding: 0 },
+            style: { backgroundColor: "#ffffff", width: "250px", padding: 0 },
             resizing: true,
             type: "group",
         },
