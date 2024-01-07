@@ -5,6 +5,7 @@ import { getLocalStorageState, setActiveDiagram, storageWriter, storage } from "
 import { v4 } from "uuid";
 import { generateCssClass } from "../../utils/styling";
 import { exportSql } from "../../utils/sql";
+import { saveImage } from "./exportImg";
 
 type MenuProps = {
     onClose: () => void;
@@ -126,6 +127,15 @@ export const Menu = ({ onClose }: MenuProps) => {
                         onClick={() => exportDiagram()}
                     >
                         Export diagram...
+                    </button>
+                </li>
+                <li>
+                    <button
+                        type="button"
+                        title="save as image"
+                        onClick={() => saveImage()}
+                    >
+                        Save as image
                     </button>
                 </li>
                 <li>
