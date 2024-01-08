@@ -1,6 +1,7 @@
 import { state } from "../../state/globalState";
 import { generateCssClass, randomColor } from "../../utils/styling"
 import { Icon } from "../Icon";
+import { COLUMN_NODE_HEIGHT } from "../Nodes/consts";
 import { TableSection } from "./TableSection";
 
 type AppSidebarProps = {
@@ -36,14 +37,14 @@ const newTable = () => {
             data: { name: newName, backgroundColor: randomColor() },
             position: { x: 10 + highestNum + 10, y: 200 + highestNum + 10 },
             className: "light",
-            style: { backgroundColor: "#ffffff", width: "250px", padding: 0 },
+            style: { backgroundColor: "#ffffff", padding: 0 },
             resizing: true,
             type: "group",
         },
         {
             id: `table_${highestNum + 1}/col_1`,
             type: "column",
-            position: { x: 0, y: 20 },
+            position: { x: 0, y: COLUMN_NODE_HEIGHT },
             data: { name: "id", type: "SERIAL", unique: false, notNull: true, index: false },
             parentNode: newId, extent: "parent",
             draggable: false,

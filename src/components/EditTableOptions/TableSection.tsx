@@ -10,6 +10,7 @@ import { deleteNodes } from "../../App";
 import { Node } from "reactflow";
 import { ColumnData, TableData } from "../../types/types";
 import { getProperty } from "../utils";
+import { COLUMN_NODE_HEIGHT } from "../Nodes/consts";
 
 type TableSectionProps = {
     table: Node<TableData>
@@ -84,8 +85,8 @@ export const TableSection = ({ table }: TableSectionProps) => {
 
         for (let i = 0; i < nodesCopy.length; i++) {
             if (nodesCopy[i].id === currentTable.id) {
-                nodesCopy[i].data.height += 20;
-                nodesCopy[i].style.height += 20;
+                nodesCopy[i].data.height += COLUMN_NODE_HEIGHT;
+                // nodesCopy[i].style.height += COLUMN_NODE_HEIGHT;
             }
 
             if (nodesCopy[i].type === "column" && nodesCopy[i].parentNode === id) {
@@ -95,7 +96,7 @@ export const TableSection = ({ table }: TableSectionProps) => {
             }
             // move the indexes section down by 20px
             if ((nodesCopy[i].type === "separator" || nodesCopy[i].type === "index") && nodesCopy[i].parentNode === id) {
-                nodesCopy[i].position.y += 20;
+                nodesCopy[i].position.y += COLUMN_NODE_HEIGHT;
             }
         }
 
@@ -106,7 +107,7 @@ export const TableSection = ({ table }: TableSectionProps) => {
         const col = {
             id: `${currentTable.id}/col_${v4()}`,
             type: "column",
-            position: { x: 0, y: (colNr * 20) + 20 },
+            position: { x: 0, y: (colNr * COLUMN_NODE_HEIGHT) + COLUMN_NODE_HEIGHT },
             data: { name: newColName, type: "VARCHAR", unique: false, notNull: false },
             parentNode: currentTable.id, extent: "parent",
             draggable: false,

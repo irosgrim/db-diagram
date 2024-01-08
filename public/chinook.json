@@ -14,10 +14,7 @@
             "className": "light",
             "style": {
                 "backgroundColor": "#ffffff",
-                "minWidth": "250px",
-                "padding": 0,
-                "width": 250,
-                "height": 80
+                "padding": 0
             },
             "resizing": true,
             "width": 250,
@@ -107,9 +104,7 @@
             "className": "light",
             "style": {
                 "backgroundColor": "#ffffff",
-                "width": "250px",
-                "padding": 0,
-                "height": 60
+                "padding": 0
             },
             "resizing": true,
             "type": "group",
@@ -178,9 +173,7 @@
             "className": "light",
             "style": {
                 "backgroundColor": "#ffffff",
-                "width": "250px",
-                "padding": 0,
-                "height": 260
+                "padding": 0
             },
             "resizing": true,
             "type": "group",
@@ -448,9 +441,7 @@
             "className": "light",
             "style": {
                 "backgroundColor": "#ffffff",
-                "width": "250px",
-                "padding": 0,
-                "height": 300
+                "padding": 0
             },
             "resizing": true,
             "type": "group",
@@ -758,9 +749,7 @@
             "className": "light",
             "style": {
                 "backgroundColor": "#ffffff",
-                "width": "250px",
-                "padding": 0,
-                "height": 60
+                "padding": 0
             },
             "resizing": true,
             "type": "group",
@@ -828,9 +817,7 @@
             "className": "light",
             "style": {
                 "backgroundColor": "#ffffff",
-                "width": "250px",
-                "padding": 0,
-                "height": 200
+                "padding": 0
             },
             "resizing": true,
             "type": "group",
@@ -1038,9 +1025,7 @@
             "className": "light",
             "style": {
                 "backgroundColor": "#ffffff",
-                "width": "250px",
-                "padding": 0,
-                "height": 120
+                "padding": 0
             },
             "resizing": true,
             "type": "group",
@@ -1168,9 +1153,7 @@
             "className": "light",
             "style": {
                 "backgroundColor": "#ffffff",
-                "width": "250px",
-                "padding": 0,
-                "height": 60
+                "padding": 0
             },
             "resizing": true,
             "type": "group",
@@ -1238,9 +1221,7 @@
             "className": "light",
             "style": {
                 "backgroundColor": "#ffffff",
-                "width": "250px",
-                "padding": 0,
-                "height": 60
+                "padding": 0
             },
             "resizing": true,
             "type": "group",
@@ -1308,9 +1289,7 @@
             "className": "light",
             "style": {
                 "backgroundColor": "#ffffff",
-                "width": "250px",
-                "padding": 0,
-                "height": 200
+                "padding": 0
             },
             "resizing": true,
             "type": "group",
@@ -1518,9 +1497,7 @@
             "className": "light",
             "style": {
                 "backgroundColor": "#ffffff",
-                "width": "250px",
-                "padding": 0,
-                "height": 60
+                "padding": 0
             },
             "resizing": true,
             "type": "group",

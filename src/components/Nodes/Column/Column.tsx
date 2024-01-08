@@ -2,6 +2,7 @@ import { useCallback } from 'react';
 import { Handle, Position } from 'reactflow';
 import { Icon } from '../../Icon';
 import { primaryKey$ } from '../../../state/globalState';
+import { COLUMN_NODE_HEIGHT, NODE_WIDTH } from '../consts';
 
 type ColumnProps = {
     id: string;
@@ -22,7 +23,7 @@ const Column = ({ id, data }: ColumnProps) => {
     }, []);
 
     return (
-        <div className="column-container nodrag" onClick={onClick}>
+        <div className="column-container nodrag" onClick={onClick} style={{ width: NODE_WIDTH + "px", height: COLUMN_NODE_HEIGHT + "px" }}>
             <Handle type="source" position={Position.Right} id="right" />
 
             <div className="col" title={data.name}>

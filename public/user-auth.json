@@ -14,10 +14,7 @@
             "className": "light",
             "style": {
                 "backgroundColor": "#ffffff",
-                "minWidth": "250px",
-                "padding": 0,
-                "width": 250,
-                "height": 140
+                "padding": 0
             },
             "resizing": true,
             "width": 250,
@@ -171,9 +168,7 @@
             "className": "light",
             "style": {
                 "backgroundColor": "#ffffff",
-                "width": "250px",
-                "padding": 0,
-                "height": 60
+                "padding": 0
             },
             "resizing": true,
             "type": "group",
@@ -241,9 +236,7 @@
             "className": "light",
             "style": {
                 "backgroundColor": "#ffffff",
-                "width": "250px",
-                "padding": 0,
-                "height": 60
+                "padding": 0
             },
             "resizing": true,
             "type": "group",
@@ -312,9 +305,7 @@
             "className": "light",
             "style": {
                 "backgroundColor": "#ffffff",
-                "width": "250px",
-                "padding": 0,
-                "height": 120
+                "padding": 0
             },
             "resizing": true,
             "type": "group",
@@ -443,9 +434,7 @@
             "className": "light",
             "style": {
                 "backgroundColor": "#ffffff",
-                "width": "250px",
-                "padding": 0,
-                "height": 100
+                "padding": 0
             },
             "resizing": true,
             "type": "group",
@@ -554,9 +543,7 @@
             "className": "light",
             "style": {
                 "backgroundColor": "#ffffff",
-                "width": "250px",
-                "padding": 0,
-                "height": 100
+                "padding": 0
             },
             "resizing": true,
             "type": "group",
@@ -665,9 +652,7 @@
             "className": "light",
             "style": {
                 "backgroundColor": "#ffffff",
-                "width": "250px",
-                "padding": 0,
-                "height": 180
+                "padding": 0
             },
             "resizing": true,
             "type": "group",

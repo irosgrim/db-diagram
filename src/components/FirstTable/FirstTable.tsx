@@ -10,6 +10,7 @@ import { v4 } from "uuid";
 import { ColumnData, TableData } from "../../types/types";
 import { getProperty } from "../utils";
 import { AllDiagrams, storage } from "../../state/storage";
+import { COLUMN_NODE_HEIGHT } from "../Nodes/consts";
 
 const isColumnNode = (node: Node<ColumnData | TableData>): node is Node<ColumnData> => {
     return node.data && node.type === "column";
@@ -73,6 +74,7 @@ export const FirstTable = ({ onClose }: { onClose: () => void }) => {
             const query = await fetch(f.file);
             if (query.ok) {
                 const { nodes, edges, primaryKey, uniqueKeys, indexes } = await query.json() as { nodes: Node[]; edges: Edge[]; primaryKey: Record<string, { cols: string[] }>, uniqueKeys: Record<string, { cols: string[] }[]>, indexes: Record<string, { cols: string[]; unique: boolean }[]> };
+
                 primaryKey$.value = primaryKey;
                 uniqueKeys$.value = uniqueKeys;
                 indexes$.value = indexes;
@@ -240,7 +242,7 @@ export const FirstTable = ({ onClose }: { onClose: () => void }) => {
                                 const colTemplate: Node<ColumnData> = {
                                     id: colId,
                                     type: "column",
-                                    position: { x: 0, y: 20 + (n * 20) },
+                                    position: { x: 0, y: COLUMN_NODE_HEIGHT + (n * COLUMN_NODE_HEIGHT) },
                                     data: { name: "new_column_" + n, type: "VARCHAR(30)", unique: false, notNull: false, },
                                     parentNode: tableId, extent: "parent",
                                     draggable: false,

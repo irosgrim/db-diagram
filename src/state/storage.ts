@@ -160,7 +160,6 @@ export const getLocalStorageState = async (): Promise<Signal<AllDiagrams>> => {
   try {
     if (data && data.hasOwnProperty("active") && data.hasOwnProperty("files")) {
       localStorageCopy$.value = data;
-
       if (data.active && data.files[data.active]) {
         return localStorageCopy$;
       }
