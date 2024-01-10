@@ -177,3 +177,15 @@ td, th {
 th {
     border-bottom: 1px solid #adadad;
 }
+
+.react-flow__node-group.parent, .react-flow__node-group.parent:hover {
+  border: 1px solid rgba(0, 0, 0, 0.587);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+  transition: box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  &.selected {
+    overflow: hidden;
+      box-shadow: 0 14px 28px rgba(0, 0, 134, 0.25), 0 10px 10px rgba(0, 0, 134, 0.25);
+  }
+}
