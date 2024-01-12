@@ -42,8 +42,6 @@ export const CompositeFk = ({ type, sourceTable, targetTable, edge, onClose }: C
 
 
     const [, setSelectedColumn] = useState<any | null>(null);
-    const sourceColumns = state.nodes$.filter(x => x.parentNode === sourceTable.id);
-    const targetColumns = state.nodes$.filter(x => x.parentNode === targetTable.id);
 
     useEffect(() => {
         if (edge?.data.compositeGroup !== null) {
@@ -79,14 +77,17 @@ export const CompositeFk = ({ type, sourceTable, targetTable, edge, onClose }: C
 
     const handleChange = (value: string, target: "source" | "target", index: number) => {
         if (value) {
-            const col = sourceColumns.find(c => c.id === value);
+            const lrSource = newEdges[index].data.sourceHandle.split(":");
+            const lrTarget = newEdges[index].data.targetHandle.split(":");
+            const col = sourceTable.data.columns.find((c: any) => c.id === value);
+            const currEdgeIndex = newEdges.findIndex(x => x.id === newEdges[index].id);
             setSelectedColumn(col)
             const edgesCopy = [...newEdges];
             if (target === "source") {
-                edgesCopy[index].source = value;
+                edgesCopy[currEdgeIndex].data.sourceHandle = lrSource[0] + ":" + value;
             }
             if (target === "target") {
-                edgesCopy[index].target = value;
+                edgesCopy[currEdgeIndex].data.targetHandle = lrTarget[0] + ":" + value;
             }
             setNewEdges(edgesCopy);
         }
@@ -161,6 +162,9 @@ export const CompositeFk = ({ type, sourceTable, targetTable, edge, onClose }: C
                         {
                             (type === "simple-fk" ? [newEdges.find(x => x.id === edge!.id)!] : newEdges).map((ed, idx) => {
                                 const isDeleted = deleted.includes(ed.id);
+                                const sourceColId = ed.data.sourceHandle?.split(":")[1];
+                                const targetColId = ed.data.targetHandle?.split(":")[1];
+
                                 if (isDeleted) {
                                     return <React.Fragment key={ed.id}></React.Fragment>
                                 }
@@ -168,7 +172,7 @@ export const CompositeFk = ({ type, sourceTable, targetTable, edge, onClose }: C
                                     <li key={ed.id} className="col-select-wrapper">
                                         <select
                                             onChange={(e) => handleChange(e.target.value, "source", idx)}
-                                            defaultValue={ed.source}
+                                            defaultValue={sourceColId}
                                         >
                                             <option
                                                 value=""
@@ -176,19 +180,19 @@ export const CompositeFk = ({ type, sourceTable, targetTable, edge, onClose }: C
                                                 select column
                                             </option>
                                             {
-                                                sourceColumns.map(c => (
+                                                sourceTable.data.columns.map((c: any) => (
                                                     <option
                                                         key={c.id}
                                                         value={c.id}
                                                         onClick={() => console.log("clicked ", c)}
-                                                    >{c.data.name} - {c.data.type} - {c.data.notNull ? "NOT NULL" : ""}</option>
+                                                    >{c.name} - {c.type} - {c.notNull ? "NOT NULL" : ""}</option>
                                                 ))
                                             }
                                         </select>
                                         &rarr;
                                         <select
                                             onChange={(e) => handleChange(e.target.value, "target", idx)}
-                                            defaultValue={ed.target}
+                                            defaultValue={targetColId}
                                         >
                                             <option
                                                 value="-"
@@ -196,11 +200,11 @@ export const CompositeFk = ({ type, sourceTable, targetTable, edge, onClose }: C
                                                 select column
                                             </option>
                                             {
-                                                targetColumns.map(c => (
+                                                targetTable.data.columns.map((c: any) => (
                                                     <option
                                                         key={c.id}
                                                         value={c.id}
-                                                    >{c.data.name} - {c.data.type} - {c.data.notNull ? "NOT NULL" : ""}</option>
+                                                    >{c.name} - {c.type} - {c.notNull ? "NOT NULL" : ""}</option>
                                                 ))
                                             }
                                         </select>

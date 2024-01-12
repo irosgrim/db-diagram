@@ -159,22 +159,20 @@ export const App = () => {
 
   const onConnect = useCallback(
     (params: Connection) => {
-      // Assuming you have access to nodes state or can retrieve source and target nodes by their IDs
-      const sourceNode = state.nodes$.find(node => node.id === params.source);
-      const targetNode = state.nodes$.find(node => node.id === params.target);
-
-      if (!sourceNode || !targetNode) {
-        // Handle error or invalid nodes
-        return;
-      }
-
+      const { sourceHandle, targetHandle } = params;
       const newEdge = {
         ...params,
         id: v4(),
         type: "floating",
         markerEnd: { type: MarkerType.Arrow },
-        data: { label: "relation", sourceHandle: params.sourceHandle, targetHandle: params.targetHandle, compositeGroup: null, color: "", onDelete: null, onUpdate: null },
-
+        data: {
+          sourceHandle,
+          targetHandle,
+          compositeGroup: null,
+          color: "",
+          onDelete: null,
+          onUpdate: null
+        },
       };
 
       state.edges$ = addEdge(newEdge, state.edges$);

@@ -158,10 +158,10 @@ class ForeignKey {
         // get simple fks
         const keys = this.edges.filter(x => x.data.compositeGroup === null).map(x => {
             const sourceTable = this.nodes.find(n => n.id === x.source);
-            const sourceCol = sourceTable?.data.columns.find((c: ColumnData) => c.id === x.sourceHandle);
+            const sourceCol = sourceTable?.data.columns.find((c: ColumnData) => c.id === x.data.sourceHandle.split(":")[1]);
 
             const targetTable = this.nodes.find(n => n.id === x.target);
-            const targetCol = targetTable?.data.columns.find((n: ColumnData) => n.id === x.targetHandle);
+            const targetCol = targetTable?.data.columns.find((n: ColumnData) => n.id === x.data.targetHandle.split(":")[1]);
 
             const onDelete = x.data.onDelete;
             const onUpdate = x.data.onUpdate;
