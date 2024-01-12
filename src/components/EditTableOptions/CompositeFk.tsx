@@ -29,8 +29,8 @@ const setCompositeGroupAndColor = (edge: Edge, groupId: string, color: string, o
 const findMatchingEdgeIndex = (edges: Edge[], edgeToMatch: Edge) => {
     return edges.findIndex(e =>
         edgeToMatch.id === e.id ||
-        (e.source === edgeToMatch.source && e.target === edgeToMatch.target) ||
-        (e.source === edgeToMatch.target && e.target === edgeToMatch.source)
+        (e.data.sourceHandle === edgeToMatch.data.sourceHandle && e.data.targetHandle === edgeToMatch.data.targetHandle) ||
+        (e.data.sourceHandle === edgeToMatch.data.targetHandle && e.data.targetHandle === edgeToMatch.data.sourceHandle)
     );
 }
 
@@ -56,14 +56,15 @@ export const CompositeFk = ({ type, sourceTable, targetTable, edge, onClose }: C
     const newEdge = () => {
         setSelectedColumn(null);
         const emptyEdge: Edge = {
-            source: "",
-            target: "",
+            source: sourceTable.id,
+            target: targetTable.id,
             type: "floating",
             markerEnd: {
                 type: MarkerType.Arrow
             },
             data: {
-                label: "relation",
+                sourceHandle: edge?.data.sourceHandle.slice(0, 2),
+                targetHandle: edge?.data.targetHandle.slice(0, 2),
                 compositeGroup: null,
                 color: "",
                 onDelete: null,
@@ -75,19 +76,19 @@ export const CompositeFk = ({ type, sourceTable, targetTable, edge, onClose }: C
     }
 
 
-    const handleChange = (value: string, target: "source" | "target", index: number) => {
+    const handleChange = (edge: Edge, value: string, target: "source" | "target", index: number) => {
         if (value) {
-            const lrSource = newEdges[index].data.sourceHandle.split(":");
-            const lrTarget = newEdges[index].data.targetHandle.split(":");
+            const lrSource = edge.data.sourceHandle.split(":");
+            const lrTarget = edge.data.targetHandle.split(":");
             const col = sourceTable.data.columns.find((c: any) => c.id === value);
-            const currEdgeIndex = newEdges.findIndex(x => x.id === newEdges[index].id);
+            console.log({ edge, value, lrSource, lrTarget })
             setSelectedColumn(col)
             const edgesCopy = [...newEdges];
             if (target === "source") {
-                edgesCopy[currEdgeIndex].data.sourceHandle = lrSource[0] + ":" + value;
+                edgesCopy[index].data.sourceHandle = lrSource[0] + ":" + value;
             }
             if (target === "target") {
-                edgesCopy[currEdgeIndex].data.targetHandle = lrTarget[0] + ":" + value;
+                edgesCopy[index].data.targetHandle = lrTarget[0] + ":" + value;
             }
             setNewEdges(edgesCopy);
         }
@@ -171,7 +172,7 @@ export const CompositeFk = ({ type, sourceTable, targetTable, edge, onClose }: C
                                 return (
                                     <li key={ed.id} className="col-select-wrapper">
                                         <select
-                                            onChange={(e) => handleChange(e.target.value, "source", idx)}
+                                            onChange={(e) => handleChange(ed, e.target.value, "source", idx)}
                                             defaultValue={sourceColId}
                                         >
                                             <option
@@ -191,7 +192,7 @@ export const CompositeFk = ({ type, sourceTable, targetTable, edge, onClose }: C
                                         </select>
                                         &rarr;
                                         <select
-                                            onChange={(e) => handleChange(e.target.value, "target", idx)}
+                                            onChange={(e) => handleChange(ed, e.target.value, "target", idx)}
                                             defaultValue={targetColId}
                                         >
                                             <option
