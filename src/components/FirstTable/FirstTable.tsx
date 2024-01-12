@@ -12,12 +12,9 @@ import { getProperty } from "../utils";
 import { AllDiagrams, storage } from "../../state/storage";
 import { COLUMN_NODE_HEIGHT } from "../Nodes/consts";
 
-const isColumnNode = (node: Node<ColumnData | TableData>): node is Node<ColumnData> => {
-    return node.data && node.type === "column";
-}
 
 export const FirstTable = ({ onClose }: { onClose: () => void }) => {
-    const [firstTable, setFirstTable] = useState<Node<ColumnData | TableData>[] | null>(tableTemplate);
+    const [firstTable, setFirstTable] = useState<Node<TableData> | null>(tableTemplate);
     const [listOfSamples, setListOfSamples] = useState<{ name: string, description: string, file: string }[]>([]);
 
     const getListOfSamples = async () => {
@@ -32,35 +29,23 @@ export const FirstTable = ({ onClose }: { onClose: () => void }) => {
         getListOfSamples();
     }, [])
 
-    const firstDragStart = (e: any, node: any) => {
-        const nodeIndex = firstTable!.findIndex(x => x.id === node.id);
-        e.dataTransfer.setData("text/plain", nodeIndex);
+    const firstDragStart = (e: any, columnIndex: number) => {
+        e.dataTransfer.setData("text/plain", columnIndex);
     };
 
-    const firstDrop = (e: any, node: any) => {
+    const firstDrop = (e: any, columnIndex: number) => {
         e.preventDefault();
 
-        const nodeIndex = firstTable!.findIndex(x => x.id === node.id);
         const draggedPosition = parseInt(e.dataTransfer.getData("text/plain"), 10);
         e.dataTransfer.clearData();
 
-        const parentTableId = node.parentNode;
 
-        let reorderedNodes = [...firstTable!];
 
         // remove the original
-        const [draggedItem] = reorderedNodes.splice(draggedPosition, 1);
+        const [draggedItem] = firstTable!.data.columns.splice(draggedPosition, 1);
         // reinsert at the new index
-        reorderedNodes.splice(nodeIndex, 0, draggedItem);
-
-        reorderedNodes = reorderedNodes.map((n, index) => {
-            if (n.type !== "group" && n.parentNode === parentTableId) {
-                n.position.y = (index * 20);
-            }
-            return n;
-        });
-
-        setFirstTable(reorderedNodes);
+        firstTable!.data.columns.splice(columnIndex, 0, draggedItem);
+        setFirstTable(firstTable);
     };
 
 
@@ -115,10 +100,10 @@ export const FirstTable = ({ onClose }: { onClose: () => void }) => {
                             className="table-name-input"
                             type="text"
                             maxLength={20}
-                            defaultValue={firstTable![0].data.name}
+                            defaultValue={firstTable!.data.name}
                             onChange={(e) => {
-                                const firstTableCopy = [...firstTable!];
-                                firstTableCopy[0].data.name = e.target.value;
+                                const firstTableCopy = { ...firstTable! };
+                                firstTableCopy.data.name = e.target.value;
                                 setFirstTable(firstTableCopy);
                             }}
                         />
@@ -128,8 +113,8 @@ export const FirstTable = ({ onClose }: { onClose: () => void }) => {
                             style={{ height: "30px", width: "30px", border: "none" }}
                             onBlur={() => true}
                             onChange={(e) => {
-                                const firstTableCopy = [...firstTable!];
-                                (firstTableCopy[0].data as TableData).backgroundColor = e.target.value;
+                                const firstTableCopy = { ...firstTable! };
+                                firstTableCopy.data.backgroundColor = e.target.value;
                                 setFirstTable(firstTableCopy);
                             }}
                             value={randomColor()}
@@ -140,12 +125,12 @@ export const FirstTable = ({ onClose }: { onClose: () => void }) => {
                     <div className="new-columns-list-wrapper">
                         <ul className="new-columns">
                             {
-                                firstTable!.filter(isColumnNode).map(col => (
+                                firstTable!.data.columns.map((col, index) => (
                                     <li
                                         key={col.id}
                                         draggable
-                                        onDragStart={(e) => firstDragStart(e, col)}
-                                        onDrop={(e) => firstDrop(e, col)}
+                                        onDragStart={(e) => firstDragStart(e, index)}
+                                        onDrop={(e) => firstDrop(e, index)}
                                         onDragOver={firstDragOver}
                                     >
                                         <div className="table-col-props-wrapper">
@@ -158,23 +143,20 @@ export const FirstTable = ({ onClose }: { onClose: () => void }) => {
                                                     className="table-name-input"
                                                     type="text"
                                                     maxLength={30}
-                                                    defaultValue={col.data.name}
+                                                    defaultValue={col.name}
                                                     onChange={(e) => {
-                                                        const firstTableCopy = [...firstTable!];
-                                                        const currentNodeIndex = firstTableCopy.findIndex(x => x.id === col.id);
-                                                        firstTableCopy[currentNodeIndex].data.name = e.target.value;
+                                                        const firstTableCopy = { ...firstTable! };
+                                                        firstTableCopy.data.columns[index].name = e.target.value;
                                                         setFirstTable(firstTableCopy);
                                                     }}
                                                 />
                                             </div>
                                             <Autocomplete
                                                 suggestions={POSTGRES_TYPES}
-                                                value={col.data.type}
+                                                value={col.type}
                                                 onChange={(val) => {
-                                                    const firstTableCopy = [...firstTable!];
-                                                    const currentNodeIndex = firstTableCopy.findIndex(x => x.id === col.id);
-                                                    const colNode = (firstTableCopy[currentNodeIndex] as Node<ColumnData>);
-                                                    colNode.data.type = val;
+                                                    const firstTableCopy = { ...firstTable! };
+                                                    firstTableCopy.data.columns[index].type = val;
                                                     setFirstTable(firstTableCopy);
                                                 }}
                                             />
@@ -183,10 +165,8 @@ export const FirstTable = ({ onClose }: { onClose: () => void }) => {
                                                 <button type="button"
                                                     className={generateCssClass("icon-btn", { active: !getProperty(col).isNotNull })}
                                                     onClick={() => {
-                                                        let nCopies = [...firstTable!];
-                                                        const curr = nCopies.findIndex(x => x.id === col.id);
-                                                        const colNode = nCopies[curr] as Node<ColumnData>;
-                                                        colNode.data.notNull = !colNode.data.notNull;
+                                                        let nCopies = { ...firstTable! };
+                                                        nCopies.data.columns[index].notNull = !nCopies.data.columns[index].notNull;
                                                         setFirstTable(nCopies)
                                                     }}
                                                     title="nullable value"
@@ -195,13 +175,11 @@ export const FirstTable = ({ onClose }: { onClose: () => void }) => {
                                                 </button>
 
                                                 <button type="button"
-                                                    className={generateCssClass("icon-btn", { active: col.data.unique })}
+                                                    className={generateCssClass("icon-btn", { active: col.unique })}
                                                     title="unique"
                                                     onClick={() => {
-                                                        let nCopies = [...firstTable!];
-                                                        const curr = nCopies.findIndex(x => x.id === col.id);
-                                                        const colNode = nCopies[curr] as Node<ColumnData>;
-                                                        colNode.data.unique = !colNode.data.unique;
+                                                        let nCopies = { ...firstTable! };
+                                                        nCopies.data.columns[index].unique = !nCopies.data.columns[index].unique;
                                                         setFirstTable(nCopies)
                                                     }}
                                                 >
@@ -213,9 +191,8 @@ export const FirstTable = ({ onClose }: { onClose: () => void }) => {
                                             className="icon-btn"
                                             title="delete column"
                                             onClick={() => {
-                                                const firstTableCopy = [...firstTable!];
-                                                const currentNodeIndex = firstTableCopy.findIndex(x => x.id === col.id);
-                                                firstTableCopy.splice(currentNodeIndex, 1);
+                                                const firstTableCopy = { ...firstTable! };
+                                                firstTableCopy.data.columns.splice(index, 1);
                                                 setFirstTable(firstTableCopy);
                                             }}
                                         >
@@ -231,24 +208,16 @@ export const FirstTable = ({ onClose }: { onClose: () => void }) => {
                         <button type="button"
                             className="normal-btn"
                             onClick={() => {
-                                const tableId = firstTable![0].id;
-                                const colId = `${tableId}/${v4()}`;
-                                const n = firstTable!.reduce((acc, curr) => {
-                                    if (curr.type === "column") {
-                                        acc += 1;
-                                    }
-                                    return acc;
-                                }, 0);
-                                const colTemplate: Node<ColumnData> = {
+                                const tableId = firstTable!.id;
+                                const colId = `${tableId}/col_${v4()}`;
+                                const n = firstTable!.data.columns.length;
+
+                                const colTemplate: ColumnData = {
                                     id: colId,
-                                    type: "column",
-                                    position: { x: 0, y: COLUMN_NODE_HEIGHT + (n * COLUMN_NODE_HEIGHT) },
-                                    data: { name: "new_column_" + n, type: "VARCHAR(30)", unique: false, notNull: false, },
-                                    parentNode: tableId, extent: "parent",
-                                    draggable: false,
-                                    expandParent: true,
+                                    name: "new_column_" + n, type: "VARCHAR(30)", unique: false, notNull: false,
                                 };
-                                setFirstTable([...firstTable!, colTemplate])
+                                firstTable?.data.columns.push(colTemplate)
+                                setFirstTable(firstTable)
                             }}>+ Add column</button>
                     </div>
                 </section>
@@ -267,7 +236,7 @@ export const FirstTable = ({ onClose }: { onClose: () => void }) => {
                             className="normal-btn"
                             style={{ marginLeft: "0.5rem" }}
                             onClick={() => {
-                                state.nodes$ = [...firstTable!]
+                                state.nodes$ = [...state.nodes$, firstTable]
                                 primaryKey$.value = {};
                                 uniqueKeys$.value = {};
                                 indexes$.value = {}

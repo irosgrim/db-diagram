@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { state } from "../../state/globalState"
+import { ColumnData } from "../../types/types";
 
 type ColumnsSelectorProps = {
     table: any;
@@ -40,11 +41,11 @@ export const ColumnsSelector = ({ table, showUniqueCheck = false, onClose, onSav
                 <table>
                     <tbody>
                         {
-                            state.nodes$.filter(x => x.parentNode === table.id && x.type === "column").map(x => (
+                            state.nodes$.find(x => x.id === table.id)!.data.columns.map((x: ColumnData) => (
                                 <tr key={x.id} style={{ background: highlight(x.id) ? "#d3ebf8" : "transparent" }}>
                                     <td><input type="checkbox" onChange={() => setConstraint(x.id)} /></td>
-                                    <td>{x.data.name}</td>
-                                    <td>{x.data.type}</td>
+                                    <td>{x.name}</td>
+                                    <td>{x.type}</td>
                                 </tr>
 
                             ))

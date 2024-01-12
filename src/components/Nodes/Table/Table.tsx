@@ -1,8 +1,9 @@
 import { getGoodContrastColor } from "../../../utils/styling";
+import Column from "../Column/Column";
 
 export const Table = ({ id, data }: any) => {
     return (
-        <div className="table" id={id}>
+        <div className="table" id={id} style={{ minWidth: "250px" }}>
             <div style={{
                 backgroundColor: data.backgroundColor,
                 color: getGoodContrastColor(data.backgroundColor),
@@ -14,6 +15,9 @@ export const Table = ({ id, data }: any) => {
                 <span>{data.name}</span>
                 <span></span>
             </div>
+            {
+                data.columns.map((c: any) => <Column id={c.id} data={c} key={c.id} />)
+            }
         </div>
     );
 };

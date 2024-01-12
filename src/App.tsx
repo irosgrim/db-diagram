@@ -21,16 +21,21 @@ import { RelationEdgeData } from "./types/types";
 import { getLocalStorageState, writeToLocalStorage } from "./state/storage";
 import { DeleteConfirm } from "./components/Dialogs/DeleteConfirm";
 import { ExportDialog } from "./components/Dialogs/ExportDialog";
+import { v4 } from "uuid";
 
 const fitViewOptions = { padding: 4 };
 
-const nodeTypes = { column: Column, group: Table };
+const nodeTypes = { column: Column, group: Table, table: Table, };
 
 const edgeTypes: Record<string, (args: any) => JSX.Element | null> = {
   floating: FloatingEdge,
 };
 
 const initialEdges: Edge<any>[] = [];
+
+export const deleteColumn = (column: any) => {
+
+}
 
 export const deleteNodes = (nodesToDelete: Node[]) => {
   let nodesCopy = [...state.nodes$];
@@ -154,24 +159,29 @@ export const App = () => {
 
   const onConnect = useCallback(
     (params: Connection) => {
-      const edgeExists = state.edges$.some(edge =>
-        edge.source === params.source &&
-        edge.target === params.target &&
-        edge.sourceHandle === params.sourceHandle &&
-        edge.targetHandle === params.targetHandle
-      );
+      // Assuming you have access to nodes state or can retrieve source and target nodes by their IDs
+      const sourceNode = state.nodes$.find(node => node.id === params.source);
+      const targetNode = state.nodes$.find(node => node.id === params.target);
 
-      if (!edgeExists) {
-        state.edges$ = addEdge(
-          { ...params, type: "floating", markerEnd: { type: MarkerType.Arrow }, data: { label: "relation", compositeGroup: null, color: "", onDelete: null, onUpdate: null } },
-          state.edges$
-        );
-      } else {
-        console.log("edge already exists.");
+      if (!sourceNode || !targetNode) {
+        // Handle error or invalid nodes
+        return;
       }
+
+      const newEdge = {
+        ...params,
+        id: v4(),
+        type: "floating",
+        markerEnd: { type: MarkerType.Arrow },
+        data: { label: "relation", sourceHandle: params.sourceHandle, targetHandle: params.targetHandle, compositeGroup: null, color: "", onDelete: null, onUpdate: null },
+
+      };
+
+      state.edges$ = addEdge(newEdge, state.edges$);
     },
-    [state.edges$]
+    [state.edges$, state.nodes$]
   );
+
 
   const onEdgesDelete = (edges: Edge<RelationEdgeData>[]) => {
     for (const edge of edges) {
@@ -192,18 +202,19 @@ export const App = () => {
     }
   };
 
-  const onNodeClick = (e: any) => {
-    if (e.currentTarget.dataset.id) {
-      const [table, column] = e.currentTarget.dataset.id.split("/");
-      if (column) {
-        setSelectedColumn(e.currentTarget.dataset.id);
-        const colInputEl = document.getElementById("input_" + e.currentTarget.dataset.id)
-        if (colInputEl) {
-          colInputEl.focus();
-        }
-      }
-      selectedTable$.value = table;
-    }
+  const onNodeClick = (e: any, node: Node) => {
+    // console.log(e.target.id);
+    // if (e.target.id) {
+    //   const [table, column] = e.target.id.split("/");
+    //   if (column) {
+    //     setSelectedColumn(e.target.id);
+    //     const colInputEl = document.getElementById("input_" + e.target.id)
+    //     if (colInputEl) {
+    //       colInputEl.focus();
+    //     }
+    //   }
+    // }
+    selectedTable$.value = node;
   };
 
   return (

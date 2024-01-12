@@ -1,8 +1,9 @@
 import { state } from "../../state/globalState";
+import { TableData } from "../../types/types";
 import { generateCssClass, randomColor } from "../../utils/styling"
 import { Icon } from "../Icon";
-import { COLUMN_NODE_HEIGHT } from "../Nodes/consts";
 import { TableSection } from "./TableSection";
+import { Node } from "reactflow";
 
 type AppSidebarProps = {
     hidden: boolean;
@@ -10,7 +11,7 @@ type AppSidebarProps = {
 }
 
 const newTable = () => {
-    const allTables = state.nodes$.filter(x => x.type === "group");
+    const allTables = state.nodes$;
     let highestNum = allTables.map(x => {
         const [, n] = x.id.split("_");
         return +n;
@@ -31,24 +32,25 @@ const newTable = () => {
         }
     }
 
-    const nT = [
+    const nT: Node<TableData>[] = [
         {
             id: newId,
-            data: { name: newName, backgroundColor: randomColor() },
+            data: {
+                name: newName,
+                backgroundColor: randomColor(),
+                columns: [
+                    {
+                        id: newId + "/col_1",
+                        name: "id",
+                        type: "SERIAL",
+                        unique: false,
+                        notNull: true,
+                    }
+                ]
+            },
             position: { x: 10 + highestNum + 10, y: 200 + highestNum + 10 },
             className: "light",
-            style: { backgroundColor: "#ffffff", padding: 0 },
-            resizing: true,
-            type: "group",
-        },
-        {
-            id: `table_${highestNum + 1}/col_1`,
-            type: "column",
-            position: { x: 0, y: COLUMN_NODE_HEIGHT },
-            data: { name: "id", type: "SERIAL", unique: false, notNull: true, index: false },
-            parentNode: newId, extent: "parent",
-            draggable: false,
-            expandParent: true,
+            type: "table",
         },
     ];
 
@@ -66,7 +68,7 @@ export const AppSidebar = ({ hidden, onShowHide }: AppSidebarProps) => {
                 <nav>
                     <ul className="tables-nav">
                         {
-                            state.nodes$.filter(n => n.type === "group").map(t => (
+                            state.nodes$.map(t => (
                                 <TableSection
                                     table={t} key={t.id}
                                 />

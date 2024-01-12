@@ -2,6 +2,7 @@ import {Edge} from "reactflow";
 import { PostgresType } from "../utils/sql";
 
 export type ColumnData = {
+    id: string;
     name: string;
     type: PostgresType;
     unique: Boolean;
@@ -11,7 +12,7 @@ export type ColumnData = {
 export type TableData = {
     name: string;
     backgroundColor: string;
-    height: number | null;
+    columns: ColumnData[];
 }
 
 export type RelationEdgeData = {

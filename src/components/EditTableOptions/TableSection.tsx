@@ -6,32 +6,31 @@ import { generateCssClass, getGoodContrastColor } from "../../utils/styling";
 import { Icon } from "../Icon";
 import Autocomplete from "../Autocomplete";
 import { POSTGRES_TYPES } from "../../utils/sql";
-import { deleteNodes } from "../../App";
 import { Node } from "reactflow";
 import { ColumnData, TableData } from "../../types/types";
 import { getProperty } from "../utils";
-import { COLUMN_NODE_HEIGHT } from "../Nodes/consts";
 
 type TableSectionProps = {
     table: Node<TableData>
 }
 
-const toggleConstraint = (column: any, type: "primary_key" | "unique" | "none") => {
+const toggleConstraint = (tableId: string, column: any, type: "primary_key" | "unique" | "none") => {
     const nodesCopy = [...state.nodes$];
-    const currNodeIndex = nodesCopy.findIndex(x => x.id === column.id);
+    const currNodeIndex = nodesCopy.findIndex(x => x.id === tableId);
+    const columnIndex = nodesCopy[currNodeIndex].data.columns.findIndex((c: any) => c.id === column.id);
     if (type === "primary_key") {
-        const pk = primaryKey$.value[column.parentNode] ? [...primaryKey$.value[column.parentNode].cols] : [];
+        const pk = primaryKey$.value[tableId] ? [...primaryKey$.value[tableId].cols] : [];
         const colIndex = pk.indexOf(column.id);
         if (colIndex === -1) {
             pk.push(column.id);
-            nodesCopy[currNodeIndex].data.unique = false;
+            nodesCopy[currNodeIndex].data.columns[columnIndex].unique = false;
         } else {
             pk.splice(colIndex, 1);
         }
-        primaryKey$.value = { ...primaryKey$.value, [column.parentNode]: { cols: pk } };
+        primaryKey$.value = { ...primaryKey$.value, [tableId]: { cols: pk } };
     }
     if (type === "unique") {
-        nodesCopy[currNodeIndex].data.unique = !nodesCopy[currNodeIndex].data.unique;
+        nodesCopy[currNodeIndex].data.columns[columnIndex].unique = !nodesCopy[currNodeIndex].data.columns[columnIndex].unique;
     }
     state.nodes$ = [...nodesCopy];
 }
@@ -40,36 +39,24 @@ const toggleConstraint = (column: any, type: "primary_key" | "unique" | "none") 
 export const TableSection = ({ table }: TableSectionProps) => {
     const [editing, setEditing] = useState(false);
 
-    const handleDragStart = (e: any, node: any) => {
-        const nodeIndex = state.nodes$.findIndex(x => x.id === node.id);
-        e.dataTransfer.setData("text/plain", nodeIndex);
+    const handleDragStart = (e: any, columnIndex: number) => {
+        e.dataTransfer.setData("text/plain", columnIndex);
     };
 
-    const handleDrop = (e: DragEvent, node: Node<ColumnData>) => {
+    const handleDrop = (e: DragEvent, tableId: string, columnIndex: number) => {
         e.preventDefault();
-
-        const nodeIndex = state.nodes$.findIndex(x => x.id === node.id);
-        const parentIndex = state.nodes$.findIndex(x => x.id === node.parentNode);
+        const parentIndex = state.nodes$.findIndex(x => x.id === tableId);
+        const tableNode = state.nodes$[parentIndex];
         const draggedPosition = parseInt(e.dataTransfer!.getData("text/plain"), 10);
         e.dataTransfer!.clearData();
 
-        const parentTableId = node.parentNode;
-
-        let reorderedNodes = [...state.nodes$];
-
         // remove the original
-        const [draggedItem] = reorderedNodes.splice(draggedPosition, 1);
+        const [draggedItem] = tableNode.data.columns.splice(draggedPosition, 1);
         // reinsert at the new index
-        reorderedNodes.splice(nodeIndex, 0, draggedItem);
+        tableNode.data.columns.splice(columnIndex, 0, draggedItem);
 
-        reorderedNodes = reorderedNodes.map((n, index) => {
-            if (n.type !== "group" && n.parentNode === parentTableId) {
-                n.position.y = ((index - parentIndex) * 20);
-            }
-            return n;
-        });
-
-        state.nodes$ = [...reorderedNodes];
+        const nodesCp = [...state.nodes$];
+        state.nodes$ = [...nodesCp];
     };
 
     const handleDragOver = (e: DragEvent) => {
@@ -77,49 +64,29 @@ export const TableSection = ({ table }: TableSectionProps) => {
     };
 
     const addColumn = (currentTable: Node<TableData>) => {
+        let colNr = currentTable.data.columns!.length;
         const nodesCopy = [...state.nodes$];
-        const { id } = currentTable;
-        let lastColumnIndex = 0;
-        let colNr = 0;
-        const columnNames = [];
 
-        for (let i = 0; i < nodesCopy.length; i++) {
-            if (nodesCopy[i].id === currentTable.id) {
-                nodesCopy[i].data.height += COLUMN_NODE_HEIGHT;
-                // nodesCopy[i].style.height += COLUMN_NODE_HEIGHT;
-            }
-
-            if (nodesCopy[i].type === "column" && nodesCopy[i].parentNode === id) {
-                lastColumnIndex = i;
-                colNr += 1;
-                columnNames.push(nodesCopy[i].data.name);
-            }
-            // move the indexes section down by 20px
-            if ((nodesCopy[i].type === "separator" || nodesCopy[i].type === "index") && nodesCopy[i].parentNode === id) {
-                nodesCopy[i].position.y += COLUMN_NODE_HEIGHT;
-            }
-        }
+        const currentTableIndex = nodesCopy.findIndex(x => x.id === currentTable.id);
+        const columnNames: string[] = [];
 
         let newColName = `column_${colNr}`;
         if (columnNames.indexOf(newColName) > -1) {
             newColName += "_" + 1;
         }
-        const col = {
+        const col: ColumnData = {
             id: `${currentTable.id}/col_${v4()}`,
-            type: "column",
-            position: { x: 0, y: (colNr * COLUMN_NODE_HEIGHT) + COLUMN_NODE_HEIGHT },
-            data: { name: newColName, type: "VARCHAR", unique: false, notNull: false },
-            parentNode: currentTable.id, extent: "parent",
-            draggable: false,
-            expandParent: true,
+            name: newColName,
+            type: "VARCHAR",
+            unique: false,
+            notNull: false,
         };
-
-        nodesCopy.splice(lastColumnIndex + 1, 0, col);
-
-        // setNodes(nodesCopy)
+        nodesCopy[currentTableIndex].data.columns.push(col);
         state.nodes$ = [...nodesCopy];
     }
-    const isActive = selectedTable$.value === table.id;
+
+    const isActive = selectedTable$.value?.id === table.id;
+
     return (
         <li>
             <details
@@ -127,7 +94,7 @@ export const TableSection = ({ table }: TableSectionProps) => {
                 style={{ borderLeft: `6px solid ${table.data.backgroundColor}` }}
                 onToggle={(e: any) => {
                     if (e.target.open) {
-                        selectedTable$.value = table.id;
+                        selectedTable$.value = table;
                     } else if (!e.target.open) {
                         selectedTable$.value = null;
                     }
@@ -194,11 +161,11 @@ export const TableSection = ({ table }: TableSectionProps) => {
                 </summary>
                 <ul className="table-props">
                     {
-                        state.nodes$.filter(n => n.parentNode === table.id && n.type === "column").map((c) => (
+                        selectedTable$.value && selectedTable$.value.data?.columns.map((c: any, index: number) => (
                             <li
                                 key={c.id}
-                                onDragStart={(e) => handleDragStart(e, c)}
-                                onDrop={(e) => handleDrop(e, c)}
+                                onDragStart={(e) => handleDragStart(e, index)}
+                                onDrop={(e) => handleDrop(e, selectedTable$.value!.id, index)}
                                 onDragOver={handleDragOver}
                                 draggable
                             >
@@ -209,9 +176,9 @@ export const TableSection = ({ table }: TableSectionProps) => {
                                             className="table-input"
                                             type="text"
                                             maxLength={30}
-                                            value={c.data.name}
+                                            value={c.name}
                                             onChange={(e) => {
-                                                c.data.name = e.target.value;
+                                                c.name = e.target.value;
                                                 const cp = [...state.nodes$];
                                                 state.nodes$ = cp;
                                             }}
@@ -219,9 +186,9 @@ export const TableSection = ({ table }: TableSectionProps) => {
                                         />
                                         <Autocomplete
                                             suggestions={POSTGRES_TYPES}
-                                            value={c.data.type || ""}
+                                            value={c.type || ""}
                                             onChange={(value) => {
-                                                c.data.type = value;
+                                                c.type = value;
                                                 const cp = [...state.nodes$];
                                                 state.nodes$ = cp;
                                             }}
@@ -231,10 +198,9 @@ export const TableSection = ({ table }: TableSectionProps) => {
                                         <button type="button"
                                             className={generateCssClass("icon-btn", { active: !getProperty(c).isNotNull })}
                                             onClick={() => {
-                                                let nCopies = [...state.nodes$];
-                                                const curr = nCopies.findIndex(x => x.id === c.id);
-                                                nCopies[curr].data.notNull = !nCopies[curr].data.notNull;
-                                                state.nodes$ = nCopies;
+                                                c.notNull = !c.notNull;
+                                                const cp = [...state.nodes$];
+                                                state.nodes$ = cp;
                                             }}
                                             title="nullable value"
                                         >
@@ -243,23 +209,30 @@ export const TableSection = ({ table }: TableSectionProps) => {
 
                                         <button type="button"
                                             title="primary key"
-                                            className={generateCssClass("icon-btn", { active: primaryKey$.value[c.parentNode] && primaryKey$.value[c.parentNode].cols.includes(c.id) })}
-                                            onClick={() => toggleConstraint(c, "primary_key")}
+                                            className={generateCssClass("icon-btn", { active: primaryKey$.value[selectedTable$.value!.id] && primaryKey$.value[selectedTable$.value!.id].cols.includes(c.id) })}
+                                            onClick={() => toggleConstraint(selectedTable$.value!.id, c, "primary_key")}
                                         >
                                             <Icon type="flag" />
                                         </button>
 
                                         <button type="button"
-                                            className={generateCssClass("icon-btn", { active: c.data.unique })}
+                                            className={generateCssClass("icon-btn", { active: c.unique })}
                                             title="unique"
-                                            onClick={() => toggleConstraint(c, "unique")}
-                                            disabled={primaryKey$.value[c.parentNode]?.cols.includes(c.id)}
+                                            onClick={() => toggleConstraint(selectedTable$.value!.id, c, "unique")}
+                                            disabled={primaryKey$.value[selectedTable$.value!.id]?.cols.includes(c.id)}
                                         >
                                             <Icon type="star" />
                                         </button>
                                         <button type="button"
                                             className={generateCssClass("icon-btn")}
-                                            onClick={() => deleteNodes([c])}
+                                            onClick={() => {
+                                                const cp = [...state.nodes$];
+                                                const tableIndex = cp.findIndex(x => x.id === selectedTable$.value!.id);
+                                                if (tableIndex > -1) {
+                                                    cp[tableIndex].data.columns.splice(index, 1);
+                                                }
+                                                state.nodes$ = cp;
+                                            }}
                                             title="delete column"
                                         >
                                             <Icon type="delete" />

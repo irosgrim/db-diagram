@@ -1,16 +1,17 @@
 import { Edge, Node } from "reactflow";
 import { indexes$, localStorageCopy$, primaryKey$, state, uniqueKeys$ } from "../state/globalState";
+import { ColumnData, TableData } from "../types/types";
 
 class Column{
     public name: string;
     public type: string;
     public notNull: string;
     public unique: string;
-    constructor(node: any) {
-        this.name = node.data.name;
-        this.type = node.data.type;
-        this.notNull = node.data.notNull ? "NOT NULL" : "";
-        this.unique = node.data.unique ? "UNIQUE" : "";
+    constructor(node: ColumnData) {
+        this.name = node.name;
+        this.type = node.type;
+        this.notNull = node.notNull ? "NOT NULL" : "";
+        this.unique = node.unique ? "UNIQUE" : "";
     }
 
     toSql(){
@@ -132,15 +133,17 @@ class ForeignKey {
             let onDelete = "";
             let onUpdate = "";
             for (const group of fk) {
-                console.log(group)
-                const sourceCol = this.nodes.find(n => n.id === group.source);
-                const targetTable = this.nodes.find(n => n.id === group.target.split("/")[0]);
-                const targetCol = this.nodes.find(n => n.id === group.target);
+                const sourceTable = this.nodes.find(n => n.id === group.source);
+                const sourceCol = sourceTable?.data.columns.find((c: ColumnData) => c.id === group.sourceHandle);
+
+                const targetTable = this.nodes.find(n => n.id === group.target);
+                const targetCol = targetTable?.data.columns.find((n: ColumnData) => n.id === group.targetHandle);
+            
                 tableName = targetTable!.data.name;
                 onDelete = group.data.onDelete;
                 onUpdate = group.data.onUpdate;
-                source.push(sourceCol!.data.name);
-                target.push(targetCol!.data.name);
+                source.push(sourceCol!.name);
+                target.push(targetCol!.name);
             }
             const ref = [];
             if (onDelete) {
@@ -154,9 +157,12 @@ class ForeignKey {
 
         // get simple fks
         const keys = this.edges.filter(x => x.data.compositeGroup === null).map(x => {
-            const sourceCol = this.nodes.find(n => n.id === x.source);
-            const targetTable = this.nodes.find(n => n.id === x.target.split("/")[0]);
-            const targetCol = this.nodes.find(n => n.id === x.target);
+            const sourceTable = this.nodes.find(n => n.id === x.source);
+            const sourceCol = sourceTable?.data.columns.find((c: ColumnData) => c.id === x.sourceHandle);
+
+            const targetTable = this.nodes.find(n => n.id === x.target);
+            const targetCol = targetTable?.data.columns.find((n: ColumnData) => n.id === x.targetHandle);
+
             const onDelete = x.data.onDelete;
             const onUpdate = x.data.onUpdate;
             const ref = [];
@@ -167,7 +173,7 @@ class ForeignKey {
                  ref.push(`        ${onUpdate}`);
             };
             
-            const txt = `FOREIGN KEY (${sourceCol!.data.name}) REFERENCES ${targetTable!.data.name}(${targetCol!.data.name}) ${ref.length > 0 ? "\n" + ref.join("\n") : ""}`
+            const txt = `FOREIGN KEY (${sourceCol!.name}) REFERENCES ${targetTable!.data.name}(${targetCol.name}) ${ref.length > 0 ? "\n" + ref.join("\n") : ""}`
             return txt;
         })
         
@@ -211,7 +217,7 @@ ${this.index && this.index.toSql().join("\n\n")}
 }
 
 type SqlDeps = {
-    nodes: Node[], 
+    nodes: Node<TableData>[], 
     edges: Edge[], 
     primaryKey: Record<string, {cols: string[]}>, 
     indexes: Record<string, {cols: string[]; unique: boolean}[]>, 
@@ -220,19 +226,13 @@ type SqlDeps = {
 
 export const generateSqlSchema = (deps: SqlDeps) => {
     const { nodes, edges, primaryKey, indexes, uniqueKeys} = deps;
-    const tables: Record<string, any> = {};
+    let tables: Record<string, any> = {};
+    console.log(edges);
 
-    const t = nodes.filter( n => n.type === "group");
-    for (const n of t) {
-        if(n.type === "group") {
-            tables[n.id] = new Table(n);
-        }
-    }
+    for (const n of nodes) {
+        tables[n.id] = new Table(n);
+        tables[n.id].cols = n.data.columns.map(x => new Column(x))
 
-    for (const col of nodes) {
-        if (col.type === "column") {
-            tables[col.parentNode!].cols.push(new Column(col))
-        }
     }
 
     for (const [key,] of Object.entries(tables)) {

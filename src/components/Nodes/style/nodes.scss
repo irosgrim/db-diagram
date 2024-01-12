@@ -6,10 +6,14 @@
 }
 
 .flow .react-flow__handle {
+  opacity: 0;
   background-color: #bcc1c2;
   height: 100%;
   width: 6px;
   border-radius: 1px;
+  &:hover {
+    opacity: 1;
+  }
 }
 
 .flow .react-flow__handle-left {
@@ -20,17 +24,16 @@
   right: -3px;
 }
 
-
-.flow .react-flow__node-custom {
-  background: #fff;
-  border: 1px solid #1a192b;
-  border-radius: 3px;
-  color: #222;
-  font-size: 12px;
-  padding: 10px;
-  text-align: center;
-  width: 150px;
-}
+// .flow .react-flow__node-custom {
+//   background: #fff;
+//   border: 1px solid #1a192b;
+//   border-radius: 3px;
+//   color: #222;
+//   font-size: 12px;
+//   padding: 10px;
+//   text-align: center;
+//   width: 150px;
+// }
 
 .edge-btn {
   display: inline-flex;
@@ -102,10 +105,12 @@
 
 
 .column-container {
-  padding: 5px;
+  position: relative;
   width: 100%;
   display: flex;
   align-items: center;
+  background-color: transparent;
+  border: none;
   &:hover {
     background-color: rgb(232, 233, 234);
   }
@@ -120,12 +125,13 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 0.25rem;
+  padding: 5px;
+  // margin-bottom: 0.25rem;
   width: 100%;
   font-size: 0.75rem;
   .col-text {
     position: relative;
-    width: 60%;
+    // width: 60%;
   }
   .col-name {
     margin-left: 0.7rem; 
@@ -178,14 +184,20 @@ th {
     border-bottom: 1px solid #adadad;
 }
 
-.react-flow__node-group.parent, .react-flow__node-group.parent:hover {
+
+.react-flow__node-table {
+  background: #fff;
   border: 1px solid rgba(0, 0, 0, 0.587);
-  border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
   transition: box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  border-radius: 8px;
+  color: #222;
+  font-size: 12px;
+  text-align: center;
+  min-width: 150px;
+  overflow: hidden;
   &.selected {
-    overflow: hidden;
       box-shadow: 0 14px 28px rgba(0, 0, 134, 0.25), 0 10px 10px rgba(0, 0, 134, 0.25);
   }
 }
