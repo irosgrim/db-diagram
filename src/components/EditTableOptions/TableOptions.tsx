@@ -3,8 +3,8 @@ import { useState } from "react";
 import "./style/tableOptions.scss";
 import { generateCssClass } from "../../utils/styling";
 import { Icon } from "../Icon";
-import { Edge } from "reactflow";
-import { RelationEdge } from "../../types/types";
+import { Edge, Node } from "reactflow";
+import { RelationEdge, TableData } from "../../types/types";
 
 const DeleteFk = ({ edge }: { edge: RelationEdge | RelationEdge[] }) => {
     return (
@@ -32,7 +32,7 @@ const DeleteFk = ({ edge }: { edge: RelationEdge | RelationEdge[] }) => {
 
 
 type TableOptionsProps = {
-    currentTable: any;
+    currentTable: Node<TableData>;
 }
 
 
@@ -175,8 +175,8 @@ export const TableOptions = ({ currentTable }: TableOptionsProps) => {
                         {
                             indexes$.value[currentTable.id] && indexes$.value[currentTable.id].map((x, idx) => {
                                 const colNames = x.cols.map(c => {
-                                    const ss = state.nodes$.find(nn => nn.id === c);
-                                    return ss.data.name;
+                                    const ss = currentTable.data.columns.find(nn => nn.id === c);
+                                    return ss!.name;
                                 }).join(", ");
                                 return (
                                     <div
@@ -237,8 +237,8 @@ export const TableOptions = ({ currentTable }: TableOptionsProps) => {
                                     <span>
                                         {primaryKey$.value[currentTable.id].cols
                                             .map(x => {
-                                                const ss = state.nodes$.find(nn => nn.id === x);
-                                                return ss.data.name;
+                                                const ss = currentTable.data.columns.find(nn => nn.id === x);
+                                                return ss!.name;
                                             })
                                             .join(", ")}
                                     </span>
@@ -263,8 +263,8 @@ export const TableOptions = ({ currentTable }: TableOptionsProps) => {
                         {
                             uniqueKeys$.value[currentTable.id] && uniqueKeys$.value[currentTable.id].map((x, idx) => {
                                 const colNames = x.cols.map(cc => {
-                                    const ss = state.nodes$.find(nn => nn.id === cc);
-                                    return ss.data.name
+                                    const ss = currentTable.data.columns.find(nn => nn.id === cc);
+                                    return ss!.name
                                 }).join(", ");
                                 return (
                                     <div key={idx} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingRight: "0.5rem" }}>
