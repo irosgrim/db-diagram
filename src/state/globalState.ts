@@ -1,13 +1,13 @@
-import { Signal, signal } from "@preact/signals-react";
+import { Signal, effect, signal } from "@preact/signals-react";
 import { Edge, Node } from "reactflow";
-import { AllDiagrams } from "./storage";
+import { AllDiagrams, writeToLocalStorage } from "./storage";
 import { RelationEdge } from "../types/types";
 
 export const currentModal$: Signal<{type: "add-constraint" | "add-index" | "add-referential-actions" | "delete-confirm" | "export-diagram" | "import-diagram"; props?: any } | null> = signal(null);
 
 export const primaryKey$: Signal<Record<string, {cols: string[]}>> = signal({});
-export const uniqueKeys$: Signal<Record<string, {cols: string[]}[]>> = signal({});
-export const indexes$: Signal<Record<string, {cols: string[]; unique: boolean}[]>> = signal({});
+export const uniqueKeys$: Signal<Record<string, Array<{cols: string[]}>>> = signal({});
+export const indexes$: Signal<Record<string, Array<{cols: string[]; unique: boolean}>>> = signal({});
 
 export const edgeOptions$: Signal<Edge | null> = signal(null);
 
@@ -38,3 +38,15 @@ class State {
 }
 
 export const state = new State();
+
+
+
+// effect(() => {
+//     const n = state.nodes$;
+//     const ed = state.edges$;
+//     const pk = primaryKey$;
+//     const uk = uniqueKeys$; 
+//     const idx = indexes$;
+//     writeToLocalStorage(localStorageCopy$.value.active);
+// }
+// )

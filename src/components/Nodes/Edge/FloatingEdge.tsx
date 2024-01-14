@@ -22,7 +22,6 @@ const FloatingEdge = ({ id, data, source, target, markerEnd, style }: EdgeProps)
     if (!sourceNode || !targetNode) {
         return null;
     }
-
     const { sx, sy, tx, ty, sourcePos, targetPos } = getEdgeParams(sourceNode, targetNode, data.sourceHandle, data.targetHandle);
 
     const [edgePath, labelX, labelY] = getSmoothStepPath({

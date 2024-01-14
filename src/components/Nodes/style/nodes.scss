@@ -7,10 +7,11 @@
 
 .flow .react-flow__handle {
   opacity: 0;
-  background-color: #bcc1c2;
+  background-color: transparent;
+  border: none;
+  border-radius: 0;
   height: 100%;
-  width: 6px;
-  border-radius: 1px;
+  width: 20px;
   &:hover {
     opacity: 1;
   }
@@ -18,10 +19,14 @@
 
 .flow .react-flow__handle-left {
   left: -3px;
+  border-left: 6px solid #999999;
+
 }
 
 .flow .react-flow__handle-right {
   right: -3px;
+  border-right: 6px solid #999999;
+
 }
 
 // .flow .react-flow__node-custom {

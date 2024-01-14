@@ -16,7 +16,8 @@ export type TableData = {
 }
 
 export type RelationEdgeData = {
-    label: "relation" | null;
+    sourceHandle: string;
+    targetHandle: string;
     compositeGroup: string | null;
     color: string;
     onDelete: string | null; 

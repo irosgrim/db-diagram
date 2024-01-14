@@ -9,7 +9,6 @@ export const getProperty = (node: any) => {
 }
 
 const getHandleCoordsByPosition = (node: Node, handlePosition: Position, handleId: string): [number, number] => {
-  
   const hh = handleId.split(":")[1];
   const handle = node[internalsSymbol]!.handleBounds!.source!.find((h: any) => {
     const handleTypeAndIds = h.id.split(":");

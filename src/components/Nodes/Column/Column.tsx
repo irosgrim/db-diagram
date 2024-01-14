@@ -1,10 +1,13 @@
-import { Handle, Position } from 'reactflow';
+import { Handle, Position, useUpdateNodeInternals } from 'reactflow';
 import { Icon } from '../../Icon';
-import { primaryKey$ } from '../../../state/globalState';
+import { primaryKey$, state } from '../../../state/globalState';
+import { useCallback, useEffect } from 'react';
 
 type ColumnProps = {
-    id: string;
+    tableId: string;
+    index: number;
     data: {
+        id: string;
         name: string;
         type: string;
         unique: boolean;
@@ -13,13 +16,10 @@ type ColumnProps = {
     },
 }
 
-const Column = ({ id, data }: ColumnProps) => {
-    const tableId = id.split("/")[0];
 
+const Column = ({ tableId, index, data }: ColumnProps) => {
     const onClick = (e: any) => {
-        console.log("input_" + id);
-        const colInputEl = document.getElementById("input_" + id);
-        console.log(colInputEl)
+        const colInputEl = document.getElementById("input_" + data.id);
         if (colInputEl) {
             colInputEl.focus();
         }
@@ -29,17 +29,17 @@ const Column = ({ id, data }: ColumnProps) => {
         <div
             className="column-container" onClick={onClick}
         >
-            <Handle type="source" position={Position.Right} id={"R:" + id} />
+            <Handle type="source" position={Position.Right} id={"R:" + data.id} key={"R:" + index} />
             <div className="col" title={data.name}>
                 <div className="col-text">
-                    {primaryKey$.value[tableId]?.cols.includes(id) && <span style={{ position: "absolute", left: 0, top: "1px" }}> <Icon type="flag" height="10" width="10" /> </span>}
+                    {primaryKey$.value[tableId]?.cols.includes(data.id) && <span style={{ position: "absolute", left: 0, top: "1px" }}> <Icon type="flag" height="10" width="10" /> </span>}
                     {data.unique === true && <span style={{ position: "absolute", left: 0, top: "1px" }}> <Icon type="star" height="10" width="10" /> </span>}
                     <div className="col-name">{data.name}</div>
                 </div>
                 <div className="col-type" title={data.type + " " + (data.notNull ? " not null" : " nullable")}>{data.type}{!data.notNull && "?"}</div>
             </div>
 
-            <Handle type="source" position={Position.Left} id={"L:" + id} />
+            <Handle type="source" position={Position.Left} id={"L:" + data.id} key={"L:" + index} />
         </div>
     );
 }

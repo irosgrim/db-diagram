@@ -162,9 +162,6 @@ export const TableOptions = ({ currentTable }: TableOptionsProps) => {
                     <li className={generateCssClass({ active: showSection === "constraints" })}>
                         <button type="button" onClick={() => toggleSection("constraints")}>Constraints</button>
                     </li>
-                    {/* <li className={generateCssClass({ active: showSection === "foreign-keys" })}>
-                        <button type="button" onClick={() => toggleSection("foreign-keys")}>Foreign keys</button>
-                    </li> */}
                 </ul>
             </nav>
 
@@ -248,7 +245,8 @@ export const TableOptions = ({ currentTable }: TableOptionsProps) => {
                                             const cp = { ...primaryKey$.value };
                                             delete cp[currentTable.id];
                                             primaryKey$.value = cp;
-                                        }}><Icon type="delete" /></button>
+                                        }}><Icon type="delete" />
+                                    </button>
                                 </div>
 
                             )
@@ -305,19 +303,6 @@ export const TableOptions = ({ currentTable }: TableOptionsProps) => {
                     </div>
                 )
             }
-            {/* {
-                showSection === "foreign-keys" && (
-                    <div>
-                        {
-                            getCompositeFks(currentTable.id)
-                        }
-                        {
-                            getSimpleFks(currentTable.id)
-                        }
-                    </div>
-                )
-            } */}
-
         </div>
     )
 }

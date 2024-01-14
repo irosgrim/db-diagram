@@ -2,8 +2,9 @@ import { state } from "../../state/globalState";
 import { TableData } from "../../types/types";
 import { generateCssClass, randomColor } from "../../utils/styling"
 import { Icon } from "../Icon";
-import { TableSection } from "./TableSection";
 import { Node } from "reactflow";
+import { TableSection } from "./TableSection";
+import { memo } from "react";
 
 type AppSidebarProps = {
     hidden: boolean;
@@ -57,7 +58,7 @@ const newTable = () => {
     state.nodes$ = [...state.nodes$, ...nT];
 }
 
-export const AppSidebar = ({ hidden, onShowHide }: AppSidebarProps) => {
+export const AppSidebar = memo(({ hidden, onShowHide }: AppSidebarProps) => {
     return (
         <aside className={generateCssClass("aside", { hidden: hidden })}>
             <button type="button" className="hide-btn normal-btn" onClick={() => onShowHide()}>{
@@ -66,17 +67,9 @@ export const AppSidebar = ({ hidden, onShowHide }: AppSidebarProps) => {
             <div className="sidebar-content">
                 <button type="button" className="new-btn" onClick={newTable}><Icon type="plus" width="12" /> <span style={{ marginLeft: "1rem" }}>Add new table</span></button>
                 <nav>
-                    <ul className="tables-nav">
-                        {
-                            state.nodes$.map(t => (
-                                <TableSection
-                                    table={t} key={t.id}
-                                />
-                            ))
-                        }
-                    </ul>
+                    <TableSection />
                 </nav>
             </div>
         </aside>
     )
-}
+});

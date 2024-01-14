@@ -10,7 +10,6 @@ import { v4 } from "uuid";
 import { ColumnData, TableData } from "../../types/types";
 import { getProperty } from "../utils";
 import { AllDiagrams, storage } from "../../state/storage";
-import { COLUMN_NODE_HEIGHT } from "../Nodes/consts";
 
 
 export const FirstTable = ({ onClose }: { onClose: () => void }) => {
