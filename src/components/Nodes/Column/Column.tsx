@@ -1,7 +1,6 @@
 import { Handle, Position, useUpdateNodeInternals } from 'reactflow';
 import { Icon } from '../../Icon';
-import { primaryKey$, state } from '../../../state/globalState';
-import { useCallback, useEffect } from 'react';
+import { primaryKey$ } from '../../../state/globalState';
 
 type ColumnProps = {
     tableId: string;

@@ -3,12 +3,13 @@ import "../style/autocomplete.scss";
 import { PostgresType } from '../utils/sql';
 
 type AutocompleteProps = {
+    id: string;
     suggestions: PostgresType[];
     value: string;
     onChange: (value: string) => void;
 }
 
-const Autocomplete = ({ suggestions, value, onChange }: AutocompleteProps) => {
+const Autocomplete = ({ id, suggestions, value, onChange }: AutocompleteProps) => {
     const [input, setInput] = useState(!value ? suggestions.length ? suggestions[0] : "" : value);
     const [filteredSuggestions, setFilteredSuggestions] = useState<PostgresType[]>([]);
     const [timer, setTimer] = useState<number | null>(null);
@@ -61,6 +62,7 @@ const Autocomplete = ({ suggestions, value, onChange }: AutocompleteProps) => {
     return (
         <div className="autocomplete-container">
             <input
+                id={id}
                 className="table-input"
                 type="text"
                 onChange={onEdit}

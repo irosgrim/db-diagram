@@ -14,8 +14,10 @@ export const Table = ({ id, data }: NodeProps) => {
         }
     }, [id, data.columns, updateNodeInternals]);
 
+    const table = state.nodes$.find(x => x.id === id);
+
     return (
-        <div className="table" id={id} style={{ minWidth: "250px" }}>
+        <div className="table" style={{ minWidth: "250px" }}>
             <div style={{
                 backgroundColor: data.backgroundColor,
                 color: getGoodContrastColor(data.backgroundColor),
@@ -28,7 +30,7 @@ export const Table = ({ id, data }: NodeProps) => {
                 <span></span>
             </div>
             {
-                state.nodes$.find(x => x.id === id).data.columns.map((c: any, idx: number) => <Column tableId={id} data={c} index={idx} key={idx} />)
+                table && table.data.columns.map((c: any, idx: number) => <Column tableId={id} data={c} index={idx} key={idx} />)
             }
         </div>
     );

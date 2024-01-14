@@ -9,6 +9,7 @@ import { POSTGRES_TYPES } from "../../utils/sql";
 import { Node } from "reactflow";
 import { ColumnData, TableData } from "../../types/types";
 import { getProperty } from "../utils";
+import { TableName } from "./TableName";
 
 type TableSectionProps = {
     table: Node<TableData>
@@ -223,53 +224,13 @@ export const TableSection = memo(() => {
                             className="table-props-container"
                         >
                             <summary
-                                style={{ display: "flex", justifyContent: "space-between", alignItems: "center", position: "relative", backgroundColor: isActive(table.id) || editing ? table.data.backgroundColor : "initial" }}
                                 className="table-props"
                             >
-                                <input
-                                    id={`input_${table.id}`}
-                                    style={{ color: isActive(table.id) || editing ? getGoodContrastColor(table.data.backgroundColor) : "initial" }}
-                                    className="table-name-input"
-                                    type="text"
-                                    maxLength={20}
-                                    value={table.data.name}
-                                    onChange={(e) => changeTableName(table, e.target.value)}
-                                    disabled={!editing}
-                                />
-                                <div style={{ position: "absolute", height: "100%", width: "210px", display: editing ? "none" : "block" }}></div>
-
-                                {
-                                    editing && (
-                                        <>
-                                            <button type="button"
-                                                className="icon-btn"
-                                                onClick={() => setEditing(false)}
-                                            >
-                                                <Icon type="check" />
-                                            </button>
-                                            <input
-                                                type="color"
-                                                style={{ height: "30px", width: "30px", border: "none" }}
-                                                value={table.data.backgroundColor}
-                                                onBlur={() => setEditing(false)}
-                                                onChange={(e) => changeTableColor(table, e.target.value)}
-                                                title="change table color"
-                                            />
-                                        </>
-                                    )
-                                }
-                                <button type="button"
-                                    className={generateCssClass("icon-btn", { active: editing })}
-                                    style={{ width: "40px", height: "40px" }}
-                                    onClick={() => setEditing(!editing)}
-                                    title="edit table name and color"
-                                >
-                                    <Icon type="edit" color={isActive(table.id) ? getGoodContrastColor(table.data.backgroundColor) : "#000000"} />
-                                </button>
+                                <TableName isActive={isActive} table={table} />
                             </summary>
                             <ul className="table-props">
                                 {
-                                    selectedTable$.value && state.nodes$.find(x => x.id === selectedTable$.value!.id).data?.columns.map((c: any, index: number) => (
+                                    selectedTable$.value && selectedTable$.value.id === table.id && selectedTable$.value.data?.columns.map((c: any, index: number) => (
                                         <li
                                             key={c.id}
                                             onDragStart={(e) => handleDragStart(e, index)}
@@ -292,6 +253,7 @@ export const TableSection = memo(() => {
                                                         suggestions={POSTGRES_TYPES}
                                                         value={c.type || ""}
                                                         onChange={(value) => onTypeChange(c, value)}
+                                                        id={"autocomplete_" + c.id}
                                                     />
                                                 </span>
                                                 <span style={{ display: "flex", alignItems: "center" }}>

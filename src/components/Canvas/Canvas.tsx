@@ -95,12 +95,14 @@ export const Canvas = () => {
 
 
     const onEdgesDelete = (edges: Edge<RelationEdgeData>[]) => {
+        const edgesCopy = [...state.edges$];
         for (const edge of edges) {
             const edgeIndex = state.edges$.findIndex(ed => ed.id === edge.id);
-            const edgesCopy = [...state.edges$];
-            edgesCopy.splice(edgeIndex, 1);
-            state.edges$ = edgesCopy;
+            if (edgeIndex > -1) {
+                edgesCopy.splice(edgeIndex, 1);
+            }
         }
+        state.edges$ = edgesCopy;
     };
 
     const onNodeDragStart = (e: any, node: Node) => {
@@ -113,10 +115,7 @@ export const Canvas = () => {
         nodes={state.nodes$}
         edges={state.edges$}
         onNodesChange={onNodesChange}
-        onEdgesChange={(changes) => {
-            console.log("changes");
-            onEdgesChange(changes)
-        }}
+        onEdgesChange={(changes) => onEdgesChange(changes)}
         onConnect={onConnect}
         onNodesDelete={deleteNodes}
         onEdgesDelete={onEdgesDelete}

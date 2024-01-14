@@ -5,6 +5,7 @@ import { Icon } from "../Icon";
 import { Node } from "reactflow";
 import { TableSection } from "./TableSection";
 import { memo } from "react";
+import { v4 } from "uuid";
 
 type AppSidebarProps = {
     hidden: boolean;
@@ -18,7 +19,7 @@ const newTable = () => {
         return +n;
     }).sort((a, b) => b - a)[0] || 0;
 
-    let newId = `table_${highestNum + 1}`;
+    let newId = `table_${v4()}`;
     let newName = `table_${highestNum + 1}`;
 
     let nameExists = true;
@@ -41,7 +42,7 @@ const newTable = () => {
                 backgroundColor: randomColor(),
                 columns: [
                     {
-                        id: newId + "/col_1",
+                        id: newId + `col_${v4()}`,
                         name: "id",
                         type: "SERIAL",
                         unique: false,

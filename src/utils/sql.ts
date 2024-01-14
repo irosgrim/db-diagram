@@ -31,7 +31,6 @@ class Pk {
     public colId: string[];
     constructor(pk: string[], private nodes: Node[], private tableId: string) {
         this.colId = pk;
-        console.log(tableId)
     }
     toSql() {
         const parts = [];
@@ -136,10 +135,10 @@ class ForeignKey {
             let onUpdate = "";
             for (const group of fk) {
                 const sourceTable = this.nodes.find(n => n.id === group.source);
-                const sourceCol = sourceTable?.data.columns.find((c: ColumnData) => c.id === group.sourceHandle);
-
+                const sourceCol = sourceTable?.data.columns.find((c: ColumnData) => c.id === group.data.sourceHandle?.slice(2));
+                
                 const targetTable = this.nodes.find(n => n.id === group.target);
-                const targetCol = targetTable?.data.columns.find((n: ColumnData) => n.id === group.targetHandle);
+                const targetCol = targetTable?.data.columns.find((n: ColumnData) => n.id === group.data.targetHandle?.slice(2));
             
                 tableName = targetTable!.data.name;
                 onDelete = group.data.onDelete;

@@ -114,9 +114,9 @@ export const FirstTable = ({ onClose }: { onClose: () => void }) => {
                             onChange={(e) => {
                                 const firstTableCopy = { ...firstTable! };
                                 firstTableCopy.data.backgroundColor = e.target.value;
-                                setFirstTable(firstTableCopy);
+                                setFirstTable(JSON.parse(JSON.stringify(firstTableCopy)));
                             }}
-                            value={randomColor()}
+                            value={firstTable?.data.backgroundColor}
                             title="change table color"
                         />
                     </div>
@@ -151,6 +151,7 @@ export const FirstTable = ({ onClose }: { onClose: () => void }) => {
                                                 />
                                             </div>
                                             <Autocomplete
+                                                id={"autocomplete_" + col.id}
                                                 suggestions={POSTGRES_TYPES}
                                                 value={col.type}
                                                 onChange={(val) => {
@@ -213,10 +214,13 @@ export const FirstTable = ({ onClose }: { onClose: () => void }) => {
 
                                 const colTemplate: ColumnData = {
                                     id: colId,
-                                    name: "new_column_" + n, type: "VARCHAR(30)", unique: false, notNull: false,
+                                    name: "new_column_" + n,
+                                    type: "VARCHAR(30)",
+                                    unique: false,
+                                    notNull: false,
                                 };
                                 firstTable?.data.columns.push(colTemplate)
-                                setFirstTable(firstTable)
+                                setFirstTable(JSON.parse(JSON.stringify(firstTable)))
                             }}>+ Add column</button>
                     </div>
                 </section>
