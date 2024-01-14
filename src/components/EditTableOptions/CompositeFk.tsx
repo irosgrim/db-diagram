@@ -81,7 +81,6 @@ export const CompositeFk = ({ type, sourceTable, targetTable, edge, onClose }: C
             const lrSource = edge.data.sourceHandle.split(":");
             const lrTarget = edge.data.targetHandle.split(":");
             const col = sourceTable.data.columns.find((c: any) => c.id === value);
-            console.log({ edge, value, lrSource, lrTarget })
             setSelectedColumn(col)
             const edgesCopy = [...newEdges];
             if (target === "source") {
@@ -185,7 +184,6 @@ export const CompositeFk = ({ type, sourceTable, targetTable, edge, onClose }: C
                                                     <option
                                                         key={c.id}
                                                         value={c.id}
-                                                        onClick={() => console.log("clicked ", c)}
                                                     >{c.name} - {c.type} - {c.notNull ? "NOT NULL" : ""}</option>
                                                 ))
                                             }

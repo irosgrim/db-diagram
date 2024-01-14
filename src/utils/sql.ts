@@ -29,15 +29,17 @@ class Column{
 
 class Pk {
     public colId: string[];
-    constructor(pk: string[], private nodes: Node[]) {
-        this.colId = pk
+    constructor(pk: string[], private nodes: Node[], private tableId: string) {
+        this.colId = pk;
+        console.log(tableId)
     }
     toSql() {
         const parts = [];
+        const table: Node<TableData> = this.nodes.find(x => x.id === this.tableId)!;
+        const columns = table.data.columns;
         for (const id of this.colId) {
-            const colEl = this.nodes.find(x => x.id === id);
-            if (colEl) {
-                parts.push(colEl.data.name);
+            if (columns) {
+                parts.push(columns.find(x => x.id === id)!.name);
             }
         }
         return parts.join(", ")
@@ -227,7 +229,6 @@ type SqlDeps = {
 export const generateSqlSchema = (deps: SqlDeps) => {
     const { nodes, edges, primaryKey, indexes, uniqueKeys} = deps;
     let tables: Record<string, any> = {};
-    console.log(edges);
 
     for (const n of nodes) {
         tables[n.id] = new Table(n);
@@ -236,7 +237,7 @@ export const generateSqlSchema = (deps: SqlDeps) => {
     }
 
     for (const [key,] of Object.entries(tables)) {
-        tables[key].pk = new Pk(primaryKey[key] ? primaryKey[key].cols : [], nodes);
+        tables[key].pk = new Pk(primaryKey[key] ? primaryKey[key].cols : [], nodes, key);
         tables[key].index = new Index(indexes[key] ? indexes[key].map(x => x.cols) : [], nodes)
         tables[key].unique = new Unique(uniqueKeys[key] ? uniqueKeys[key].map(x => x.cols) : [], nodes);
         tables[key].fk = new ForeignKey(edges.filter(x => x.source.split("/")[0] === key), nodes);
