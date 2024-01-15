@@ -1,6 +1,6 @@
-import { Signal, effect, signal } from "@preact/signals-react";
+import { Signal, signal } from "@preact/signals-react";
 import { Edge, Node } from "reactflow";
-import { AllDiagrams, writeToLocalStorage } from "./storage";
+import { AllDiagrams } from "./storage";
 import { RelationEdge } from "../types/types";
 
 export const currentModal$: Signal<{type: "add-constraint" | "add-index" | "add-referential-actions" | "delete-confirm" | "export-diagram" | "import-diagram"; props?: any } | null> = signal(null);
@@ -11,7 +11,7 @@ export const indexes$: Signal<Record<string, Array<{cols: string[]; unique: bool
 
 export const edgeOptions$: Signal<Edge | null> = signal(null);
 
-export const selectedTable$: Signal<Node | null> = signal(null);    
+export const selectedTable$: Signal<Node | null> = signal(null);  
 
 export const localStorageCopy$: Signal<AllDiagrams> = signal({
     files: {},

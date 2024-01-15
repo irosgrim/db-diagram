@@ -22,12 +22,10 @@ export const Table = ({ id, data }: NodeProps) => {
                 backgroundColor: data.backgroundColor,
                 color: getGoodContrastColor(data.backgroundColor),
                 borderRadius: "1.5px 1.5px 0 0",
-                display: "flex", justifyContent: "space-between",
+                display: "flex", justifyContent: "center",
                 borderBottom: "1px solid #ababab"
             }}>
-                <span>&nbsp; :::</span>
                 <span>{data.name}</span>
-                <span></span>
             </div>
             {
                 table && table.data.columns.map((c: any, idx: number) => <Column tableId={id} data={c} index={idx} key={idx} />)

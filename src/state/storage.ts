@@ -40,7 +40,7 @@ export class LocalStorage implements Storage {
     }
 }
 
-export const storage = new LocalStorage("db-diagram");
+export const storage = new LocalStorage("db_diagram");
 
 export interface DiagramData {
     nodes: Node[];

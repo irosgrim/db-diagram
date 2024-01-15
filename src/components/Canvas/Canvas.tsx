@@ -2,10 +2,11 @@ import Flow, { addEdge, applyNodeChanges, Connection, ConnectionMode, Controls, 
 import { Table } from "../Nodes/Table/Table";
 import FloatingEdge from "../Nodes/Edge/FloatingEdge";
 import { selectedTable$, state } from "../../state/globalState";
-import { useCallback, useRef, useState } from "react";
-import { RelationEdgeData } from "../../types/types";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { RelationEdgeData, TableData } from "../../types/types";
 import { v4 } from "uuid";
 import { ContextMenu } from "../ContextMenu/Contextmenu";
+import { cloneNodesOnDrag, copyNodes, pasteNodes, selectedNodes$ } from "../../state/copyPaste";
 
 
 const fitViewOptions = { padding: 4 };
@@ -93,7 +94,6 @@ export const Canvas = () => {
         [state.edges$, state.nodes$]
     );
 
-
     const onEdgesDelete = (edges: Edge<RelationEdgeData>[]) => {
         const edgesCopy = [...state.edges$];
         for (const edge of edges) {
@@ -105,13 +105,42 @@ export const Canvas = () => {
         state.edges$ = edgesCopy;
     };
 
-    const onNodeDragStart = (e: any, node: Node) => {
-        selectedTable$.value = node;
+    const onNodeDragStart = (e: any, node: Node<TableData>, nodes: Node<TableData>[]) => {
+        if (e.altKey) {
+            cloneNodesOnDrag(nodes)
+
+        } else {
+            selectedTable$.value = node;
+        }
     };
 
 
+    useEffect(() => {
+        const handleKeyDown = (event: any) => {
+            if (event.ctrlKey || event.metaKey) {
+                switch (event.key) {
+                    case 'c':
+                        copyNodes(selectedNodes$.value);
+                        break;
+                    case 'v':
+                        pasteNodes();
+                        break;
+                    default:
+                        break;
+                }
+            }
+        };
+
+        document.addEventListener('keydown', handleKeyDown);
+
+        return () => {
+            document.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [selectedNodes$.value]);
+
     return (<Flow
         ref={ref}
+        onSelectionChange={(p) => selectedNodes$.value = p.nodes}
         nodes={state.nodes$}
         edges={state.edges$}
         onNodesChange={onNodesChange}
@@ -119,7 +148,7 @@ export const Canvas = () => {
         onConnect={onConnect}
         onNodesDelete={deleteNodes}
         onEdgesDelete={onEdgesDelete}
-        onNodeDragStart={onNodeDragStart}
+        onNodeDragStart={(e, n, nodes) => onNodeDragStart(e, n, nodes)}
         onNodeClick={onNodeClick}
         edgeTypes={edgeTypes}
         nodeTypes={nodeTypes}

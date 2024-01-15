@@ -1,3 +1,4 @@
+import { copyNodes, pasteNodes } from "../../state/copyPaste";
 import { deleteNodes } from "../Canvas/Canvas";
 import "./style/context-menu.scss";
 
@@ -19,8 +20,10 @@ export const ContextMenu = ({
             {
                 node !== null && <>
                     <p style={{ margin: '0.5em' }}>
-                        <small>{node.type === "group" ? "Table" : "Column"}: {node.data.name}</small>
+                        <small>Table: {node.data.name}</small>
                     </p>
+                    <button type="button" onClick={() => copyNodes([node])}>Copy table</button>
+                    <button type="button" onClick={() => pasteNodes()}>Paste</button>
                     <button type="button" onClick={() => deleteNodes([node])}>Delete</button>
                 </>
             }

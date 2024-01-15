@@ -47,21 +47,20 @@ class Pk {
 
 class Unique {
     public uniques: string[][];
-    public tableId: string = "";
 
-    constructor(uniques: string[][], private nodes: Node[]) {
+    constructor(uniques: string[][], private nodes: Node[], private tableId: string) {
         this.uniques = uniques;
     }
 
     toSql() {
         const parts: {name: string, cols: string[]}[] = [];
+        const table: Node<TableData> = this.nodes.find(x => x.id === this.tableId)!;
         for (const u of this.uniques) {
             const cols: string[] = [];
             for (let i=0; i < u.length; i++) {
-                const colEl = this.nodes.find(x => x.id === u[i]);
+                const colEl = table.data.columns.find(x => x.id === u[i]);
                 if (colEl) {
-                    this.tableId = colEl.parentNode!;
-                    cols.push(colEl.data.name);
+                    cols.push(colEl.name);
                     if(i === u.length - 1) {
                         parts.push({name: cols.join("_"), cols: cols});
                     }
@@ -70,7 +69,7 @@ class Unique {
         }
         const str: string[] = [];
         for (const p of parts) {
-            str.push(`${p.cols.join(", ")})`);
+            str.push(`${p.cols.join(", ")}`);
         }
 
         return str;
@@ -78,20 +77,19 @@ class Unique {
 }
 
 class Index {
-    public tableId: string = "";
-    constructor (private indexes: string[][], private nodes: Node[]) {
+    constructor (private indexes: string[][], private nodes: Node[], private tableId: string) {
         this.indexes = indexes;
     }
 
     toSql() {
         const parts: {name: string; cols: string[]}[] = [];
+        const table: Node<TableData> = this.nodes.find(x => x.id === this.tableId)!;
         for (const idx of this.indexes) {
             const cols = [];
             for (let i=0; i < idx.length; i++) {
-                const colEl = this.nodes.find(x => x.id === idx[i]);
+                const colEl = table.data.columns.find(x => x.id === idx[i]);
                 if (colEl) {
-                    this.tableId = colEl.parentNode!;
-                    cols.push(colEl.data.name);
+                    cols.push(colEl.name);
                     if(i === idx.length - 1) {
                         parts.push({name: cols.join("_"), cols: cols});
                     }
@@ -102,7 +100,7 @@ class Index {
         const tableName = this.nodes.find(n => n.id === this.tableId);
         for (const p of parts) {
             str.push(
-                `CREATE INDEX ${p.name}_idx
+                `CREATE INDEX ${table.data.name}_${p.name}_idx
 ON ${tableName!.data.name} (${p.cols.join(", ")});`
             )
         }
@@ -237,8 +235,8 @@ export const generateSqlSchema = (deps: SqlDeps) => {
 
     for (const [key,] of Object.entries(tables)) {
         tables[key].pk = new Pk(primaryKey[key] ? primaryKey[key].cols : [], nodes, key);
-        tables[key].index = new Index(indexes[key] ? indexes[key].map(x => x.cols) : [], nodes)
-        tables[key].unique = new Unique(uniqueKeys[key] ? uniqueKeys[key].map(x => x.cols) : [], nodes);
+        tables[key].index = new Index(indexes[key] ? indexes[key].map(x => x.cols) : [], nodes, key)
+        tables[key].unique = new Unique(uniqueKeys[key] ? uniqueKeys[key].map(x => x.cols) : [], nodes, key);
         tables[key].fk = new ForeignKey(edges.filter(x => x.source.split("/")[0] === key), nodes);
     } 
 
