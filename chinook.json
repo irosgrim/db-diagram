@@ -4,1734 +4,887 @@
             "id": "table_1",
             "data": {
                 "name": "album",
-                "backgroundColor": "#66ccca",
-                "height": 60
+                "backgroundColor": "#88d5f7",
+                "columns": [
+                    {
+                        "id": "table_1/col_1",
+                        "name": "id",
+                        "type": "SERIAL",
+                        "unique": false,
+                        "notNull": true
+                    },
+                    {
+                        "id": "table_1/col_b3392ed6-45f9-4b82-8e85-99343bf905aa",
+                        "name": "name",
+                        "type": "VARCHAR(30)",
+                        "unique": false,
+                        "notNull": true
+                    },
+                    {
+                        "id": "table_1/col_4ef3c87d-0519-46ed-acc4-5ebb02abe24f",
+                        "name": "artist_id",
+                        "type": "INTEGER",
+                        "unique": false,
+                        "notNull": true
+                    },
+                    {
+                        "id": "table_1/col_0d03ea39-649c-490f-b16c-de84fed093f1",
+                        "name": "release_date",
+                        "type": "DATE",
+                        "unique": false,
+                        "notNull": true
+                    }
+                ]
             },
             "position": {
-                "x": -388.87120701331054,
-                "y": -39.13801540652708
+                "x": -305.8632286995516,
+                "y": -103.82355070617704
             },
             "className": "light",
-            "style": {
-                "backgroundColor": "#ffffff",
-                "padding": 0
-            },
-            "resizing": true,
-            "width": 250,
-            "height": 80,
-            "type": "group",
-            "selected": false,
-            "positionAbsolute": {
-                "x": -388.87120701331054,
-                "y": -39.13801540652708
-            },
-            "dragging": false
-        },
-        {
-            "id": "table_1/col_1",
-            "type": "column",
-            "position": {
-                "x": 0,
-                "y": 20
-            },
-            "data": {
-                "name": "id",
-                "type": "SERIAL",
-                "unique": false,
-                "notNull": true,
-                "index": false
-            },
-            "parentNode": "table_1",
-            "extent": "parent",
-            "draggable": false,
-            "expandParent": true,
-            "width": 250,
-            "height": 20,
-            "selected": false
-        },
-        {
-            "id": "table_1/col_f9592f15-7c8d-46b7-86eb-35a6618a803c",
-            "type": "column",
-            "position": {
-                "x": 0,
-                "y": 40
-            },
-            "data": {
-                "name": "name",
-                "type": "VARCHAR(220)",
-                "unique": false,
-                "notNull": true
-            },
-            "parentNode": "table_1",
-            "extent": "parent",
-            "draggable": false,
-            "expandParent": true,
-            "width": 250,
-            "height": 20,
-            "selected": false
-        },
-        {
-            "id": "table_1/col_fb2cc40f-fa59-4e22-abde-bd40c54d7a61",
-            "type": "column",
-            "position": {
-                "x": 0,
-                "y": 60
-            },
-            "data": {
-                "name": "artist_id",
-                "type": "INTEGER",
-                "unique": false,
-                "notNull": true
-            },
-            "parentNode": "table_1",
-            "extent": "parent",
-            "draggable": false,
-            "expandParent": true,
-            "width": 250,
-            "height": 20
-        },
-        {
-            "id": "table_2",
-            "data": {
-                "name": "artist",
-                "backgroundColor": "#fdce26",
-                "height": null
-            },
-            "position": {
-                "x": -75.74080808707937,
-                "y": -22.205599362407725
-            },
-            "className": "light",
-            "style": {
-                "backgroundColor": "#ffffff",
-                "padding": 0
-            },
-            "resizing": true,
-            "type": "group",
-            "width": 250,
-            "height": 60,
-            "selected": false,
-            "positionAbsolute": {
-                "x": -75.74080808707937,
-                "y": -22.205599362407725
-            },
-            "dragging": false
-        },
-        {
-            "id": "table_2/col_1",
-            "type": "column",
-            "position": {
-                "x": 0,
-                "y": 20
-            },
-            "data": {
-                "name": "id",
-                "type": "SERIAL",
-                "unique": false,
-                "notNull": true,
-                "index": false
-            },
-            "parentNode": "table_2",
-            "extent": "parent",
-            "draggable": false,
-            "expandParent": true,
-            "width": 250,
-            "height": 20,
-            "selected": false
-        },
-        {
-            "id": "table_2/col_1ce39bda-7fe8-40ed-950f-84898dc694b6",
-            "type": "column",
-            "position": {
-                "x": 0,
-                "y": 40
-            },
-            "data": {
-                "name": "name",
-                "type": "VARCHAR(120)",
-                "unique": false,
-                "notNull": true
-            },
-            "parentNode": "table_2",
-            "extent": "parent",
-            "draggable": false,
-            "expandParent": true,
-            "width": 250,
-            "height": 20
-        },
-        {
-            "id": "table_3",
-            "data": {
-                "name": "customer",
-                "backgroundColor": "#ffb3d4",
-                "height": null
-            },
-            "position": {
-                "x": 233.93972296021064,
-                "y": 372.0015659850653
-            },
-            "className": "light",
-            "style": {
-                "backgroundColor": "#ffffff",
-                "padding": 0
-            },
-            "resizing": true,
-            "type": "group",
-            "width": 250,
-            "height": 260,
-            "selected": false,
-            "positionAbsolute": {
-                "x": 233.93972296021064,
-                "y": 372.0015659850653
-            },
-            "dragging": false
-        },
-        {
-            "id": "table_3/col_1",
-            "type": "column",
-            "position": {
-                "x": 0,
-                "y": 20
-            },
-            "data": {
-                "name": "id",
-                "type": "SERIAL",
-                "unique": false,
-                "notNull": true,
-                "index": false
-            },
-            "parentNode": "table_3",
-            "extent": "parent",
-            "draggable": false,
-            "expandParent": true,
-            "width": 250,
-            "height": 20
-        },
-        {
-            "id": "table_3/col_26fcf45f-d54e-4c78-b293-3f90ac033f01",
-            "type": "column",
-            "position": {
-                "x": 0,
-                "y": 40
-            },
-            "data": {
-                "name": "first_name",
-                "type": "VARCHAR(40)",
-                "unique": false,
-                "notNull": true
-            },
-            "parentNode": "table_3",
-            "extent": "parent",
-            "draggable": false,
-            "expandParent": true,
-            "width": 250,
-            "height": 20
-        },
-        {
-            "id": "table_3/col_93be0e4c-0a31-49e5-93ef-64a5812e3d4e",
-            "type": "column",
-            "position": {
-                "x": 0,
-                "y": 60
-            },
-            "data": {
-                "name": "last_name",
-                "type": "VARCHAR(40)",
-                "unique": false,
-                "notNull": true
-            },
-            "parentNode": "table_3",
-            "extent": "parent",
-            "draggable": false,
-            "expandParent": true,
-            "width": 250,
-            "height": 20
-        },
-        {
-            "id": "table_3/col_4e88b9d0-01cd-481c-8fc2-a7830810546b",
-            "type": "column",
-            "position": {
-                "x": 0,
-                "y": 80
-            },
-            "data": {
-                "name": "company",
-                "type": "VARCHAR(80)",
-                "unique": false,
-                "notNull": false
-            },
-            "parentNode": "table_3",
-            "extent": "parent",
-            "draggable": false,
-            "expandParent": true,
-            "width": 250,
-            "height": 20
-        },
-        {
-            "id": "table_3/col_bb1db81b-fe43-4728-8ccb-c0c0a4e0d0c9",
-            "type": "column",
-            "position": {
-                "x": 0,
-                "y": 100
-            },
-            "data": {
-                "name": "address",
-                "type": "VARCHAR(80)",
-                "unique": false,
-                "notNull": false
-            },
-            "parentNode": "table_3",
-            "extent": "parent",
-            "draggable": false,
-            "expandParent": true,
-            "width": 250,
-            "height": 20
-        },
-        {
-            "id": "table_3/col_cfc0e958-7502-4869-aabb-baf0897ea5d0",
-            "type": "column",
-            "position": {
-                "x": 0,
-                "y": 120
-            },
-            "data": {
-                "name": "city",
-                "type": "VARCHAR(40)",
-                "unique": false,
-                "notNull": false
-            },
-            "parentNode": "table_3",
-            "extent": "parent",
-            "draggable": false,
-            "expandParent": true,
-            "width": 250,
-            "height": 20
-        },
-        {
-            "id": "table_3/col_f967290d-21d4-4c45-be07-dfd8864af8c4",
-            "type": "column",
-            "position": {
-                "x": 0,
-                "y": 140
-            },
-            "data": {
-                "name": "state",
-                "type": "VARCHAR(40)",
-                "unique": false,
-                "notNull": false
-            },
-            "parentNode": "table_3",
-            "extent": "parent",
-            "draggable": false,
-            "expandParent": true,
-            "width": 250,
-            "height": 20
-        },
-        {
-            "id": "table_3/col_e08a7bc1-8c55-44ed-81cc-0501ed9e307d",
-            "type": "column",
-            "position": {
-                "x": 0,
-                "y": 160
-            },
-            "data": {
-                "name": "country",
-                "type": "VARCHAR(40)",
-                "unique": false,
-                "notNull": false
-            },
-            "parentNode": "table_3",
-            "extent": "parent",
-            "draggable": false,
-            "expandParent": true,
-            "width": 250,
-            "height": 20
-        },
-        {
-            "id": "table_3/col_f0d88681-c830-415a-942a-7811d3f7dbb4",
-            "type": "column",
-            "position": {
-                "x": 0,
-                "y": 180
-            },
-            "data": {
-                "name": "postal_code",
-                "type": "VARCHAR(10)",
-                "unique": false,
-                "notNull": false
-            },
-            "parentNode": "table_3",
-            "extent": "parent",
-            "draggable": false,
-            "expandParent": true,
-            "width": 250,
-            "height": 20
-        },
-        {
-            "id": "table_3/col_9b988a09-63fd-416c-8532-aea8f02390f6",
-            "type": "column",
-            "position": {
-                "x": 0,
-                "y": 200
-            },
-            "data": {
-                "name": "phone",
-                "type": "VARCHAR(24)",
-                "unique": false,
-                "notNull": false
-            },
-            "parentNode": "table_3",
-            "extent": "parent",
-            "draggable": false,
-            "expandParent": true,
-            "width": 250,
-            "height": 20
-        },
-        {
-            "id": "table_3/col_7b949c9b-18cd-4e52-b841-8d618d49677d",
-            "type": "column",
-            "position": {
-                "x": 0,
-                "y": 220
-            },
-            "data": {
-                "name": "email",
-                "type": "VARCHAR(60)",
-                "unique": false,
-                "notNull": true
-            },
-            "parentNode": "table_3",
-            "extent": "parent",
-            "draggable": false,
-            "expandParent": true,
-            "width": 250,
-            "height": 20
-        },
-        {
-            "id": "table_3/col_f3355193-6107-4021-a0cf-dca35de97f5b",
-            "type": "column",
-            "position": {
-                "x": 0,
-                "y": 240
-            },
-            "data": {
-                "name": "support_rep_id",
-                "type": "INTEGER",
-                "unique": false,
-                "notNull": true
-            },
-            "parentNode": "table_3",
-            "extent": "parent",
-            "draggable": false,
-            "expandParent": true,
-            "width": 250,
-            "height": 20
-        },
-        {
-            "id": "table_4",
-            "data": {
-                "name": "employee",
-                "backgroundColor": "#b4a5fd",
-                "height": null
-            },
-            "position": {
-                "x": 532.9320193267758,
-                "y": 220.20563120587093
-            },
-            "className": "light",
-            "style": {
-                "backgroundColor": "#ffffff",
-                "padding": 0
-            },
-            "resizing": true,
-            "type": "group",
-            "width": 250,
-            "height": 300,
-            "selected": false,
-            "positionAbsolute": {
-                "x": 532.9320193267758,
-                "y": 220.20563120587093
-            },
-            "dragging": false
-        },
-        {
-            "id": "table_4/col_1",
-            "type": "column",
-            "position": {
-                "x": 0,
-                "y": 20
-            },
-            "data": {
-                "name": "id",
-                "type": "SERIAL",
-                "unique": false,
-                "notNull": true,
-                "index": false
-            },
-            "parentNode": "table_4",
-            "extent": "parent",
-            "draggable": false,
-            "expandParent": true,
-            "width": 250,
-            "height": 20
-        },
-        {
-            "id": "table_4/col_19b156cf-6232-4301-bd1c-ceb031ef27d9",
-            "type": "column",
-            "position": {
-                "x": 0,
-                "y": 40
-            },
-            "data": {
-                "name": "first_name",
-                "type": "VARCHAR(20)",
-                "unique": false,
-                "notNull": true
-            },
-            "parentNode": "table_4",
-            "extent": "parent",
-            "draggable": false,
-            "expandParent": true,
-            "width": 250,
-            "height": 20
-        },
-        {
-            "id": "table_4/col_2f1f284b-628a-43bc-a1a2-9f5c88fd2873",
-            "type": "column",
-            "position": {
-                "x": 0,
-                "y": 60
-            },
-            "data": {
-                "name": "last_name",
-                "type": "VARCHAR(20)",
-                "unique": false,
-                "notNull": true
-            },
-            "parentNode": "table_4",
-            "extent": "parent",
-            "draggable": false,
-            "expandParent": true,
-            "width": 250,
-            "height": 20
-        },
-        {
-            "id": "table_4/col_34aa5ebb-81a4-4646-b138-41667261a9d4",
-            "type": "column",
-            "position": {
-                "x": 0,
-                "y": 80
-            },
-            "data": {
-                "name": "title",
-                "type": "VARCHAR(30)",
-                "unique": false,
-                "notNull": true
-            },
-            "parentNode": "table_4",
-            "extent": "parent",
-            "draggable": false,
-            "expandParent": true,
-            "width": 250,
-            "height": 20
-        },
-        {
-            "id": "table_4/col_24bef63a-a628-43fc-934f-1a74ee84bbe3",
-            "type": "column",
-            "position": {
-                "x": 0,
-                "y": 100
-            },
-            "data": {
-                "name": "reports_to",
-                "type": "INTEGER",
-                "unique": false,
-                "notNull": true
-            },
-            "parentNode": "table_4",
-            "extent": "parent",
-            "draggable": false,
-            "expandParent": true,
-            "width": 250,
-            "height": 20
-        },
-        {
-            "id": "table_4/col_776c5a22-4e57-496e-ba9a-dcc9e597a004",
-            "type": "column",
-            "position": {
-                "x": 0,
-                "y": 120
-            },
-            "data": {
-                "name": "birth_date",
-                "type": "TIMESTAMP",
-                "unique": false,
-                "notNull": true
-            },
-            "parentNode": "table_4",
-            "extent": "parent",
-            "draggable": false,
-            "expandParent": true,
-            "width": 250,
-            "height": 20
-        },
-        {
-            "id": "table_4/col_b1a717fc-8ca2-4bfa-aafe-f6f5afbfca3f",
-            "type": "column",
-            "position": {
-                "x": 0,
-                "y": 140
-            },
-            "data": {
-                "name": "hire_date",
-                "type": "TIMESTAMP",
-                "unique": false,
-                "notNull": true
-            },
-            "parentNode": "table_4",
-            "extent": "parent",
-            "draggable": false,
-            "expandParent": true,
-            "width": 250,
-            "height": 20
-        },
-        {
-            "id": "table_4/col_fd4c25f6-b172-403d-a883-597444da87b2",
-            "type": "column",
-            "position": {
-                "x": 0,
-                "y": 160
-            },
-            "data": {
-                "name": "address",
-                "type": "VARCHAR(70)",
-                "unique": false,
-                "notNull": true
-            },
-            "parentNode": "table_4",
-            "extent": "parent",
-            "draggable": false,
-            "expandParent": true,
-            "width": 250,
-            "height": 20
-        },
-        {
-            "id": "table_4/col_ab15b3da-79cc-4c6b-960e-ffab60d00ab6",
-            "type": "column",
-            "position": {
-                "x": 0,
-                "y": 180
-            },
-            "data": {
-                "name": "city",
-                "type": "VARCHAR(40)",
-                "unique": false,
-                "notNull": true
-            },
-            "parentNode": "table_4",
-            "extent": "parent",
-            "draggable": false,
-            "expandParent": true,
-            "width": 250,
-            "height": 20
-        },
-        {
-            "id": "table_4/col_22c4cef8-b1c2-429b-980d-7883a549b881",
-            "type": "column",
-            "position": {
-                "x": 0,
-                "y": 200
-            },
-            "data": {
-                "name": "state",
-                "type": "VARCHAR(40)",
-                "unique": false,
-                "notNull": false
-            },
-            "parentNode": "table_4",
-            "extent": "parent",
-            "draggable": false,
-            "expandParent": true,
-            "width": 250,
-            "height": 20
-        },
-        {
-            "id": "table_4/col_8756af3a-4256-4fc5-9371-78cc83d08b40",
-            "type": "column",
-            "position": {
-                "x": 0,
-                "y": 220
-            },
-            "data": {
-                "name": "country",
-                "type": "VARCHAR(40)",
-                "unique": false,
-                "notNull": true
-            },
-            "parentNode": "table_4",
-            "extent": "parent",
-            "draggable": false,
-            "expandParent": true,
-            "width": 250,
-            "height": 20
-        },
-        {
-            "id": "table_4/col_a20aeb9c-fdc2-48e4-aed9-e3dae35ab007",
-            "type": "column",
-            "position": {
-                "x": 0,
-                "y": 240
-            },
-            "data": {
-                "name": "postal_code",
-                "type": "VARCHAR(10)",
-                "unique": false,
-                "notNull": true
-            },
-            "parentNode": "table_4",
-            "extent": "parent",
-            "draggable": false,
-            "expandParent": true,
-            "width": 250,
-            "height": 20
-        },
-        {
-            "id": "table_4/col_5a67ec4e-200c-41f8-a263-bf7f462e9b64",
-            "type": "column",
-            "position": {
-                "x": 0,
-                "y": 260
-            },
-            "data": {
-                "name": "phone",
-                "type": "VARCHAR(24)",
-                "unique": false,
-                "notNull": false
-            },
-            "parentNode": "table_4",
-            "extent": "parent",
-            "draggable": false,
-            "expandParent": true,
-            "width": 250,
-            "height": 20
-        },
-        {
-            "id": "table_4/col_a3ac7092-de1a-4353-98da-b532823964ff",
-            "type": "column",
-            "position": {
-                "x": 0,
-                "y": 280
-            },
-            "data": {
-                "name": "email",
-                "type": "VARCHAR(60)",
-                "unique": false,
-                "notNull": true
-            },
-            "parentNode": "table_4",
-            "extent": "parent",
-            "draggable": false,
-            "expandParent": true,
-            "width": 250,
-            "height": 20
-        },
-        {
-            "id": "table_5",
-            "data": {
-                "name": "genre",
-                "backgroundColor": "#cfbcaa",
-                "height": 40
-            },
-            "position": {
-                "x": -84.40741375130068,
-                "y": 267.3162486888388
-            },
-            "className": "light",
-            "style": {
-                "backgroundColor": "#ffffff",
-                "padding": 0
-            },
-            "resizing": true,
-            "type": "group",
-            "width": 250,
-            "height": 60,
+            "type": "table",
+            "width": 252,
+            "height": 133,
             "selected": false,
             "dragging": false,
             "positionAbsolute": {
-                "x": -84.40741375130068,
-                "y": 267.3162486888388
+                "x": -305.8632286995516,
+                "y": -103.82355070617704
             }
         },
         {
-            "id": "table_5/col_1",
-            "type": "column",
-            "position": {
-                "x": 0,
-                "y": 20
-            },
-            "data": {
-                "name": "id",
-                "type": "SERIAL",
-                "unique": false,
-                "notNull": true,
-                "index": false
-            },
-            "parentNode": "table_5",
-            "extent": "parent",
-            "draggable": false,
-            "expandParent": true,
-            "width": 250,
-            "height": 20
-        },
-        {
-            "id": "table_5/col_a96c2105-f2f9-4e9a-a8f4-cc61b2824559",
-            "type": "column",
-            "position": {
-                "x": 0,
-                "y": 40
-            },
-            "data": {
-                "name": "name",
-                "type": "VARCHAR(120)",
-                "unique": true,
-                "notNull": true
-            },
-            "parentNode": "table_5",
-            "extent": "parent",
-            "draggable": false,
-            "expandParent": true,
-            "width": 250,
-            "height": 20
-        },
-        {
-            "id": "table_6",
-            "data": {
-                "name": "invoice",
-                "backgroundColor": "#eec499",
-                "height": null
-            },
-            "position": {
-                "x": 229.2063439292105,
-                "y": 65.2869465815104
-            },
-            "className": "light",
-            "style": {
-                "backgroundColor": "#ffffff",
-                "padding": 0
-            },
-            "resizing": true,
-            "type": "group",
-            "width": 250,
-            "height": 200,
-            "selected": false,
-            "positionAbsolute": {
-                "x": 229.2063439292105,
-                "y": 65.2869465815104
-            },
-            "dragging": false
-        },
-        {
-            "id": "table_6/col_1",
-            "type": "column",
-            "position": {
-                "x": 0,
-                "y": 20
-            },
-            "data": {
-                "name": "id",
-                "type": "SERIAL",
-                "unique": false,
-                "notNull": true,
-                "index": false
-            },
-            "parentNode": "table_6",
-            "extent": "parent",
-            "draggable": false,
-            "expandParent": true,
-            "width": 250,
-            "height": 20
-        },
-        {
-            "id": "table_6/col_4c7af6a7-fadd-4fe0-95c1-cff65223bb2f",
-            "type": "column",
-            "position": {
-                "x": 0,
-                "y": 40
-            },
-            "data": {
-                "name": "customer_id",
-                "type": "VARCHAR",
-                "unique": false,
-                "notNull": true
-            },
-            "parentNode": "table_6",
-            "extent": "parent",
-            "draggable": false,
-            "expandParent": true,
-            "width": 250,
-            "height": 20
-        },
-        {
-            "id": "table_6/col_e72fb7d5-9017-4e21-a9a8-c776120d0194",
-            "type": "column",
-            "position": {
-                "x": 0,
-                "y": 60
-            },
-            "data": {
-                "name": "invoice_date",
-                "type": "VARCHAR",
-                "unique": false,
-                "notNull": true
-            },
-            "parentNode": "table_6",
-            "extent": "parent",
-            "draggable": false,
-            "expandParent": true,
-            "width": 250,
-            "height": 20
-        },
-        {
-            "id": "table_6/col_77da0b10-38f5-4ae5-9c65-e956d1029416",
-            "type": "column",
-            "position": {
-                "x": 0,
-                "y": 80
-            },
-            "data": {
-                "name": "billing_address",
-                "type": "VARCHAR",
-                "unique": false,
-                "notNull": true
-            },
-            "parentNode": "table_6",
-            "extent": "parent",
-            "draggable": false,
-            "expandParent": true,
-            "width": 250,
-            "height": 20
-        },
-        {
-            "id": "table_6/col_53ac724a-da53-41e4-b23e-917dc97793e0",
-            "type": "column",
-            "position": {
-                "x": 0,
-                "y": 100
-            },
-            "data": {
-                "name": "billing_city",
-                "type": "VARCHAR",
-                "unique": false,
-                "notNull": true
-            },
-            "parentNode": "table_6",
-            "extent": "parent",
-            "draggable": false,
-            "expandParent": true,
-            "width": 250,
-            "height": 20
-        },
-        {
-            "id": "table_6/col_31cad5a3-83a9-447e-8e3d-78fca5f9ceca",
-            "type": "column",
-            "position": {
-                "x": 0,
-                "y": 120
-            },
-            "data": {
-                "name": "billing_state",
-                "type": "VARCHAR",
-                "unique": false,
-                "notNull": false
-            },
-            "parentNode": "table_6",
-            "extent": "parent",
-            "draggable": false,
-            "expandParent": true,
-            "width": 250,
-            "height": 20
-        },
-        {
-            "id": "table_6/col_f2805e25-e649-499c-a5bd-18d6e379655e",
-            "type": "column",
-            "position": {
-                "x": 0,
-                "y": 140
-            },
-            "data": {
-                "name": "billing_country",
-                "type": "VARCHAR",
-                "unique": false,
-                "notNull": true
-            },
-            "parentNode": "table_6",
-            "extent": "parent",
-            "draggable": false,
-            "expandParent": true,
-            "width": 250,
-            "height": 20
-        },
-        {
-            "id": "table_6/col_7a15c5e6-fd45-4adf-acdc-376b142bee8d",
-            "type": "column",
-            "position": {
-                "x": 0,
-                "y": 160
-            },
-            "data": {
-                "name": "billing_postal_code",
-                "type": "VARCHAR",
-                "unique": false,
-                "notNull": true
-            },
-            "parentNode": "table_6",
-            "extent": "parent",
-            "draggable": false,
-            "expandParent": true,
-            "width": 250,
-            "height": 20
-        },
-        {
-            "id": "table_6/col_5f532f15-aa3f-4b6b-8b5f-5d3cb7a35c0c",
-            "type": "column",
-            "position": {
-                "x": 0,
-                "y": 180
-            },
-            "data": {
-                "name": "total",
-                "type": "NUMERIC(10,2)",
-                "unique": false,
-                "notNull": true
-            },
-            "parentNode": "table_6",
-            "extent": "parent",
-            "draggable": false,
-            "expandParent": true,
-            "width": 250,
-            "height": 20
-        },
-        {
-            "id": "table_7",
-            "data": {
-                "name": "invoice_line",
-                "backgroundColor": "#b8f19c",
-                "height": null
-            },
-            "position": {
-                "x": -78.5674089288195,
-                "y": 45.118260422621844
-            },
-            "className": "light",
-            "style": {
-                "backgroundColor": "#ffffff",
-                "padding": 0
-            },
-            "resizing": true,
-            "type": "group",
-            "width": 250,
-            "height": 120,
-            "selected": false,
-            "positionAbsolute": {
-                "x": -78.5674089288195,
-                "y": 45.118260422621844
-            },
-            "dragging": false
-        },
-        {
-            "id": "table_7/col_1",
-            "type": "column",
-            "position": {
-                "x": 0,
-                "y": 20
-            },
-            "data": {
-                "name": "id",
-                "type": "SERIAL",
-                "unique": false,
-                "notNull": true,
-                "index": false
-            },
-            "parentNode": "table_7",
-            "extent": "parent",
-            "draggable": false,
-            "expandParent": true,
-            "width": 250,
-            "height": 20
-        },
-        {
-            "id": "table_7/col_5713bd1e-08d1-4f65-a4c9-12061c74147a",
-            "type": "column",
-            "position": {
-                "x": 0,
-                "y": 40
-            },
-            "data": {
-                "name": "invoice_id",
-                "type": "INTEGER",
-                "unique": false,
-                "notNull": true
-            },
-            "parentNode": "table_7",
-            "extent": "parent",
-            "draggable": false,
-            "expandParent": true,
-            "width": 250,
-            "height": 20
-        },
-        {
-            "id": "table_7/col_f9d30e52-70cc-4ae8-bb0e-a6b69b5dacd1",
-            "type": "column",
-            "position": {
-                "x": 0,
-                "y": 60
-            },
-            "data": {
-                "name": "track_id",
-                "type": "INTEGER",
-                "unique": false,
-                "notNull": true
-            },
-            "parentNode": "table_7",
-            "extent": "parent",
-            "draggable": false,
-            "expandParent": true,
-            "width": 250,
-            "height": 20
-        },
-        {
-            "id": "table_7/col_fa7ec815-4af5-4e32-93af-75170de30ec1",
-            "type": "column",
-            "position": {
-                "x": 0,
-                "y": 80
-            },
-            "data": {
-                "name": "unit_price",
-                "type": "NUMERIC(10,2)",
-                "unique": false,
-                "notNull": true
-            },
-            "parentNode": "table_7",
-            "extent": "parent",
-            "draggable": false,
-            "expandParent": true,
-            "width": 250,
-            "height": 20
-        },
-        {
-            "id": "table_7/col_5a27519a-7ffe-455a-8c17-2af377fa78e1",
-            "type": "column",
-            "position": {
-                "x": 0,
-                "y": 100
-            },
-            "data": {
-                "name": "quantity",
-                "type": "SMALLINT",
-                "unique": false,
-                "notNull": true
-            },
-            "parentNode": "table_7",
-            "extent": "parent",
-            "draggable": false,
-            "expandParent": true,
-            "width": 250,
-            "height": 20
-        },
-        {
-            "id": "table_8",
-            "data": {
-                "name": "media_type",
-                "backgroundColor": "#aecdbc",
-                "height": null
-            },
-            "position": {
-                "x": -82.91575050116028,
-                "y": 179.3763004523152
-            },
-            "className": "light",
-            "style": {
-                "backgroundColor": "#ffffff",
-                "padding": 0
-            },
-            "resizing": true,
-            "type": "group",
-            "width": 250,
-            "height": 60,
-            "selected": false,
-            "dragging": false,
-            "positionAbsolute": {
-                "x": -82.91575050116028,
-                "y": 179.3763004523152
-            }
-        },
-        {
-            "id": "table_8/col_1",
-            "type": "column",
-            "position": {
-                "x": 0,
-                "y": 20
-            },
-            "data": {
-                "name": "id",
-                "type": "SERIAL",
-                "unique": false,
-                "notNull": true,
-                "index": false
-            },
-            "parentNode": "table_8",
-            "extent": "parent",
-            "draggable": false,
-            "expandParent": true,
-            "width": 250,
-            "height": 20
-        },
-        {
-            "id": "table_8/col_d9ee17b3-174c-4517-8a28-e7d73807445f",
-            "type": "column",
-            "position": {
-                "x": 0,
-                "y": 40
-            },
-            "data": {
-                "name": "name",
-                "type": "VARCHAR(120)",
-                "unique": false,
-                "notNull": true
-            },
-            "parentNode": "table_8",
-            "extent": "parent",
-            "draggable": false,
-            "expandParent": true,
-            "width": 250,
-            "height": 20
-        },
-        {
-            "id": "table_9",
-            "data": {
-                "name": "playlist",
-                "backgroundColor": "#f4ccff",
-                "height": null
-            },
-            "position": {
-                "x": -81.75241573003709,
-                "y": 423.39676125471016
-            },
-            "className": "light",
-            "style": {
-                "backgroundColor": "#ffffff",
-                "padding": 0
-            },
-            "resizing": true,
-            "type": "group",
-            "width": 250,
-            "height": 60,
-            "selected": false,
-            "positionAbsolute": {
-                "x": -81.75241573003709,
-                "y": 423.39676125471016
-            },
-            "dragging": false
-        },
-        {
-            "id": "table_9/col_1",
-            "type": "column",
-            "position": {
-                "x": 0,
-                "y": 20
-            },
-            "data": {
-                "name": "id",
-                "type": "SERIAL",
-                "unique": false,
-                "notNull": true,
-                "index": false
-            },
-            "parentNode": "table_9",
-            "extent": "parent",
-            "draggable": false,
-            "expandParent": true,
-            "width": 250,
-            "height": 20
-        },
-        {
-            "id": "table_9/col_0e6d0875-42ff-4dd7-8705-702c3f14d146",
-            "type": "column",
-            "position": {
-                "x": 0,
-                "y": 40
-            },
-            "data": {
-                "name": "name",
-                "type": "VARCHAR(120)",
-                "unique": false,
-                "notNull": true
-            },
-            "parentNode": "table_9",
-            "extent": "parent",
-            "draggable": false,
-            "expandParent": true,
-            "width": 250,
-            "height": 20
-        },
-        {
-            "id": "table_10",
+            "id": "table_03d35110-d32d-488a-b468-3d5b73ccd838",
             "data": {
                 "name": "track",
-                "backgroundColor": "#c3fff4",
-                "height": null
+                "backgroundColor": "#fbbfde",
+                "columns": [
+                    {
+                        "id": "table_03d35110-d32d-488a-b468-3d5b73ccd838col_7e0406f0-a286-474a-bf75-addba5fa8321",
+                        "name": "id",
+                        "type": "SERIAL",
+                        "unique": false,
+                        "notNull": true
+                    },
+                    {
+                        "id": "table_03d35110-d32d-488a-b468-3d5b73ccd838/col_b7bcd4d9-8ccf-430d-bc65-5064ff37af93",
+                        "name": "name",
+                        "type": "VARCHAR(200)",
+                        "unique": false,
+                        "notNull": true
+                    },
+                    {
+                        "id": "table_03d35110-d32d-488a-b468-3d5b73ccd838/col_0c643597-8eb8-4ea8-81cd-24e47dc94539",
+                        "name": "album_id",
+                        "type": "INTEGER",
+                        "unique": false,
+                        "notNull": true
+                    },
+                    {
+                        "id": "table_03d35110-d32d-488a-b468-3d5b73ccd838/col_0e222e01-54f3-48d9-b10d-5f69cd2d4995",
+                        "name": "media_type_id",
+                        "type": "INTEGER",
+                        "unique": false,
+                        "notNull": true
+                    },
+                    {
+                        "id": "table_03d35110-d32d-488a-b468-3d5b73ccd838/col_1e885204-924c-4b6f-a14b-e0ab79f2bebc",
+                        "name": "genre_id",
+                        "type": "INTEGER",
+                        "unique": false,
+                        "notNull": true
+                    },
+                    {
+                        "id": "table_03d35110-d32d-488a-b468-3d5b73ccd838/col_06411288-801c-46c1-9dbb-d2d6de1d4da1",
+                        "name": "composer",
+                        "type": "VARCHAR(220)",
+                        "unique": false,
+                        "notNull": true
+                    },
+                    {
+                        "id": "table_03d35110-d32d-488a-b468-3d5b73ccd838/col_76e2d357-552b-4eee-8d85-c20f243465e9",
+                        "name": "milliseconds",
+                        "type": "INTEGER",
+                        "unique": false,
+                        "notNull": true
+                    },
+                    {
+                        "id": "table_03d35110-d32d-488a-b468-3d5b73ccd838/col_01e58990-4879-4e9e-b971-0337aef31279",
+                        "name": "bytes",
+                        "type": "INTEGER",
+                        "unique": false,
+                        "notNull": true
+                    },
+                    {
+                        "id": "table_03d35110-d32d-488a-b468-3d5b73ccd838/col_24d60620-8fc0-4cb9-b40f-7a8b59861b88",
+                        "name": "unit_price",
+                        "type": "NUMERIC(10,2)",
+                        "unique": false,
+                        "notNull": true
+                    }
+                ]
             },
             "position": {
-                "x": -407.30227473402954,
-                "y": 119.83244768681499
+                "x": -307.2816908746966,
+                "y": 54.34813732659353
             },
             "className": "light",
-            "style": {
-                "backgroundColor": "#ffffff",
-                "padding": 0
-            },
-            "resizing": true,
-            "type": "group",
-            "width": 250,
-            "height": 200,
+            "type": "table",
+            "width": 252,
+            "height": 273,
             "selected": false,
-            "dragging": false,
             "positionAbsolute": {
-                "x": -407.30227473402954,
-                "y": 119.83244768681499
-            }
+                "x": -307.2816908746966,
+                "y": 54.34813732659353
+            },
+            "dragging": false
         },
         {
-            "id": "table_10/col_1",
-            "type": "column",
-            "position": {
-                "x": 0,
-                "y": 20
-            },
+            "id": "table_ac8da0b1-4efc-40c8-809e-7adb2600c825",
             "data": {
-                "name": "id",
-                "type": "SERIAL",
-                "unique": false,
-                "notNull": true,
-                "index": false
+                "name": "artist",
+                "backgroundColor": "#edebb4",
+                "columns": [
+                    {
+                        "id": "table_ac8da0b1-4efc-40c8-809e-7adb2600c825col_d1bb6cb7-516d-4b53-805a-6edcfb129011",
+                        "name": "id",
+                        "type": "SERIAL",
+                        "unique": false,
+                        "notNull": true
+                    },
+                    {
+                        "id": "table_ac8da0b1-4efc-40c8-809e-7adb2600c825/col_a4324719-42e8-403e-9bfb-d3855cbc8ea3",
+                        "name": "name",
+                        "type": "VARCHAR(120)",
+                        "unique": true,
+                        "notNull": true
+                    }
+                ]
             },
-            "parentNode": "table_10",
-            "extent": "parent",
-            "draggable": false,
-            "expandParent": true,
-            "width": 250,
-            "height": 20
-        },
-        {
-            "id": "table_10/col_ca8742f1-8e8d-4c8c-9f24-aba1457c8eb3",
-            "type": "column",
             "position": {
-                "x": 0,
-                "y": 40
+                "x": 20.62908706055464,
+                "y": -47.67376857611427
             },
-            "data": {
-                "name": "name",
-                "type": "VARCHAR(200)",
-                "unique": false,
-                "notNull": true
+            "className": "light",
+            "type": "table",
+            "width": 252,
+            "height": 77,
+            "selected": false,
+            "positionAbsolute": {
+                "x": 20.62908706055464,
+                "y": -47.67376857611427
             },
-            "parentNode": "table_10",
-            "extent": "parent",
-            "draggable": false,
-            "expandParent": true,
-            "width": 250,
-            "height": 20
+            "dragging": false
         },
         {
-            "id": "table_10/col_9c7e7927-5429-425c-b1fe-ae8ecc782549",
-            "type": "column",
+            "id": "table_d99ced83-f49d-4cda-b176-fec31c89d831",
+            "data": {
+                "name": "playlist",
+                "backgroundColor": "#b6e1f7",
+                "columns": [
+                    {
+                        "id": "table_d99ced83-f49d-4cda-b176-fec31c89d831col_0927bb24-6f01-4d8d-9deb-0df0c6f822a5",
+                        "name": "id",
+                        "type": "SERIAL",
+                        "unique": false,
+                        "notNull": true
+                    },
+                    {
+                        "id": "table_d99ced83-f49d-4cda-b176-fec31c89d831/col_8ee6842a-2b03-46da-b7c5-cf9e02eae374",
+                        "name": "name",
+                        "type": "VARCHAR(120)",
+                        "unique": true,
+                        "notNull": true
+                    }
+                ]
+            },
             "position": {
-                "x": 0,
-                "y": 60
+                "x": 14.744150521732905,
+                "y": 432.9729544478822
             },
-            "data": {
-                "name": "album_id",
-                "type": "INTEGER",
-                "unique": false,
-                "notNull": true
+            "className": "light",
+            "type": "table",
+            "width": 252,
+            "height": 77,
+            "selected": false,
+            "positionAbsolute": {
+                "x": 14.744150521732905,
+                "y": 432.9729544478822
             },
-            "parentNode": "table_10",
-            "extent": "parent",
-            "draggable": false,
-            "expandParent": true,
-            "width": 250,
-            "height": 20
+            "dragging": false
         },
         {
-            "id": "table_10/col_d7a1dc6f-f1c5-4f07-87b4-710ea96b8929",
-            "type": "column",
-            "position": {
-                "x": 0,
-                "y": 80
-            },
-            "data": {
-                "name": "media_type_id",
-                "type": "INTEGER",
-                "unique": false,
-                "notNull": true
-            },
-            "parentNode": "table_10",
-            "extent": "parent",
-            "draggable": false,
-            "expandParent": true,
-            "width": 250,
-            "height": 20
-        },
-        {
-            "id": "table_10/col_0670a223-9068-42fa-8139-aafdd71f42fd",
-            "type": "column",
-            "position": {
-                "x": 0,
-                "y": 100
-            },
-            "data": {
-                "name": "genre_id",
-                "type": "INTEGER",
-                "unique": false,
-                "notNull": true
-            },
-            "parentNode": "table_10",
-            "extent": "parent",
-            "draggable": false,
-            "expandParent": true,
-            "width": 250,
-            "height": 20
-        },
-        {
-            "id": "table_10/col_2b81f0ee-8fe1-42fe-8079-95b46b3193ff",
-            "type": "column",
-            "position": {
-                "x": 0,
-                "y": 120
-            },
-            "data": {
-                "name": "composer",
-                "type": "VARCHAR(220)",
-                "unique": false,
-                "notNull": true
-            },
-            "parentNode": "table_10",
-            "extent": "parent",
-            "draggable": false,
-            "expandParent": true,
-            "width": 250,
-            "height": 20
-        },
-        {
-            "id": "table_10/col_cc17bc8b-7640-4354-808e-e1a8abec9e56",
-            "type": "column",
-            "position": {
-                "x": 0,
-                "y": 140
-            },
-            "data": {
-                "name": "milliseconds",
-                "type": "INTEGER",
-                "unique": false,
-                "notNull": true
-            },
-            "parentNode": "table_10",
-            "extent": "parent",
-            "draggable": false,
-            "expandParent": true,
-            "width": 250,
-            "height": 20
-        },
-        {
-            "id": "table_10/col_124cc004-4ce0-4db2-afbc-5b894aed6309",
-            "type": "column",
-            "position": {
-                "x": 0,
-                "y": 160
-            },
-            "data": {
-                "name": "bytes",
-                "type": "INTEGER",
-                "unique": false,
-                "notNull": true
-            },
-            "parentNode": "table_10",
-            "extent": "parent",
-            "draggable": false,
-            "expandParent": true,
-            "width": 250,
-            "height": 20
-        },
-        {
-            "id": "table_10/col_2c4a93cc-5195-4023-8306-b15ba07d5416",
-            "type": "column",
-            "position": {
-                "x": 0,
-                "y": 180
-            },
-            "data": {
-                "name": "unit_price",
-                "type": "NUMERIC(10,2)",
-                "unique": false,
-                "notNull": true
-            },
-            "parentNode": "table_10",
-            "extent": "parent",
-            "draggable": false,
-            "expandParent": true,
-            "width": 250,
-            "height": 20
-        },
-        {
-            "id": "table_11",
+            "id": "table_4861352e-1814-420b-ac5e-c9e01983b2e3",
             "data": {
                 "name": "playlist_track",
-                "backgroundColor": "#b5d9d4",
-                "height": null
+                "backgroundColor": "#c2e633",
+                "columns": [
+                    {
+                        "id": "table_4861352e-1814-420b-ac5e-c9e01983b2e3col_5ff22bba-52cd-4508-97ba-91a2e7e9dcc3",
+                        "name": "playlist_id",
+                        "type": "SERIAL",
+                        "unique": false,
+                        "notNull": true
+                    },
+                    {
+                        "id": "table_4861352e-1814-420b-ac5e-c9e01983b2e3/col_839176fd-542a-4c82-acea-001342fa54bd",
+                        "name": "track_id",
+                        "type": "INTEGER",
+                        "unique": false,
+                        "notNull": true
+                    }
+                ]
             },
             "position": {
-                "x": -414.94099255849386,
-                "y": 423.5708502892675
+                "x": -304.35053833384205,
+                "y": 433.4708567858963
             },
             "className": "light",
-            "style": {
-                "backgroundColor": "#ffffff",
-                "padding": 0
-            },
-            "resizing": true,
-            "type": "group",
-            "width": 250,
-            "height": 60,
+            "type": "table",
+            "width": 252,
+            "height": 77,
             "selected": false,
-            "dragging": false,
             "positionAbsolute": {
-                "x": -414.94099255849386,
-                "y": 423.5708502892675
-            }
+                "x": -304.35053833384205,
+                "y": 433.4708567858963
+            },
+            "dragging": false
         },
         {
-            "id": "table_11/col_1",
-            "type": "column",
-            "position": {
-                "x": 0,
-                "y": 20
-            },
+            "id": "table_437412c3-9386-4e2a-968e-599dbbb2ed34",
             "data": {
-                "name": "playlist_id",
-                "type": "SERIAL",
-                "unique": false,
-                "notNull": true,
-                "index": false
+                "name": "invoice",
+                "backgroundColor": "#fb09bb",
+                "columns": [
+                    {
+                        "id": "table_437412c3-9386-4e2a-968e-599dbbb2ed34col_c53135df-68c4-47c8-9b42-d3a9f5d70ad7",
+                        "name": "id",
+                        "type": "SERIAL",
+                        "unique": false,
+                        "notNull": true
+                    },
+                    {
+                        "id": "table_437412c3-9386-4e2a-968e-599dbbb2ed34/col_31f67d3d-740e-4853-aa3b-9c9ddcf5e816",
+                        "name": "customer_id",
+                        "type": "INTEGER",
+                        "unique": false,
+                        "notNull": true
+                    },
+                    {
+                        "id": "table_437412c3-9386-4e2a-968e-599dbbb2ed34/col_bd5cf69d-ddab-4eee-9204-7f82e1298a9d",
+                        "name": "invoice_date",
+                        "type": "TIMESTAMP",
+                        "unique": false,
+                        "notNull": true
+                    },
+                    {
+                        "id": "table_437412c3-9386-4e2a-968e-599dbbb2ed34/col_e8dc8c53-315e-4390-bdfe-aa9a113dde96",
+                        "name": "billing_address",
+                        "type": "VARCHAR(200)",
+                        "unique": false,
+                        "notNull": true
+                    },
+                    {
+                        "id": "table_437412c3-9386-4e2a-968e-599dbbb2ed34/col_5068f6a5-1c49-462b-88e9-0899d37c7bd7",
+                        "name": "billing_city",
+                        "type": "VARCHAR(100)",
+                        "unique": false,
+                        "notNull": true
+                    },
+                    {
+                        "id": "table_437412c3-9386-4e2a-968e-599dbbb2ed34/col_9fb39075-6945-4e8d-b5f0-d032c68890c6",
+                        "name": "billing_state",
+                        "type": "VARCHAR(100)",
+                        "unique": false,
+                        "notNull": false
+                    },
+                    {
+                        "id": "table_437412c3-9386-4e2a-968e-599dbbb2ed34/col_b7bae6e9-a253-4eaf-823a-b0c558b9955b",
+                        "name": "billing_country",
+                        "type": "VARCHAR(6)",
+                        "unique": false,
+                        "notNull": true
+                    },
+                    {
+                        "id": "table_437412c3-9386-4e2a-968e-599dbbb2ed34/col_1a35baa9-923f-46b6-823d-440ff14ff8cb",
+                        "name": "billing_postal_code",
+                        "type": "VARCHAR",
+                        "unique": false,
+                        "notNull": true
+                    },
+                    {
+                        "id": "table_437412c3-9386-4e2a-968e-599dbbb2ed34/col_bebd3b30-bf0c-4d1f-bd5b-69091851071a",
+                        "name": "total",
+                        "type": "NUMERIC(10,2)",
+                        "unique": false,
+                        "notNull": true
+                    }
+                ]
             },
-            "parentNode": "table_11",
-            "extent": "parent",
-            "draggable": false,
-            "expandParent": true,
-            "width": 250,
-            "height": 20
+            "position": {
+                "x": 325.99912720646586,
+                "y": -50.375529247408394
+            },
+            "className": "light",
+            "type": "table",
+            "width": 252,
+            "height": 273,
+            "selected": false,
+            "positionAbsolute": {
+                "x": 325.99912720646586,
+                "y": -50.375529247408394
+            },
+            "dragging": false
         },
         {
-            "id": "table_11/col_f881bcf6-3a99-4fbd-8287-8adcd768f5b2",
-            "type": "column",
-            "position": {
-                "x": 0,
-                "y": 40
-            },
+            "id": "table_db41a59f-214a-478b-89ac-894731093fae",
             "data": {
-                "name": "track_id",
-                "type": "INTEGER",
-                "unique": false,
-                "notNull": true
+                "name": "media_type",
+                "backgroundColor": "#d9bcf0",
+                "columns": [
+                    {
+                        "id": "table_db41a59f-214a-478b-89ac-894731093faecol_4b193ede-4d6f-40c1-b221-17f1b34efb09",
+                        "name": "id",
+                        "type": "SERIAL",
+                        "unique": false,
+                        "notNull": true
+                    },
+                    {
+                        "id": "table_db41a59f-214a-478b-89ac-894731093fae/col_f2840106-864f-4a23-8e31-f7499151b676",
+                        "name": "name",
+                        "type": "VARCHAR(120)",
+                        "unique": true,
+                        "notNull": true
+                    }
+                ]
             },
-            "parentNode": "table_11",
-            "extent": "parent",
-            "draggable": false,
-            "expandParent": true,
-            "width": 250,
-            "height": 20
+            "position": {
+                "x": 17.890516713292556,
+                "y": 231.96432136372198
+            },
+            "className": "light",
+            "type": "table",
+            "width": 252,
+            "height": 77,
+            "selected": false,
+            "positionAbsolute": {
+                "x": 17.890516713292556,
+                "y": 231.96432136372198
+            },
+            "dragging": false
+        },
+        {
+            "id": "table_000faafb-439c-45b2-bfb7-1bf105273f6f",
+            "data": {
+                "name": "invoice_line",
+                "backgroundColor": "#ff9ebf",
+                "columns": [
+                    {
+                        "id": "table_000faafb-439c-45b2-bfb7-1bf105273f6fcol_625afd2a-4e94-4031-8e8f-62c3e54679c8",
+                        "name": "id",
+                        "type": "SERIAL",
+                        "unique": false,
+                        "notNull": true
+                    },
+                    {
+                        "id": "table_000faafb-439c-45b2-bfb7-1bf105273f6f/col_24b53039-8942-4804-8e95-5a5c9d6cbbd5",
+                        "name": "invoice_id",
+                        "type": "INTEGER",
+                        "unique": false,
+                        "notNull": true
+                    },
+                    {
+                        "id": "table_000faafb-439c-45b2-bfb7-1bf105273f6f/col_21e9b784-2f59-4929-abe8-bbcb8205a88f",
+                        "name": "track_id",
+                        "type": "INTEGER",
+                        "unique": false,
+                        "notNull": true
+                    },
+                    {
+                        "id": "table_000faafb-439c-45b2-bfb7-1bf105273f6f/col_23ade920-b647-4e45-89bb-7078f35d50a1",
+                        "name": "unit_price",
+                        "type": "NUMERIC(10,2)",
+                        "unique": false,
+                        "notNull": true
+                    },
+                    {
+                        "id": "table_000faafb-439c-45b2-bfb7-1bf105273f6f/col_41c94183-5b6a-4dcf-86ad-25e12d7c8355",
+                        "name": "quantity",
+                        "type": "SMALLINT",
+                        "unique": false,
+                        "notNull": true
+                    }
+                ]
+            },
+            "position": {
+                "x": 17.335132976407778,
+                "y": 49.837977022189094
+            },
+            "className": "light",
+            "type": "table",
+            "width": 252,
+            "height": 161,
+            "selected": false,
+            "positionAbsolute": {
+                "x": 17.335132976407778,
+                "y": 49.837977022189094
+            },
+            "dragging": false
+        },
+        {
+            "id": "table_3c74ab6b-78de-460c-849b-be86c1bddb67",
+            "data": {
+                "name": "genre",
+                "backgroundColor": "#cdc9a0",
+                "columns": [
+                    {
+                        "id": "table_3c74ab6b-78de-460c-849b-be86c1bddb67col_ec18391f-dc53-4531-b66a-fd8174fda116",
+                        "name": "id",
+                        "type": "SERIAL",
+                        "unique": false,
+                        "notNull": true
+                    },
+                    {
+                        "id": "table_3c74ab6b-78de-460c-849b-be86c1bddb67/col_df5e6e2b-2960-4bca-a00d-8cc5caa479fd",
+                        "name": "name",
+                        "type": "VARCHAR(120)",
+                        "unique": true,
+                        "notNull": true
+                    }
+                ]
+            },
+            "position": {
+                "x": 11.721035023263397,
+                "y": 333.4182897291115
+            },
+            "className": "light",
+            "type": "table",
+            "width": 252,
+            "height": 77,
+            "selected": false,
+            "positionAbsolute": {
+                "x": 11.721035023263397,
+                "y": 333.4182897291115
+            },
+            "dragging": false
+        },
+        {
+            "id": "table_3e17347e-91de-44e0-a8d1-10c1bbec0306",
+            "data": {
+                "name": "customer",
+                "backgroundColor": "#eeb5ae",
+                "columns": [
+                    {
+                        "id": "table_3e17347e-91de-44e0-a8d1-10c1bbec0306col_eca834bf-0be5-47e0-af57-6e3da9c1e477",
+                        "name": "id",
+                        "type": "SERIAL",
+                        "unique": false,
+                        "notNull": true
+                    },
+                    {
+                        "id": "table_3e17347e-91de-44e0-a8d1-10c1bbec0306/col_04e9bddd-bedf-40dd-a9ab-8effe991bb3a",
+                        "name": "first_name",
+                        "type": "VARCHAR(50)",
+                        "unique": false,
+                        "notNull": true
+                    },
+                    {
+                        "id": "table_3e17347e-91de-44e0-a8d1-10c1bbec0306/col_891323b3-977d-4e6a-9a4c-ee1ec9d9fe61",
+                        "name": "last_name",
+                        "type": "VARCHAR(50)",
+                        "unique": false,
+                        "notNull": true
+                    },
+                    {
+                        "id": "table_3e17347e-91de-44e0-a8d1-10c1bbec0306/col_cc77d2da-3ce6-400b-8ba8-f81faca59a88",
+                        "name": "company",
+                        "type": "VARCHAR(200)",
+                        "unique": false,
+                        "notNull": false
+                    },
+                    {
+                        "id": "table_3e17347e-91de-44e0-a8d1-10c1bbec0306/col_06dbfa41-3acc-470e-839b-8a0d668b5fa3",
+                        "name": "address",
+                        "type": "VARCHAR(200)",
+                        "unique": false,
+                        "notNull": false
+                    },
+                    {
+                        "id": "table_3e17347e-91de-44e0-a8d1-10c1bbec0306/col_e666f97e-3994-4344-bc4f-26363455e12c",
+                        "name": "city",
+                        "type": "VARCHAR(100)",
+                        "unique": false,
+                        "notNull": false
+                    },
+                    {
+                        "id": "table_3e17347e-91de-44e0-a8d1-10c1bbec0306/col_3c37c9f0-9042-4ba2-9de6-a2d30c7b7cfb",
+                        "name": "state",
+                        "type": "VARCHAR(100)",
+                        "unique": false,
+                        "notNull": false
+                    },
+                    {
+                        "id": "table_3e17347e-91de-44e0-a8d1-10c1bbec0306/col_14b4e790-3822-4baf-b71b-c7b8b89dc946",
+                        "name": "country",
+                        "type": "VARCHAR(6)",
+                        "unique": false,
+                        "notNull": false
+                    },
+                    {
+                        "id": "table_3e17347e-91de-44e0-a8d1-10c1bbec0306/col_bd69f29d-ad6e-4591-8a65-11086756a529",
+                        "name": "postal_code",
+                        "type": "VARCHAR(10)",
+                        "unique": false,
+                        "notNull": false
+                    },
+                    {
+                        "id": "table_3e17347e-91de-44e0-a8d1-10c1bbec0306/col_354e8bee-1c66-4fd0-a395-1dec86d6068e",
+                        "name": "phone",
+                        "type": "VARCHAR(30)",
+                        "unique": false,
+                        "notNull": false
+                    },
+                    {
+                        "id": "table_3e17347e-91de-44e0-a8d1-10c1bbec0306/col_def567fe-3035-4ec1-98a7-7636fa4382c8",
+                        "name": "email",
+                        "type": "VARCHAR(200)",
+                        "unique": false,
+                        "notNull": true
+                    },
+                    {
+                        "id": "table_3e17347e-91de-44e0-a8d1-10c1bbec0306/col_6ad57576-36d2-45df-ae09-8b949ea2362c",
+                        "name": "support_rep_id",
+                        "type": "VARCHAR",
+                        "unique": false,
+                        "notNull": false
+                    }
+                ]
+            },
+            "position": {
+                "x": 327.51843659792394,
+                "y": 247.4146579701038
+            },
+            "className": "light",
+            "type": "table",
+            "width": 252,
+            "height": 357,
+            "selected": false,
+            "positionAbsolute": {
+                "x": 327.51843659792394,
+                "y": 247.4146579701038
+            },
+            "dragging": false
+        },
+        {
+            "id": "table_232da585-3088-46f0-a2c0-9a0b59c39257",
+            "data": {
+                "name": "employee",
+                "backgroundColor": "#9edbb9",
+                "columns": [
+                    {
+                        "id": "table_232da585-3088-46f0-a2c0-9a0b59c39257col_1a5df97d-d756-487d-a467-534ab1c368f2",
+                        "name": "id",
+                        "type": "SERIAL",
+                        "unique": false,
+                        "notNull": true
+                    },
+                    {
+                        "id": "table_232da585-3088-46f0-a2c0-9a0b59c39257/col_6b1a27d0-8205-4898-9d16-0ff1270fc2ee",
+                        "name": "first_name",
+                        "type": "VARCHAR(20)",
+                        "unique": false,
+                        "notNull": true
+                    },
+                    {
+                        "id": "table_232da585-3088-46f0-a2c0-9a0b59c39257/col_77a7b1b8-6a2b-458d-afa9-c675f38adff9",
+                        "name": "last_name",
+                        "type": "VARCHAR(20)",
+                        "unique": false,
+                        "notNull": true
+                    },
+                    {
+                        "id": "table_232da585-3088-46f0-a2c0-9a0b59c39257/col_724a8073-56a9-4442-b2e5-96765c0bd994",
+                        "name": "title",
+                        "type": "VARCHAR(30)",
+                        "unique": false,
+                        "notNull": true
+                    },
+                    {
+                        "id": "table_232da585-3088-46f0-a2c0-9a0b59c39257/col_b24086b8-ca8f-48fb-b74b-7492d0fe0db6",
+                        "name": "reports_to",
+                        "type": "INTEGER",
+                        "unique": false,
+                        "notNull": true
+                    },
+                    {
+                        "id": "table_232da585-3088-46f0-a2c0-9a0b59c39257/col_1a325212-3a7a-41d5-a0f7-ecf008e6aec8",
+                        "name": "birth_date",
+                        "type": "DATE",
+                        "unique": false,
+                        "notNull": true
+                    },
+                    {
+                        "id": "table_232da585-3088-46f0-a2c0-9a0b59c39257/col_ede24fa3-97dc-405d-a93b-4c7df8dd9e58",
+                        "name": "hire_date",
+                        "type": "TIMESTAMP",
+                        "unique": false,
+                        "notNull": true
+                    },
+                    {
+                        "id": "table_232da585-3088-46f0-a2c0-9a0b59c39257/col_c8d918c0-1ea2-4ba0-99de-d02c032ecb39",
+                        "name": "address",
+                        "type": "VARCHAR(70)",
+                        "unique": false,
+                        "notNull": true
+                    },
+                    {
+                        "id": "table_232da585-3088-46f0-a2c0-9a0b59c39257/col_81050df4-88a8-4736-af71-6c28178f77e7",
+                        "name": "city",
+                        "type": "VARCHAR(100)",
+                        "unique": false,
+                        "notNull": true
+                    },
+                    {
+                        "id": "table_232da585-3088-46f0-a2c0-9a0b59c39257/col_fca05d89-a8ab-486f-9d60-82447a05baad",
+                        "name": "state",
+                        "type": "VARCHAR(100)",
+                        "unique": false,
+                        "notNull": false
+                    },
+                    {
+                        "id": "table_232da585-3088-46f0-a2c0-9a0b59c39257/col_02de70dd-d8a6-40c6-982d-cadf473d0ceb",
+                        "name": "country",
+                        "type": "VARCHAR(6)",
+                        "unique": false,
+                        "notNull": true
+                    },
+                    {
+                        "id": "table_232da585-3088-46f0-a2c0-9a0b59c39257/col_fab8cfed-9812-4a9b-ba96-b110e2a562eb",
+                        "name": "postal_code",
+                        "type": "VARCHAR(10)",
+                        "unique": false,
+                        "notNull": true
+                    },
+                    {
+                        "id": "table_232da585-3088-46f0-a2c0-9a0b59c39257/col_84c9f2e3-a87d-4e93-b5d8-7ea51dba522e",
+                        "name": "phone",
+                        "type": "VARCHAR(24)",
+                        "unique": false,
+                        "notNull": true
+                    },
+                    {
+                        "id": "table_232da585-3088-46f0-a2c0-9a0b59c39257/col_39a5188c-94aa-42d6-bd3a-17ae2b9a7b74",
+                        "name": "email",
+                        "type": "VARCHAR",
+                        "unique": true,
+                        "notNull": true
+                    }
+                ]
+            },
+            "position": {
+                "x": 623.9235802286215,
+                "y": 115.942006075589
+            },
+            "className": "light",
+            "type": "table",
+            "width": 252,
+            "height": 413,
+            "selected": false,
+            "positionAbsolute": {
+                "x": 623.9235802286215,
+                "y": 115.942006075589
+            },
+            "dragging": false
         }
     ],
     "edges": [
         {
-            "source": "table_1/col_1",
-            "sourceHandle": "left",
-            "target": "table_2/col_1",
-            "targetHandle": "left",
+            "source": "table_1",
+            "sourceHandle": "R:table_1/col_4ef3c87d-0519-46ed-acc4-5ebb02abe24f",
+            "target": "table_ac8da0b1-4efc-40c8-809e-7adb2600c825",
+            "targetHandle": "L:table_ac8da0b1-4efc-40c8-809e-7adb2600c825col_d1bb6cb7-516d-4b53-805a-6edcfb129011",
+            "id": "6f4aa59f-c28b-4d65-a91a-256d7549d580",
             "type": "floating",
             "markerEnd": {
                 "type": "arrow"
             },
             "data": {
-                "label": "relation",
+                "sourceHandle": "R:table_1/col_4ef3c87d-0519-46ed-acc4-5ebb02abe24f",
+                "targetHandle": "L:table_ac8da0b1-4efc-40c8-809e-7adb2600c825col_d1bb6cb7-516d-4b53-805a-6edcfb129011",
                 "compositeGroup": null,
                 "color": "",
                 "onDelete": null,
                 "onUpdate": null
-            },
-            "id": "reactflow__edge-table_1/col_1left-table_2/col_1left"
+            }
         },
         {
-            "source": "table_3/col_f3355193-6107-4021-a0cf-dca35de97f5b",
-            "sourceHandle": "right",
-            "target": "table_4/col_1",
-            "targetHandle": "left",
+            "source": "table_03d35110-d32d-488a-b468-3d5b73ccd838",
+            "sourceHandle": "L:table_03d35110-d32d-488a-b468-3d5b73ccd838/col_0c643597-8eb8-4ea8-81cd-24e47dc94539",
+            "target": "table_1",
+            "targetHandle": "L:table_1/col_1",
+            "id": "a62b7e5e-574d-411e-b0b7-089720d11381",
             "type": "floating",
             "markerEnd": {
                 "type": "arrow"
             },
             "data": {
-                "label": "relation",
+                "sourceHandle": "L:table_03d35110-d32d-488a-b468-3d5b73ccd838/col_0c643597-8eb8-4ea8-81cd-24e47dc94539",
+                "targetHandle": "L:table_1/col_1",
                 "compositeGroup": null,
                 "color": "",
                 "onDelete": null,
                 "onUpdate": null
-            },
-            "id": "reactflow__edge-table_3/col_f3355193-6107-4021-a0cf-dca35de97f5bright-table_4/col_1left"
+            }
         },
         {
-            "source": "table_6/col_4c7af6a7-fadd-4fe0-95c1-cff65223bb2f",
-            "sourceHandle": "right",
-            "target": "table_3/col_1",
-            "targetHandle": "left",
+            "source": "table_4861352e-1814-420b-ac5e-c9e01983b2e3",
+            "sourceHandle": "L:table_4861352e-1814-420b-ac5e-c9e01983b2e3/col_839176fd-542a-4c82-acea-001342fa54bd",
+            "target": "table_03d35110-d32d-488a-b468-3d5b73ccd838",
+            "targetHandle": "L:table_03d35110-d32d-488a-b468-3d5b73ccd838col_7e0406f0-a286-474a-bf75-addba5fa8321",
+            "id": "a634bd2b-3ca8-49b5-9264-7b738f6cceba",
             "type": "floating",
             "markerEnd": {
                 "type": "arrow"
             },
             "data": {
-                "label": "relation",
+                "sourceHandle": "L:table_4861352e-1814-420b-ac5e-c9e01983b2e3/col_839176fd-542a-4c82-acea-001342fa54bd",
+                "targetHandle": "L:table_03d35110-d32d-488a-b468-3d5b73ccd838col_7e0406f0-a286-474a-bf75-addba5fa8321",
                 "compositeGroup": null,
                 "color": "",
                 "onDelete": null,
                 "onUpdate": null
-            },
-            "id": "reactflow__edge-table_6/col_4c7af6a7-fadd-4fe0-95c1-cff65223bb2fright-table_3/col_1left"
+            }
         },
         {
-            "source": "table_7/col_5713bd1e-08d1-4f65-a4c9-12061c74147a",
-            "sourceHandle": "right",
-            "target": "table_6/col_1",
-            "targetHandle": "left",
+            "source": "table_000faafb-439c-45b2-bfb7-1bf105273f6f",
+            "sourceHandle": "L:table_000faafb-439c-45b2-bfb7-1bf105273f6f/col_21e9b784-2f59-4929-abe8-bbcb8205a88f",
+            "target": "table_03d35110-d32d-488a-b468-3d5b73ccd838",
+            "targetHandle": "R:table_03d35110-d32d-488a-b468-3d5b73ccd838col_7e0406f0-a286-474a-bf75-addba5fa8321",
+            "id": "d3cc85ea-9452-4b42-8b72-06fb0488a8a7",
             "type": "floating",
             "markerEnd": {
                 "type": "arrow"
             },
             "data": {
-                "label": "relation",
+                "sourceHandle": "L:table_000faafb-439c-45b2-bfb7-1bf105273f6f/col_21e9b784-2f59-4929-abe8-bbcb8205a88f",
+                "targetHandle": "R:table_03d35110-d32d-488a-b468-3d5b73ccd838col_7e0406f0-a286-474a-bf75-addba5fa8321",
                 "compositeGroup": null,
                 "color": "",
                 "onDelete": null,
                 "onUpdate": null
-            },
-            "id": "reactflow__edge-table_7/col_5713bd1e-08d1-4f65-a4c9-12061c74147aright-table_6/col_1left"
+            }
         },
         {
-            "source": "table_7/col_f9d30e52-70cc-4ae8-bb0e-a6b69b5dacd1",
-            "sourceHandle": "right",
-            "target": "table_10/col_1",
-            "targetHandle": "right",
+            "source": "table_000faafb-439c-45b2-bfb7-1bf105273f6f",
+            "sourceHandle": "R:table_000faafb-439c-45b2-bfb7-1bf105273f6f/col_24b53039-8942-4804-8e95-5a5c9d6cbbd5",
+            "target": "table_437412c3-9386-4e2a-968e-599dbbb2ed34",
+            "targetHandle": "L:table_437412c3-9386-4e2a-968e-599dbbb2ed34col_c53135df-68c4-47c8-9b42-d3a9f5d70ad7",
+            "id": "e27580e9-7a72-437c-960b-340e7547d426",
             "type": "floating",
             "markerEnd": {
                 "type": "arrow"
             },
             "data": {
-                "label": "relation",
+                "sourceHandle": "R:table_000faafb-439c-45b2-bfb7-1bf105273f6f/col_24b53039-8942-4804-8e95-5a5c9d6cbbd5",
+                "targetHandle": "L:table_437412c3-9386-4e2a-968e-599dbbb2ed34col_c53135df-68c4-47c8-9b42-d3a9f5d70ad7",
                 "compositeGroup": null,
                 "color": "",
                 "onDelete": null,
                 "onUpdate": null
-            },
-            "id": "reactflow__edge-table_7/col_f9d30e52-70cc-4ae8-bb0e-a6b69b5dacd1right-table_10/col_1right"
+            }
         },
         {
-            "source": "table_11/col_1",
-            "sourceHandle": "left",
-            "target": "table_9/col_1",
-            "targetHandle": "right",
+            "source": "table_03d35110-d32d-488a-b468-3d5b73ccd838",
+            "sourceHandle": "R:table_03d35110-d32d-488a-b468-3d5b73ccd838/col_0e222e01-54f3-48d9-b10d-5f69cd2d4995",
+            "target": "table_db41a59f-214a-478b-89ac-894731093fae",
+            "targetHandle": "L:table_db41a59f-214a-478b-89ac-894731093faecol_4b193ede-4d6f-40c1-b221-17f1b34efb09",
+            "id": "f2e8f379-0cf8-43f5-8274-58bff17a17ef",
             "type": "floating",
             "markerEnd": {
                 "type": "arrow"
             },
             "data": {
-                "label": "relation",
+                "sourceHandle": "R:table_03d35110-d32d-488a-b468-3d5b73ccd838/col_0e222e01-54f3-48d9-b10d-5f69cd2d4995",
+                "targetHandle": "L:table_db41a59f-214a-478b-89ac-894731093faecol_4b193ede-4d6f-40c1-b221-17f1b34efb09",
                 "compositeGroup": null,
                 "color": "",
                 "onDelete": null,
                 "onUpdate": null
-            },
-            "id": "reactflow__edge-table_11/col_1left-table_9/col_1right"
+            }
         },
         {
-            "source": "table_11/col_f881bcf6-3a99-4fbd-8287-8adcd768f5b2",
-            "sourceHandle": "left",
-            "target": "table_10/col_1",
-            "targetHandle": "right",
+            "source": "table_03d35110-d32d-488a-b468-3d5b73ccd838",
+            "sourceHandle": "R:table_03d35110-d32d-488a-b468-3d5b73ccd838/col_1e885204-924c-4b6f-a14b-e0ab79f2bebc",
+            "target": "table_3c74ab6b-78de-460c-849b-be86c1bddb67",
+            "targetHandle": "L:table_3c74ab6b-78de-460c-849b-be86c1bddb67col_ec18391f-dc53-4531-b66a-fd8174fda116",
+            "id": "84c09d70-cc38-4394-a592-bc5cafd07970",
             "type": "floating",
             "markerEnd": {
                 "type": "arrow"
             },
             "data": {
-                "label": "relation",
+                "sourceHandle": "R:table_03d35110-d32d-488a-b468-3d5b73ccd838/col_1e885204-924c-4b6f-a14b-e0ab79f2bebc",
+                "targetHandle": "L:table_3c74ab6b-78de-460c-849b-be86c1bddb67col_ec18391f-dc53-4531-b66a-fd8174fda116",
                 "compositeGroup": null,
                 "color": "",
                 "onDelete": null,
                 "onUpdate": null
-            },
-            "id": "reactflow__edge-table_11/col_f881bcf6-3a99-4fbd-8287-8adcd768f5b2left-table_10/col_1right"
+            }
         },
         {
-            "source": "table_10/col_9c7e7927-5429-425c-b1fe-ae8ecc782549",
-            "sourceHandle": "right",
-            "target": "table_1/col_1",
-            "targetHandle": "left",
+            "source": "table_4861352e-1814-420b-ac5e-c9e01983b2e3",
+            "sourceHandle": "R:table_4861352e-1814-420b-ac5e-c9e01983b2e3col_5ff22bba-52cd-4508-97ba-91a2e7e9dcc3",
+            "target": "table_d99ced83-f49d-4cda-b176-fec31c89d831",
+            "targetHandle": "L:table_d99ced83-f49d-4cda-b176-fec31c89d831col_0927bb24-6f01-4d8d-9deb-0df0c6f822a5",
+            "id": "e0295138-261f-4afe-a03c-9b1505f65469",
             "type": "floating",
             "markerEnd": {
                 "type": "arrow"
             },
             "data": {
-                "label": "relation",
+                "sourceHandle": "R:table_4861352e-1814-420b-ac5e-c9e01983b2e3col_5ff22bba-52cd-4508-97ba-91a2e7e9dcc3",
+                "targetHandle": "L:table_d99ced83-f49d-4cda-b176-fec31c89d831col_0927bb24-6f01-4d8d-9deb-0df0c6f822a5",
                 "compositeGroup": null,
                 "color": "",
                 "onDelete": null,
                 "onUpdate": null
-            },
-            "id": "reactflow__edge-table_10/col_9c7e7927-5429-425c-b1fe-ae8ecc782549right-table_1/col_1left"
+            }
         },
         {
-            "source": "table_10/col_0670a223-9068-42fa-8139-aafdd71f42fd",
-            "sourceHandle": "right",
-            "target": "table_5/col_1",
-            "targetHandle": "left",
+            "source": "table_437412c3-9386-4e2a-968e-599dbbb2ed34",
+            "sourceHandle": "L:table_437412c3-9386-4e2a-968e-599dbbb2ed34/col_31f67d3d-740e-4853-aa3b-9c9ddcf5e816",
+            "target": "table_3e17347e-91de-44e0-a8d1-10c1bbec0306",
+            "targetHandle": "L:table_3e17347e-91de-44e0-a8d1-10c1bbec0306col_eca834bf-0be5-47e0-af57-6e3da9c1e477",
+            "id": "6d8efd03-5d50-4751-8c87-4ce903c3c274",
             "type": "floating",
             "markerEnd": {
                 "type": "arrow"
             },
             "data": {
-                "label": "relation",
+                "sourceHandle": "L:table_437412c3-9386-4e2a-968e-599dbbb2ed34/col_31f67d3d-740e-4853-aa3b-9c9ddcf5e816",
+                "targetHandle": "L:table_3e17347e-91de-44e0-a8d1-10c1bbec0306col_eca834bf-0be5-47e0-af57-6e3da9c1e477",
                 "compositeGroup": null,
                 "color": "",
                 "onDelete": null,
                 "onUpdate": null
-            },
-            "id": "reactflow__edge-table_10/col_0670a223-9068-42fa-8139-aafdd71f42fdright-table_5/col_1left"
+            }
         },
         {
-            "source": "table_10/col_d7a1dc6f-f1c5-4f07-87b4-710ea96b8929",
-            "sourceHandle": "right",
-            "target": "table_8/col_1",
-            "targetHandle": "left",
+            "source": "table_3e17347e-91de-44e0-a8d1-10c1bbec0306",
+            "sourceHandle": "R:table_3e17347e-91de-44e0-a8d1-10c1bbec0306/col_6ad57576-36d2-45df-ae09-8b949ea2362c",
+            "target": "table_232da585-3088-46f0-a2c0-9a0b59c39257",
+            "targetHandle": "L:table_232da585-3088-46f0-a2c0-9a0b59c39257col_1a5df97d-d756-487d-a467-534ab1c368f2",
+            "id": "141cf5c5-f05f-418d-9917-775b3137c2c5",
             "type": "floating",
             "markerEnd": {
                 "type": "arrow"
             },
             "data": {
-                "label": "relation",
+                "sourceHandle": "R:table_3e17347e-91de-44e0-a8d1-10c1bbec0306/col_6ad57576-36d2-45df-ae09-8b949ea2362c",
+                "targetHandle": "L:table_232da585-3088-46f0-a2c0-9a0b59c39257col_1a5df97d-d756-487d-a467-534ab1c368f2",
                 "compositeGroup": null,
                 "color": "",
                 "onDelete": null,
                 "onUpdate": null
-            },
-            "id": "reactflow__edge-table_10/col_d7a1dc6f-f1c5-4f07-87b4-710ea96b8929right-table_8/col_1left"
+            }
         }
     ],
     "primaryKey": {
@@ -1740,130 +893,128 @@
                 "table_1/col_1"
             ]
         },
-        "table_2": {
+        "table_ac8da0b1-4efc-40c8-809e-7adb2600c825": {
             "cols": [
-                "table_2/col_1"
+                "table_ac8da0b1-4efc-40c8-809e-7adb2600c825col_d1bb6cb7-516d-4b53-805a-6edcfb129011"
             ]
         },
-        "table_3": {
+        "table_4861352e-1814-420b-ac5e-c9e01983b2e3": {
             "cols": [
-                "table_3/col_1"
+                "table_4861352e-1814-420b-ac5e-c9e01983b2e3col_5ff22bba-52cd-4508-97ba-91a2e7e9dcc3",
+                "table_4861352e-1814-420b-ac5e-c9e01983b2e3/col_839176fd-542a-4c82-acea-001342fa54bd"
             ]
         },
-        "table_4": {
+        "table_232da585-3088-46f0-a2c0-9a0b59c39257": {
             "cols": [
-                "table_4/col_1"
+                "table_232da585-3088-46f0-a2c0-9a0b59c39257col_1a5df97d-d756-487d-a467-534ab1c368f2"
             ]
         },
-        "table_5": {
+        "table_db41a59f-214a-478b-89ac-894731093fae": {
             "cols": [
-                "table_5/col_1"
+                "table_db41a59f-214a-478b-89ac-894731093faecol_4b193ede-4d6f-40c1-b221-17f1b34efb09"
             ]
         },
-        "table_6": {
+        "table_3c74ab6b-78de-460c-849b-be86c1bddb67": {
             "cols": [
-                "table_6/col_1"
+                "table_3c74ab6b-78de-460c-849b-be86c1bddb67col_ec18391f-dc53-4531-b66a-fd8174fda116"
             ]
         },
-        "table_7": {
+        "table_000faafb-439c-45b2-bfb7-1bf105273f6f": {
             "cols": [
-                "table_7/col_1"
+                "table_000faafb-439c-45b2-bfb7-1bf105273f6fcol_625afd2a-4e94-4031-8e8f-62c3e54679c8"
             ]
         },
-        "table_8": {
+        "table_d99ced83-f49d-4cda-b176-fec31c89d831": {
             "cols": [
-                "table_8/col_1"
+                "table_d99ced83-f49d-4cda-b176-fec31c89d831col_0927bb24-6f01-4d8d-9deb-0df0c6f822a5"
             ]
         },
-        "table_9": {
+        "table_03d35110-d32d-488a-b468-3d5b73ccd838": {
             "cols": [
-                "table_9/col_1"
+                "table_03d35110-d32d-488a-b468-3d5b73ccd838col_7e0406f0-a286-474a-bf75-addba5fa8321"
             ]
         },
-        "table_10": {
+        "table_437412c3-9386-4e2a-968e-599dbbb2ed34": {
             "cols": [
-                "table_10/col_1"
+                "table_437412c3-9386-4e2a-968e-599dbbb2ed34col_c53135df-68c4-47c8-9b42-d3a9f5d70ad7"
             ]
         },
-        "table_11": {
+        "table_3e17347e-91de-44e0-a8d1-10c1bbec0306": {
             "cols": [
-                "table_11/col_1",
-                "table_11/col_f881bcf6-3a99-4fbd-8287-8adcd768f5b2"
+                "table_3e17347e-91de-44e0-a8d1-10c1bbec0306col_eca834bf-0be5-47e0-af57-6e3da9c1e477"
             ]
         }
     },
     "uniqueKeys": {},
     "indexes": {
-        "table_10": [
+        "0": {
+            "cols": [
+                "table_3e17347e-91de-44e0-a8d1-10c1bbec0306/col_04e9bddd-bedf-40dd-a9ab-8effe991bb3a"
+            ],
+            "unique": false
+        },
+        "1": {
+            "cols": [
+                "table_3e17347e-91de-44e0-a8d1-10c1bbec0306/col_891323b3-977d-4e6a-9a4c-ee1ec9d9fe61"
+            ],
+            "unique": false
+        },
+        "2": {
+            "cols": [
+                "table_3e17347e-91de-44e0-a8d1-10c1bbec0306/col_354e8bee-1c66-4fd0-a395-1dec86d6068e"
+            ],
+            "unique": false
+        },
+        "table_3e17347e-91de-44e0-a8d1-10c1bbec0306": [
             {
                 "cols": [
-                    "table_10/col_d7a1dc6f-f1c5-4f07-87b4-710ea96b8929"
+                    "table_3e17347e-91de-44e0-a8d1-10c1bbec0306/col_04e9bddd-bedf-40dd-a9ab-8effe991bb3a"
                 ],
                 "unique": false
             },
             {
                 "cols": [
-                    "table_10/col_0670a223-9068-42fa-8139-aafdd71f42fd"
+                    "table_3e17347e-91de-44e0-a8d1-10c1bbec0306/col_891323b3-977d-4e6a-9a4c-ee1ec9d9fe61"
                 ],
                 "unique": false
             },
             {
                 "cols": [
-                    "table_10/col_9c7e7927-5429-425c-b1fe-ae8ecc782549"
+                    "table_3e17347e-91de-44e0-a8d1-10c1bbec0306/col_def567fe-3035-4ec1-98a7-7636fa4382c8"
                 ],
                 "unique": false
             }
         ],
-        "table_11": [
+        "table_232da585-3088-46f0-a2c0-9a0b59c39257": [
             {
                 "cols": [
-                    "table_11/col_f881bcf6-3a99-4fbd-8287-8adcd768f5b2"
-                ],
-                "unique": false
-            }
-        ],
-        "table_7": [
-            {
-                "cols": [
-                    "table_7/col_f9d30e52-70cc-4ae8-bb0e-a6b69b5dacd1"
+                    "table_232da585-3088-46f0-a2c0-9a0b59c39257/col_6b1a27d0-8205-4898-9d16-0ff1270fc2ee"
                 ],
                 "unique": false
             },
             {
                 "cols": [
-                    "table_7/col_5713bd1e-08d1-4f65-a4c9-12061c74147a"
+                    "table_232da585-3088-46f0-a2c0-9a0b59c39257/col_77a7b1b8-6a2b-458d-afa9-c675f38adff9"
+                ],
+                "unique": false
+            },
+            {
+                "cols": [
+                    "table_232da585-3088-46f0-a2c0-9a0b59c39257/col_724a8073-56a9-4442-b2e5-96765c0bd994"
+                ],
+                "unique": false
+            },
+            {
+                "cols": [
+                    "table_232da585-3088-46f0-a2c0-9a0b59c39257/col_39a5188c-94aa-42d6-bd3a-17ae2b9a7b74"
                 ],
                 "unique": false
             }
         ],
-        "table_6": [
+        "table_3c74ab6b-78de-460c-849b-be86c1bddb67": [
             {
                 "cols": [
-                    "table_6/col_4c7af6a7-fadd-4fe0-95c1-cff65223bb2f"
-                ],
-                "unique": false
-            }
-        ],
-        "table_4": [
-            {
-                "cols": [
-                    "table_4/col_24bef63a-a628-43fc-934f-1a74ee84bbe3"
-                ],
-                "unique": false
-            }
-        ],
-        "table_3": [
-            {
-                "cols": [
-                    "table_3/col_f3355193-6107-4021-a0cf-dca35de97f5b"
-                ],
-                "unique": false
-            }
-        ],
-        "table_1": [
-            {
-                "cols": [
-                    "table_1/col_fb2cc40f-fa59-4e22-abde-bd40c54d7a61"
+                    "table_3c74ab6b-78de-460c-849b-be86c1bddb67/col_df5e6e2b-2960-4bca-a00d-8cc5caa479fd"
                 ],
                 "unique": false
             }
