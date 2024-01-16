@@ -1,8 +1,8 @@
 import { v4 } from "uuid";
-import { indexes$, localStorageCopy$, primaryKey$, selectedTable$, state, uniqueKeys$ } from "../../state/globalState";
+import { indexes$, primaryKey$, selectedTable$, state, uniqueKeys$ } from "../../state/globalState";
 import { TableOptions } from "./TableOptions";
-import { DragEvent, memo, useState } from "react";
-import { generateCssClass, getGoodContrastColor } from "../../utils/styling";
+import { DragEvent, memo } from "react";
+import { generateCssClass } from "../../utils/styling";
 import { Icon } from "../Icon";
 import Autocomplete from "../Autocomplete";
 import { POSTGRES_TYPES } from "../../utils/sql";
@@ -10,10 +10,6 @@ import { Node } from "reactflow";
 import { ColumnData, TableData } from "../../types/types";
 import { getProperty } from "../utils";
 import { TableName } from "./TableName";
-
-type TableSectionProps = {
-    table: Node<TableData>
-}
 
 const toggleConstraint = (tableId: string, column: any, type: "primary_key" | "unique" | "none") => {
     const nodesCopy = [...state.nodes$];
@@ -159,23 +155,6 @@ const changeColumnName = (table: Node<TableData>, c: ColumnData, value: string) 
     state.nodes$ = cp;
 }
 
-const changeTableColor = (table: Node, val: string) => {
-    const value = val;
-    let nCopies = [...state.nodes$];
-    const curr = nCopies.findIndex(x => x.id === table.id);
-    nCopies[curr].data.backgroundColor = value;
-    state.nodes$ = [...nCopies];
-}
-
-const changeTableName = (table: Node, val: string) => {
-    const value = val;
-    let nCopies = [...state.nodes$];
-    const curr = nCopies.findIndex(x => x.id === table.id);
-    // TODO: prevent renaming to existing table name
-    nCopies[curr].data.name = value;
-    state.nodes$ = [...nCopies];
-}
-
 const handleDrop = async (e: DragEvent, tableId: string, columnIndex: number) => {
 
     e.preventDefault();
@@ -196,7 +175,6 @@ const handleDrop = async (e: DragEvent, tableId: string, columnIndex: number) =>
 };
 
 export const TableSection = memo(() => {
-    const [editing, setEditing] = useState(false);
 
     return (
         <ul className="tables-nav" >

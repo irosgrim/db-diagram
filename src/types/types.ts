@@ -1,4 +1,4 @@
-import {Edge} from "reactflow";
+import {Edge, Node} from "reactflow";
 import { PostgresType } from "../utils/sql";
 
 export type ColumnData = {
@@ -25,3 +25,4 @@ export type RelationEdgeData = {
 }
 
 export type RelationEdge = Edge<RelationEdgeData>;
+export type TableNode = Node<TableData>;

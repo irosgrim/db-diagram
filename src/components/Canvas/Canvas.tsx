@@ -6,7 +6,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { RelationEdgeData, TableData } from "../../types/types";
 import { v4 } from "uuid";
 import { ContextMenu } from "../ContextMenu/Contextmenu";
-import { cloneNodesOnDrag, copyNodes, pasteNodes, selectedNodes$ } from "../../state/copyPaste";
+import { cloneNodesOnDrag, copyNodes, cutNodes, pasteNodes, selectedEdges$, selectedNodes$ } from "../../state/copyPaste";
 
 
 const fitViewOptions = { padding: 4 };
@@ -18,10 +18,6 @@ const edgeTypes: Record<string, (args: any) => JSX.Element | null> = {
 };
 
 const initialEdges: Edge<any>[] = [];
-
-export const deleteColumn = (column: any) => {
-
-}
 
 export const deleteNodes = (nodesToDelete: Node[]) => {
     let nodesCopy = [...state.nodes$];
@@ -40,11 +36,23 @@ export const deleteNodes = (nodesToDelete: Node[]) => {
 };
 
 
-const onNodeClick = (e: any, node: Node) => {
+const onNodeClick = (_: any, node: Node) => {
     if (node) {
         selectedTable$.value = node;
     }
 };
+
+
+export const onNodeDragStart = (e: any, node: Node<TableData>, nodes: Node<TableData>[]) => {
+    if (e.altKey) {
+        cloneNodesOnDrag(nodes)
+
+    } else {
+        selectedTable$.value = node;
+    }
+};
+
+
 
 export const Canvas = () => {
     const [, , onEdgesChange] = useEdgesState<Edge<RelationEdgeData>[]>(initialEdges);
@@ -105,22 +113,15 @@ export const Canvas = () => {
         state.edges$ = edgesCopy;
     };
 
-    const onNodeDragStart = (e: any, node: Node<TableData>, nodes: Node<TableData>[]) => {
-        if (e.altKey) {
-            cloneNodesOnDrag(nodes)
-
-        } else {
-            selectedTable$.value = node;
-        }
-    };
-
-
     useEffect(() => {
         const handleKeyDown = (event: any) => {
             if (event.ctrlKey || event.metaKey) {
-                switch (event.key) {
+                switch (event.key.toLowerCase()) {
                     case 'c':
-                        copyNodes(selectedNodes$.value);
+                        copyNodes(selectedNodes$.value, selectedEdges$.value);
+                        break;
+                    case "x":
+                        cutNodes(selectedNodes$.value, selectedEdges$.value);
                         break;
                     case 'v':
                         pasteNodes();
@@ -138,9 +139,27 @@ export const Canvas = () => {
         };
     }, [selectedNodes$.value]);
 
+    useEffect(() => {
+        const handleKeyDown = (event: any) => {
+            if ((event.ctrlKey || event.metaKey) && event.key === 'a') {
+                event.preventDefault();
+
+                const updatedNodes = state.nodes$.map(node => ({ ...node, selected: true }));
+                state.nodes$ = updatedNodes;
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    });
+
     return (<Flow
         ref={ref}
-        onSelectionChange={(p) => selectedNodes$.value = p.nodes}
+        onSelectionChange={(p) => {
+            selectedNodes$.value = p.nodes;
+            selectedEdges$.value = p.edges;
+        }}
         nodes={state.nodes$}
         edges={state.edges$}
         onNodesChange={onNodesChange}

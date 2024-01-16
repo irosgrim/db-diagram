@@ -1,4 +1,4 @@
-import { Handle, Position, useUpdateNodeInternals } from 'reactflow';
+import { Handle, Position } from 'reactflow';
 import { Icon } from '../../Icon';
 import { primaryKey$ } from '../../../state/globalState';
 
@@ -17,7 +17,7 @@ type ColumnProps = {
 
 
 const Column = ({ tableId, index, data }: ColumnProps) => {
-    const onClick = (e: any) => {
+    const onClick = (_: any) => {
         const colInputEl = document.getElementById("input_" + data.id);
         if (colInputEl) {
             colInputEl.focus();

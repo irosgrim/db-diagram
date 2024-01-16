@@ -5,7 +5,7 @@ import { Node, Edge } from "reactflow";
 import { Icon } from "../Icon";
 import { POSTGRES_TYPES } from "../../utils/sql";
 import Autocomplete from "../Autocomplete";
-import { generateCssClass, randomColor } from "../../utils/styling";
+import { generateCssClass } from "../../utils/styling";
 import { v4 } from "uuid";
 import { ColumnData, TableData } from "../../types/types";
 import { getProperty } from "../utils";
