@@ -16,5 +16,8 @@
     &:hover {
         background: #eaf0f1;
     }
+    &:disabled {
+        opacity: 0.5;
+    }
   }
 }

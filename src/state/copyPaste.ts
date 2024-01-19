@@ -10,7 +10,6 @@ export const selectedEdges$: Signal<RelationEdge[]> = signal([]);
 export const copiedNodes$: Signal<string | null> = signal(null);
 export const copiedEdges$: Signal<string | null> = signal(null);
 
-
 export const nodeClone = (node: Node<TableData>) => {
     const tableId = "table_" + v4();
     const newIds = node.data.columns.map(x => {
@@ -76,19 +75,13 @@ export const pasteNodes = () => {
 };
 
 export const cloneNodesOnDrag = (nodes: Node<TableData>[]) => {
-    const nodesCopy: Node<TableData>[] = JSON.parse(JSON.stringify(state.nodes$));
+    let nodesCopy: Node<TableData>[] = JSON.parse(JSON.stringify(state.nodes$));
 
-    const nodeIds = nodes.map(n => n.id);
     for (let i=0; i < nodes.length; i++) {
         const n = nodes[i];
         const clonedNode = nodeClone(n);
-        nodesCopy.push(clonedNode);
-    }
-    for (const nodeId of nodeIds) {
-        const nodeIndex = nodesCopy.findIndex(x => x.id === nodeId);
-        if (nodeIndex > -1) {
-            nodesCopy[nodeIndex].selected = false;
-        }
+        clonedNode.selected = false;
+        nodesCopy = [clonedNode, ...nodesCopy];
     }
     state.nodes$ = nodesCopy;
     selectedTable$.value = nodesCopy[nodesCopy.length - 1];

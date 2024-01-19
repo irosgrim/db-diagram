@@ -59,23 +59,24 @@ export const Canvas = () => {
 
     const [menu, setMenu] = useState<{ node: Node | null, x: number, y: number } | null>(null);
 
-    const ref = useRef(null);
+    const flowRef = useRef(null);
     const onNodesChange = (changes: NodeChange[]) => {
         state.nodes$ = applyNodeChanges(changes, state.nodes$);
         return state.nodes$;
     }
 
-    const onNodeContextMenu = useCallback(
-        (event: any, node?: Node) => {
-            event.preventDefault();
+    const onContextMenu = (event: any, node?: Node) => {
+        event.preventDefault();
+        if (menu) {
+            setMenu(null);
+        } else {
             setMenu({
                 node: node || null,
                 x: event.clientX,
-                y: event.clientY
+                y: event.clientY,
             });
-        },
-        [setMenu],
-    );
+        }
+    }
 
     const onPaneClick = useCallback(() => setMenu(null), [setMenu]);
 
@@ -155,7 +156,7 @@ export const Canvas = () => {
     });
 
     return (<Flow
-        ref={ref}
+        ref={flowRef}
         onSelectionChange={(p) => {
             selectedNodes$.value = p.nodes;
             selectedEdges$.value = p.edges;
@@ -175,14 +176,11 @@ export const Canvas = () => {
         fitViewOptions={fitViewOptions}
         connectionMode={ConnectionMode.Loose}
         onPaneClick={onPaneClick}
-        onContextMenu={(e) => {
-            e.preventDefault();
-            console.log("context")
-        }}
-        onNodeContextMenu={onNodeContextMenu}
+        onPaneContextMenu={onContextMenu}
+        onNodeContextMenu={onContextMenu}
         style={{ backgroundColor: "rgb(242 242 242)", width: "calc(100% - 300px)!important" }}
     >
         <Controls position="bottom-right" />
-        {menu && <ContextMenu onClick={onPaneClick} {...menu} />}
+        {menu && <ContextMenu onClose={() => setMenu(null)} onClick={onPaneClick} {...menu} />}
     </Flow>)
 }
