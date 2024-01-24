@@ -12,7 +12,7 @@ type AppSidebarProps = {
     onShowHide: () => void;
 }
 
-const newTable = () => {
+export const newTable = () => {
     const allTables = state.nodes$;
     let highestNum = allTables.map(x => {
         const [, n] = x.id.split("_");

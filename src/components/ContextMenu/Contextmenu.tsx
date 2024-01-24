@@ -5,6 +5,7 @@ import "./style/context-menu.scss";
 import { state } from "../../state/globalState";
 import { saveImage } from "../Menu/exportImg";
 import { exportSql } from "../../utils/sql";
+import { newTable } from "../EditTableOptions/AppSidebar";
 
 export const ContextMenu = ({
     node,
@@ -46,7 +47,7 @@ export const ContextMenu = ({
                 </>
                     :
                     <>
-                        <button type="button">New table</button>
+                        <button type="button" onClick={newTable}>New table</button>
                         <button type="button" title="export sql" onClick={() => {
                             exportSql();
                             onClose();
