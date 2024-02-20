@@ -222,7 +222,7 @@ export const TableSection = memo(() => {
                                                         id={`input_${c.id}`}
                                                         className="table-input"
                                                         type="text"
-                                                        maxLength={30}
+                                                        maxLength={128}
                                                         value={c.name}
                                                         onChange={(e) => changeColumnName(table, c, e.target.value)}
                                                         style={{ width: "100px" }}

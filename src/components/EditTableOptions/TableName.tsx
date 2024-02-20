@@ -42,7 +42,7 @@ export const TableName = ({ isActive, table }: TableNameProps) => {
                 style={{ color: isActive(table.id) || editing ? getGoodContrastColor(table.data.backgroundColor) : "initial" }}
                 className="table-name-input"
                 type="text"
-                maxLength={20}
+                maxLength={128}
                 value={table.data.name}
                 onChange={(e) => changeTableName(table, e.target.value)}
                 disabled={!editing}

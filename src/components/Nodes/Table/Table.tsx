@@ -21,6 +21,7 @@ export const Table = ({ id, data }: NodeProps) => {
             <div style={{
                 backgroundColor: data.backgroundColor,
                 color: getGoodContrastColor(data.backgroundColor),
+                padding: "0 1.5rem",
                 borderRadius: "1.5px 1.5px 0 0",
                 display: "flex", justifyContent: "center",
                 borderBottom: "1px solid #ababab"

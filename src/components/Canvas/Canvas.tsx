@@ -8,11 +8,8 @@ import { v4 } from "uuid";
 import { ContextMenu } from "../ContextMenu/Contextmenu";
 import { cloneNodesOnDrag, copyNodes, cutNodes, pasteNodes, selectedEdges$, selectedNodes$ } from "../../state/copyPaste";
 
-
 const fitViewOptions = { padding: 4 };
-
 const nodeTypes = { table: Table, };
-
 const edgeTypes: Record<string, (args: any) => JSX.Element | null> = {
     floating: FloatingEdge,
 };
@@ -24,17 +21,14 @@ export const deleteNodes = (nodesToDelete: Node[]) => {
     let edgesCopy = [...state.edges$];
 
     for (const nodeToDelete of nodesToDelete) {
-
         // delete table and edges associated with table
         nodesCopy = nodesCopy.filter(node => node.id !== nodeToDelete.id);
         edgesCopy = edgesCopy.filter(edge => edge.source !== nodeToDelete.id && edge.target !== nodeToDelete.id);
     }
 
-    // Update the state
     state.nodes$ = [...nodesCopy];
     state.edges$ = [...edgesCopy];
 };
-
 
 const onNodeClick = (_: any, node: Node) => {
     if (node) {
@@ -42,17 +36,13 @@ const onNodeClick = (_: any, node: Node) => {
     }
 };
 
-
 export const onNodeDragStart = (e: any, node: Node<TableData>, nodes: Node<TableData>[]) => {
     if (e.altKey) {
         cloneNodesOnDrag(nodes)
-
     } else {
         selectedTable$.value = node;
     }
 };
-
-
 
 export const Canvas = () => {
     const [, , onEdgesChange] = useEdgesState<Edge<RelationEdgeData>[]>(initialEdges);
