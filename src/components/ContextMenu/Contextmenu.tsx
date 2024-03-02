@@ -85,10 +85,10 @@ export const ContextMenu = ({
 }: any) => {
     const [coords, setCoords] = useState<[number, number]>([x, y]);
     const contextMenuRef: React.RefObject<HTMLElement> = useRef(null);
-    const { project } = useReactFlow();
+    const { screenToFlowPosition } = useReactFlow();
 
     const getXY = (): [number, number] => {
-        const { x, y } = project({ x: coords[0], y: coords[1] });
+        const { x, y } = screenToFlowPosition({ x: coords[0], y: coords[1] });
         return [x, y];
     };
 
