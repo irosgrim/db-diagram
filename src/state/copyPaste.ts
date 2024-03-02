@@ -11,16 +11,19 @@ export const copiedNodes$: Signal<string | null> = signal(null);
 export const copiedEdges$: Signal<string | null> = signal(null);
 
 export const nodeClone = (node: Node<TableData>) => {
-    const tableId = "table_" + v4();
-    const newIds = node.data.columns.map(x => {
-        x.id = tableId + "/col_" + v4();
-        return x;
-    });
-    node.data.columns = newIds;
-    node.data.name = "copy_of_" + node.data.name;
+    const newId = node.type === "table" ? "table_" + v4() : "note_" + v4();
+
+    if (node.type === "table") {
+        const newIds = node.data.columns.map(x => {
+            x.id = newId + "/col_" + v4();
+            return x;
+        });
+        node.data.columns = newIds;
+        node.data.name = "copy_of_" + node.data.name;
+    }
     return {
         ...node,
-        id: tableId,
+        id: newId,
         position: { x: node.position.x + 20, y: node.position.y + 20 },
     }
 }

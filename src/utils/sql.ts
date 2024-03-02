@@ -228,8 +228,10 @@ export const generateSqlSchema = (deps: SqlDeps) => {
     let tables: Record<string, any> = {};
 
     for (const n of nodes) {
-        tables[n.id] = new Table(n);
-        tables[n.id].cols = n.data.columns.map(x => new Column(x))
+        if (n.type === "table") {
+            tables[n.id] = new Table(n);
+            tables[n.id].cols = n.data.columns.map(x => new Column(x))
+        }
 
     }
 

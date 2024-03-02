@@ -5,7 +5,77 @@ import "./style/context-menu.scss";
 import { state } from "../../state/globalState";
 import { saveImage } from "../Menu/exportImg";
 import { exportSql } from "../../utils/sql";
-import { newTable } from "../EditTableOptions/AppSidebar";
+import { Node, useReactFlow } from "reactflow";
+import { ColorPalette } from "../Nodes/Note/ColorPalette";
+import { newNote, newTable } from "../../state/createNodes";
+
+
+const TableMenu = ({ node }: { node: Node }) => {
+    return <>
+        <p style={{ margin: '0.5em' }}>
+            <small>Table: {node.data.name}</small>
+
+        </p>
+        <button type="button" onClick={() => copyNodes([node])}>Copy table</button>
+        <button type="button" onClick={() => pasteNodes()}>Paste</button>
+        <button type="button" onClick={() => deleteNodes([node])}>Delete</button>
+    </>;
+};
+
+const CanvasMenu = ({ onClose, coords }: { onClose: () => void, coords: [number, number] }) => {
+    return <>
+        <button type="button" onClick={() => newTable(coords)}>New table</button>
+
+        <button type="button" title="export sql" onClick={() => {
+            exportSql();
+            onClose();
+        }}>Export as SQL</button>
+        <button type="button" title="save as image" onClick={() => {
+            saveImage();
+            onClose();
+        }}>Save as image</button>
+        <hr />
+        <button type="button" onClick={() => newNote(coords)}>Add note</button>
+        <button type="button" onClick={() => {
+            const nodesCp = [...state.nodes$];
+            for (const n of nodesCp) {
+                n.selected = true;
+            }
+            state.nodes$ = nodesCp;
+            selectedNodes$.value = nodesCp;
+            onClose();
+        }}>Select all</button>
+        <button type="button" disabled={copiedNodes$.value === null} onClick={() => pasteNodes()}>Paste</button>
+    </>;
+};
+
+const NoteMenu = ({ node }: { node: Node }) => {
+    const changeColor = (color: string) => {
+        const nodesCopy = [...state.nodes$];
+        const noteIndex = nodesCopy.findIndex(x => x.id === node.id);
+        nodesCopy[noteIndex].data.backgroundColor = color;
+        state.nodes$ = nodesCopy;
+    }
+    return <>
+        <div style={{ display: "flex", position: "relative", padding: "0.5rem" }}>
+            <span style={{ marginRight: "0.5rem" }}>Change color</span>
+            <ColorPalette color={node.data.backgroundColor} onChange={changeColor} />
+        </div>
+    </>;
+};
+
+const renderMenu = (coords: [number, number], node: Node, onClose: () => void) => {
+    if (node) {
+        if (node.type === "table") {
+            return <TableMenu node={node} />
+        }
+        if (node.type === "note") {
+            return <NoteMenu node={node} />
+        }
+    } else {
+        return <CanvasMenu onClose={onClose} coords={coords} />
+    }
+};
 
 export const ContextMenu = ({
     node,
@@ -13,9 +83,16 @@ export const ContextMenu = ({
     onClose,
     ...props
 }: any) => {
-    const [coords, setCoords] = useState([x, y]);
+    const [coords, setCoords] = useState<[number, number]>([x, y]);
     const contextMenuRef: React.RefObject<HTMLElement> = useRef(null);
-    const isTableNodeContext = node !== null;
+    const { project } = useReactFlow();
+
+    const getXY = (): [number, number] => {
+        const { x, y } = project({ x: coords[0], y: coords[1] });
+        return [x, y];
+    };
+
+
 
     useEffect(() => {
         if (contextMenuRef.current) {
@@ -37,37 +114,7 @@ export const ContextMenu = ({
             {...props}
         >
             {
-                isTableNodeContext ? <>
-                    <p style={{ margin: '0.5em' }}>
-                        <small>Table: {node.data.name}</small>
-                    </p>
-                    <button type="button" onClick={() => copyNodes([node])}>Copy table</button>
-                    <button type="button" onClick={() => pasteNodes()}>Paste</button>
-                    <button type="button" onClick={() => deleteNodes([node])}>Delete</button>
-                </>
-                    :
-                    <>
-                        <button type="button" onClick={newTable}>New table</button>
-                        <button type="button" title="export sql" onClick={() => {
-                            exportSql();
-                            onClose();
-                        }}>Export as SQL</button>
-                        <button type="button" title="save as image" onClick={() => {
-                            saveImage();
-                            onClose();
-                        }}>Save as image</button>
-                        <hr />
-                        <button type="button" onClick={() => {
-                            const nodesCp = [...state.nodes$];
-                            for (const n of nodesCp) {
-                                n.selected = true;
-                            }
-                            state.nodes$ = nodesCp;
-                            selectedNodes$.value = nodesCp;
-                            onClose();
-                        }}>Select all</button>
-                        <button type="button" disabled={copiedNodes$.value === null} onClick={() => pasteNodes()}>Paste</button>
-                    </>
+                renderMenu(getXY(), node, onClose)
             }
         </div>
     );

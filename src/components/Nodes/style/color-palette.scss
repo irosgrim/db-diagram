@@ -1,0 +1,26 @@
+.color-palette {
+    position: absolute;
+    display: flex;
+    flex-wrap: wrap;
+    list-style-type: none;
+    border-radius: 4px;
+    width: 82px;
+    height: 93px;
+    padding: 0.5rem;
+    bottom: -2px;
+    box-shadow: rgba(0, 0, 0, 0.15) 0px 4px 6px 0px;
+    background-color: #ffffff;
+    margin: 0;
+    bottom: 0;
+    top: 0;
+    right: 0;
+}
+
+.color-button {
+    border: 1px solid #d0d0d0!important;
+    outline: none;
+    border-radius: 50%!important;
+    height: 22px!important;
+    width: 22px!important;
+
+}

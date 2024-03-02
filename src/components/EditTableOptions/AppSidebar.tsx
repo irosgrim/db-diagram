@@ -1,62 +1,12 @@
-import { state } from "../../state/globalState";
-import { TableData } from "../../types/types";
-import { generateCssClass, randomColor } from "../../utils/styling"
+import { newTable } from "../../state/createNodes";
+import { generateCssClass } from "../../utils/styling"
 import { Icon } from "../Icon";
-import { Node } from "reactflow";
 import { TableSection } from "./TableSection";
 import { memo } from "react";
-import { v4 } from "uuid";
 
 type AppSidebarProps = {
     hidden: boolean;
     onShowHide: () => void;
-}
-
-export const newTable = () => {
-    const allTables = state.nodes$;
-    let highestNum = allTables.map(x => {
-        const [, n] = x.id.split("_");
-        return +n;
-    }).sort((a, b) => b - a)[0] || 0;
-
-    let newId = `table_${v4()}`;
-    let newName = `table_${highestNum + 1}`;
-
-    let nameExists = true;
-
-    while (nameExists) {
-        const name = allTables.find(x => x.data.name === newName);
-        if (name) {
-            highestNum += 1;
-            newName = `table_${highestNum}`;
-        } else {
-            nameExists = false;
-        }
-    }
-
-    const nT: Node<TableData>[] = [
-        {
-            id: newId,
-            data: {
-                name: newName,
-                backgroundColor: randomColor(),
-                columns: [
-                    {
-                        id: newId + `col_${v4()}`,
-                        name: "id",
-                        type: "SERIAL",
-                        unique: false,
-                        notNull: true,
-                    }
-                ]
-            },
-            position: { x: 10 + highestNum + 10, y: 200 + highestNum + 10 },
-            className: "light",
-            type: "table",
-        },
-    ];
-
-    state.nodes$ = [...state.nodes$, ...nT];
 }
 
 export const AppSidebar = memo(({ hidden, onShowHide }: AppSidebarProps) => {
@@ -66,7 +16,7 @@ export const AppSidebar = memo(({ hidden, onShowHide }: AppSidebarProps) => {
                 hidden ? <Icon type="arrow-right" /> : <Icon type="arrow-left" />
             } </button>
             <div className="sidebar-content">
-                <button type="button" className="new-btn" onClick={newTable}><Icon type="plus" width="12" /> <span style={{ marginLeft: "1rem" }}>Add new table</span></button>
+                <button type="button" className="new-btn" onClick={() => newTable()}><Icon type="plus" width="12" /> <span style={{ marginLeft: "1rem" }}>Add new table</span></button>
                 <nav>
                     <TableSection />
                 </nav>
